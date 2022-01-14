@@ -6,15 +6,15 @@ library(ggplot2)
 library(reshape2)  
 library(filenamer) 
 
-x = read.csv('/Users/aliya/my_docs/proj/bayes_meta/input.csv')  # requires this data for all indexed functions that read information for each construct across studies 
+x = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/input.csv')  # requires this data for all indexed functions that read information for each construct across studies 
 print(x)
 
-data = read.csv('/Users/aliya/my_docs/proj/bayes_meta/QuantData_CheckedForAccuracy_20March2020.csv') 
+data = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/QuantData_CheckedForAccuracy_20March2020.csv') 
 print(data) #data from the quant studies 
 
-source('/Users/aliya/my_docs/proj/bayes_meta/BayesUpdateStepByStep.R', local = TRUE)
+source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/BayesUpdateStepByStep.R', local = TRUE)
 
-source('/Users/aliya/my_docs/proj/bayes_meta/VariableType.R')
+source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/VariableType.R')
 
 
 ###################################### THE BAYES UPDATE three steps ###########
@@ -70,7 +70,7 @@ print(Results_BayesianMeta_Analysis)
 ############################### saving csv file of the results for this seed and this uncertainty ############################
 logName = as.character(uncertainty + seed)
 
-file_x <- file.path("/Users/aliya/my_docs/proj/bayes_meta", logName, "Results_BayesianMeta_Analysis.csv")
+file_x <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis", logName, "Results_BayesianMeta_Analysis.csv")
 fn <- as.filename(file_x)
 make_path(fn)
 write.table(Results_BayesianMeta_Analysis, file = file_x, 
@@ -119,7 +119,7 @@ print(posterior_CredibleInterval_0.95_string_SEED)
 plots.dir.path <- list.files(tempdir(), pattern="rs-graphics", full.names = TRUE); 
 plots.png.paths <- list.files(plots.dir.path, pattern=".png", full.names = TRUE)
 
-x_directory <- file.path("/Users/aliya/my_docs/proj/bayes_meta", logName)
+x_directory <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis", logName)
 file.copy(from=plots.png.paths, to=x_directory)
 
 
@@ -166,7 +166,7 @@ print(Comparison_MixedBayes)
 
 
 
-file_x2 <- file.path("/Users/aliya/my_docs/proj/bayes_meta", logName, "Comparison_MixedBayes.csv")
+file_x2 <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis", logName, "Comparison_MixedBayes.csv")
 fn <- as.filename(file_x2)
 make_path(fn)
 write.table(Comparison_MixedBayes, file = file_x2, 
