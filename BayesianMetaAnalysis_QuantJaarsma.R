@@ -29,9 +29,9 @@ source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/PooledOddsRatio_metaana
 
 source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/ContingenciesTable_MCMC.R')
 
-print("finishedContingenciesTable_MCMC")
-
 source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/Density_ggplot.R')
+
+print("finishedDensityPlot")
 
 source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/N_success.R')  
 
@@ -200,9 +200,11 @@ mean = 0.43
                                 ylabTitle = "Probability density", 
                                 title = Construct)
   
+  print("finished plot")
   print(graph_Posterior)
   
   ProbabilityDistribution_Posterior = pbeta(Theta, posterior_alpha, posterior_beta)
+  print("done with pbeta")
   ProbabilityDistribution_Posterior_normalised = ProbabilityDistribution_Posterior/sum(ProbabilityDistribution_Posterior)
   
 

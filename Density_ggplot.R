@@ -2,6 +2,8 @@ library(ggplot2)
 
 plotDensity = function(data, ... , mean, mode, quantile_0.05, quantile_0.95,xlabTitle,  ylabTitle, title, MAPhyperprior, CIUpperhyperprior, CILowerhyperprior) {
 
+  print("in_densityPlot_function")
+  
   ggplot(data, ...)+
     geom_bar(stat="identity", alpha=0.5)+
     theme_minimal()+
