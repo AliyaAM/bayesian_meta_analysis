@@ -1,6 +1,6 @@
 
 
-data_All_SEEDS = read.csv("/Users/aliya/my_docs/proj/bayesian_meta_analysis/seeds_MAPQuant_only.csv")
+data_All_SEEDS = read.csv("/Users/aliya/my_docs/proj//bayesian_meta_analysis/seedsMAP_Quant_only.csv")
 head(data_All_SEEDS)
 
 
