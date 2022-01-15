@@ -6,7 +6,7 @@ library(reshape2)
 library(tibble)
 
 x = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/input.csv') #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately. 
-data = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/QuantData_CheckedForAccuracy_20March2020.csv')  #data extracted from from the quantative studies 
+data = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/QuantData_CheckedForAccuracy_20March2020.csv')  #data extracted from from the quantitative studies 
 JaarsmaInternationalStudy = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/HyperPriorData.csv') #data used for eliciting the hyperprior (general physical activity levels in HF estimated from a large internaitonal study (Jaarsma et al., 2013)
 
 
