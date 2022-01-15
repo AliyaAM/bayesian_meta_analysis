@@ -9,7 +9,7 @@ library(ggplot2)
 library(reshape2)  
 library(filenamer) # library for as.filename
 
-x = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/input.csv')  #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately. 
+x = read.csv(paste(SOURCE_ROOT, "input.csv", sep=""))  #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately.
 data = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/QuantData_CheckedForAccuracy_20March2020.csv')  #data extracted from from the quantative studies 
 
 source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/BayesUpdateStepByStep.R', local = TRUE) # this function (BayesUpdateStepByStep) runs the Bayesian meta-analysis that combines qualitative and quantitative evidence 

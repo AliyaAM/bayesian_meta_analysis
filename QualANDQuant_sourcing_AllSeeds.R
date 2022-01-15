@@ -8,8 +8,8 @@ library(filenamer) # library for as.filename
 
 Source_seed = function(uncertainty, seed) {
   
-  source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/BayesianMetaAnalysis_StepByStep.R', local = TRUE)
-  
+  source(paste(SOURCE_ROOT, "BayesianMetaAnalysis_StepByStep.R", sep=""), local = TRUE)
+
   MAPQualQuant_uncertainty_seed_tag = data.frame(Pooled_LOGOdds_Ratio_posterior_string_SEED,
                                         LowerCI_LogOddsRatio_posterior_string_SEED, 
                                         UpperCI_LogOddsRatio_posterior_string_SEED,

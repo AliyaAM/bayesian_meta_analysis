@@ -1,7 +1,7 @@
 
 library(filenamer)
 
-
+## Set the root directory to look for source code.
 SOURCE_ROOT = "/Users/aliya/my_docs/proj/bayesian_meta_analysis/"
 
 
