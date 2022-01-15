@@ -12,6 +12,7 @@ library(tibble)
 library(bayestestR)
 library(HDInterval)
 
+x = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/input.csv')  #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately. 
 
 data = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/QuantData_CheckedForAccuracy_20March2020.csv')  #data extracted from from the quantitative studies 
 
@@ -42,8 +43,8 @@ source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/N_success.R')
 
 BayesUpdate_Quant <- function(data, Construct, uncertainty, seed) {
   
-  index = data$Construct == Construct
-
+  index = x$Construct == Construct
+  
  #elicit hyperprior distribution from Jaarsm et al (2003) evidence: 
   
 JaarsmaInternationalStudy = JaarsmaInternationalStudy
