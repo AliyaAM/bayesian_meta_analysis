@@ -61,6 +61,8 @@ Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_Sel
 
 print(Results_BayesianMeta_Analysis)
 
+uncertainty = 10
+
 # below we are saving csv file of the results for the specified seed (x10) and uncertainty
 logName = as.character(uncertainty + seed)
 
