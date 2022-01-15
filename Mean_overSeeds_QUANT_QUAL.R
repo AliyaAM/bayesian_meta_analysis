@@ -1,6 +1,6 @@
 
 
-data_All_SEEDS = read.csv("/Users/aliya/my_docs/proj/bayes_meta/seeds_MAP_23Feb2021.csv")
+data_All_SEEDS = read.csv("/Users/aliya/my_docs/proj/bayesian_meta_analysis/seeds_MAP_23Feb2021.csv")
 head(data_All_SEEDS)
 
 
@@ -61,7 +61,7 @@ Construct_name = c("Age",
 
 Mean_results_over_SEEDS = cbind(Mean_results_over_SEEDS, Construct_name)
 
-file_Mean_results_over_SEEDS <- file.path("/Users/aliya/my_docs/proj/bayes_meta/Mean_results_over_SEEDS_23Feb2021.csv")
+file_Mean_results_over_SEEDS <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis/Mean_results_over_SEEDS_23Feb2021.csv")
 fn_Mean_results_over_SEEDS <- as.filename(file_Mean_results_over_SEEDS)
 make_path(fn_Mean_results_over_SEEDS)
 write.table(Mean_results_over_SEEDS, file = file_Mean_results_over_SEEDS, 
@@ -74,7 +74,3 @@ write.table(Mean_results_over_SEEDS, file = file_Mean_results_over_SEEDS,
             row.names = FALSE, 
             col.names = TRUE, 
             fileEncoding = "" )
-#Age_uncertaintyLevels_MAP = filter(data_All_SEEDS, Construct_name == "Age") 
-#MAPmean_Age_uncertaintyLevels_MAP = mean(Age_uncertaintyLevels_MAP$MAP)
-#osterior_CredibleInterval_0.05_Age_uncertaintyLevels_MAP = mean(Age_uncertaintyLevels_MAP$posterior_CredibleInterval_0.05)
-#posterior_CredibleInterval_0.95_Age_uncertaintyLevels_MAP = mean(Age_uncertaintyLevels_MAP$posterior_CredibleInterval_0.95)

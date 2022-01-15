@@ -1,6 +1,6 @@
 
 
-data_All_SEEDS = read.csv("/Users/aliya/my_docs/proj/bayes_meta/seeds_QUANT_MAP_QUANT_23Feb2021_QUANT.csv")
+data_All_SEEDS = read.csv("/Users/aliya/my_docs/proj/bayesian_meta_analysis/seeds_QUANT_MAP_QUANT_23Feb2021_QUANT.csv")
 head(data_All_SEEDS)
 
 
@@ -36,9 +36,6 @@ Functioning_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_nam
 Symptoms_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "Symptoms")
 LVEF_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "LVEF")
 SelfEfficacy_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "SelfEfficacy")
-#BloodPressure_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "BloodPressure")
-#BMI_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "BMI")
-#CRT_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "CRT")
 Depression_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "Depression")
 Digoxin_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "Digoxin")
 Doppler_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "Doppler")
@@ -109,9 +106,6 @@ Construct_name = c("Age",
                    "Symptoms",
                    "LVEF",
                    "SelfEfficacy",
-                   #"BloodPressure",
-                   #"BMI",
-                   #"CRT",
                    "Depression",
                    "Digoxin",
                    "Doppler",
@@ -125,7 +119,6 @@ Construct_name = c("Age",
                    "highproBNP",
                    "Hostility",
                    "Income",
-                   #"Knowledge",
                    "LAV",
                    "LVAD",
                    "LVR",
@@ -139,7 +132,7 @@ Construct_name = c("Age",
 
 Mean_results_over_SEEDS = cbind(Mean_results_over_SEEDS, Construct_name)
 
-file_Mean_results_over_SEEDS <- file.path("/Users/aliya/my_docs/proj/bayes_meta/Quant_Mean_results_over_SEEDS_23Feb2021_Quant.csv")
+file_Mean_results_over_SEEDS <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis/Quant_Mean_results_over_SEEDS_23Feb2021_Quant.csv")
 fn_Mean_results_over_SEEDS <- as.filename(file_Mean_results_over_SEEDS)
 make_path(fn_Mean_results_over_SEEDS)
 write.table(Mean_results_over_SEEDS, file = file_Mean_results_over_SEEDS, 
@@ -152,7 +145,3 @@ write.table(Mean_results_over_SEEDS, file = file_Mean_results_over_SEEDS,
             row.names = FALSE, 
             col.names = TRUE, 
             fileEncoding = "" )
-#Age_uncertaintyLevels_MAP = filter(data_All_SEEDS, Construct_name == "Age") 
-#MAPmean_Age_uncertaintyLevels_MAP = mean(Age_uncertaintyLevels_MAP$MAP)
-#osterior_CredibleInterval_0.05_Age_uncertaintyLevels_MAP = mean(Age_uncertaintyLevels_MAP$posterior_CredibleInterval_0.05)
-#posterior_CredibleInterval_0.95_Age_uncertaintyLevels_MAP = mean(Age_uncertaintyLevels_MAP$posterior_CredibleInterval_0.95)
