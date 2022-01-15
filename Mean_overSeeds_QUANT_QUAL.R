@@ -2,7 +2,7 @@
 
 #read the results from the analysis of the qualitative combined with quantitative evidence for all 10 different seeds: 
 
-data_All_SEEDS = read.csv("/Users/aliya/my_docs/proj/bayesian_meta_analysis/seeds_MAP_23Feb2021.csv")
+data_All_SEEDS = read.csv("/Users/aliya/my_docs/proj/bayesian_meta_analysis/seeds_MAPQualQuant.csv")
 
 Mean_overSeeds = function(data, Construct_name){
   

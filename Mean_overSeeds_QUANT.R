@@ -1,6 +1,6 @@
 
 
-data_All_SEEDS = read.csv("/Users/aliya/my_docs/proj/bayesian_meta_analysis/seeds_QUANT_MAP_QUANT_23Feb2021_QUANT.csv")
+data_All_SEEDS = read.csv("/Users/aliya/my_docs/proj/bayesian_meta_analysis/seeds_MAPQuant_only.csv")
 head(data_All_SEEDS)
 
 
@@ -132,7 +132,7 @@ Construct_name = c("Age",
 
 Mean_results_over_SEEDS = cbind(Mean_results_over_SEEDS, Construct_name)
 
-file_Mean_results_over_SEEDS <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis/Quant_Mean_results_over_SEEDS_23Feb2021_Quant.csv")
+file_Mean_results_over_SEEDS <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis/Quant_Mean_results_over_SEEDS.csv")
 fn_Mean_results_over_SEEDS <- as.filename(file_Mean_results_over_SEEDS)
 make_path(fn_Mean_results_over_SEEDS)
 write.table(Mean_results_over_SEEDS, file = file_Mean_results_over_SEEDS, 

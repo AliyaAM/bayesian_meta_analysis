@@ -108,3 +108,22 @@ uncertaintyLevels_MAP = rbind(uncertaintyLevels_MAP, MAP_uncertainty_seed_tag)
 
 MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888111)
 uncertaintyLevels_MAP = rbind(uncertaintyLevels_MAP, MAP_uncertainty_seed_tag)
+
+
+uncertaintyLevels_MAP = rbind(uncertaintyLevels_MAP, MAP_uncertainty_seed_tag)
+
+#save the results of the Bayesian meta-analysis of the qualitative combined with quantitative evidence that was run from 10 different seeds below: 
+file_uncertaintyLevels_MAP <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis/seeds_MAPQuant_only.csv")
+fn_uncertaintyLevels_MAP <- as.filename(file_uncertaintyLevels_MAP)
+make_path(fn_uncertaintyLevels_MAP)
+write.table(uncertaintyLevels_MAP, file = file_uncertaintyLevels_MAP, 
+            append = FALSE, 
+            quote = TRUE, 
+            sep = ",", 
+            eol = "\r", 
+            na = "NA", 
+            dec = ".",
+            row.names = FALSE, 
+            col.names = TRUE, 
+            fileEncoding = "" )
+
