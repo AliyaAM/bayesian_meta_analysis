@@ -204,11 +204,7 @@ for (estimate_type in data$estimate_type) {
                                 "variance_Fisher_Z",
                                 "raw_correlation_coefficient", 
                                 "Total_N")
- 
- print("likelihood_data")
- print(likelihood_data)
- 
- 
+
  
  write.table(likelihood_data, file = '/Users/aliya/my_docs/proj/bayesian_meta_analysis/likelihood_data.csv', 
              append = FALSE, 

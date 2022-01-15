@@ -21,13 +21,13 @@ JaarsmaInternationalStudy = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_an
 
 source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/ConvertEffectsizes.R')
 
-print("finishedConvertEffectsizes")
-
 source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/plbeta_function.R') 
 
 source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/PooledN.R') 
 
 source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/PooledOddsRatio_metaanalysis.R')
+
+print('PooledOddsRatio_metaanalysis')
 
 source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/ContingenciesTable_MCMC.R')
 
