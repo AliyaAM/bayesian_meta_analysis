@@ -21,6 +21,8 @@ JaarsmaInternationalStudy = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_an
 
 source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/ConvertEffectsizes.R')
 
+print("finishedConvertEffectsizes")
+
 source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/plbeta_function.R') 
 
 source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/PooledN.R') 
@@ -44,6 +46,8 @@ source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/N_success.R')
 BayesUpdate_Quant <- function(data, Construct, uncertainty, seed) {
   
   index = x$Construct == Construct
+  
+  print("made it into Bayes_update_quant")
   
  #elicit hyperprior distribution from Jaarsm et al (2003) evidence: 
   

@@ -27,6 +27,7 @@ QuantUpdate_Age = BayesUpdate_Quant(data = data, Construct = "Age", uncertainty 
 print(QuantUpdate_Age)
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Age)
 
+print("finished running analysis for Age")
 
 QuantUpdate_Comorbidity = BayesUpdate_Quant(data = data, Construct = "Comorbidity" , uncertainty = uncertainty, seed = seed)
 print(QuantUpdate_Comorbidity)

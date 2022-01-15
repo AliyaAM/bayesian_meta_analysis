@@ -9,7 +9,6 @@ library(dplyr)
 library(dplyr)
 
 data = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/QuantData_CheckedForAccuracy_20March2020.csv') 
-print(data)
 
 results_estimated_from_F = data.frame()
 results_estimated_from_r = data.frame()
@@ -33,8 +32,7 @@ for (estimate_type in data$estimate_type) {
     
     estimated_from_F$varLOR =  (pi^2*estimated_from_F$var.d)/(3)
     estimated_from_F = cbind(estimated_from_F$varLOR, estimated_from_F) 
-    print("F valueeeee")
-    print(estimated_from_F)
+   
     
     results_estimated_from_F = rbind(results_estimated_from_F, estimated_from_F)
   }
@@ -46,18 +44,14 @@ for (estimate_type in data$estimate_type) {
                            level = 95,
                            verbose = FALSE)
     
-    print(estimated_from_r)
     
-    print("computed fro r see below") 
     
     estimated_from_r$Author = data$Author[row_id]
     estimated_from_r$Construct = data$Construct[row_id]
     
     
     estimated_from_r$varLOR =  (pi^2*estimated_from_r$var.d)/(3)
-    print("rrrrrrrrrr")
     estimated_from_r = cbind(estimated_from_r$varLOR, estimated_from_r) 
-    print(estimated_from_r)
     results_estimated_from_r = rbind(results_estimated_from_r, estimated_from_r)
   } 
   
@@ -75,12 +69,9 @@ for (estimate_type in data$estimate_type) {
     
     estimated_from_mean$Author = data$Author[row_id]
     estimated_from_mean$Construct = data$Construct[row_id]
-    print("meaaaaaan")
     estimated_from_mean$varLOR =  (pi^2*estimated_from_mean$var.d)/(3)
     estimated_from_mean = cbind(estimated_from_mean$varLOR, estimated_from_mean) 
-    print(estimated_from_mean)
     results_estimated_from_mean = rbind(results_estimated_from_mean, estimated_from_mean) 
-    print(results_estimated_from_mean)
   }
   
   if (estimate_type == "Binary") {
@@ -98,12 +89,9 @@ for (estimate_type in data$estimate_type) {
     
     estimated_from_Binary$Author = data$Author[row_id]
     estimated_from_Binary$Construct = data$Construct[row_id]
-    print("Binaryyyyyyyy")
     estimated_from_Binary$varLOR =  (pi^2*estimated_from_mean$var.d)/(3)
     estimated_from_Binary = cbind(estimated_from_Binary$varLOR, estimated_from_Binary) 
-    print(estimated_from_Binary)
     results_estimated_Binary= rbind(results_estimated_Binary, estimated_from_Binary) 
-    print(results_estimated_Binary)
   }
   
   row_id = row_id + 1
@@ -111,64 +99,22 @@ for (estimate_type in data$estimate_type) {
 
 
 
-print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-print("results computed from mean of the first group are below:")
 
-print(results_estimated_from_mean)
-
-print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-print("results computed from r coeffcient  are below:")
-print(results_estimated_from_r)
-
-
-print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-print("results computed from F are below:")
-print(results_estimated_from_F)
-
-
-print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-print("results computed from Binary are below:")
-print(results_estimated_Binary)
-
-print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-
-
-
-
-EffectSize_conversion_lOR = c(results_estimated_from_mean$lOR, 
+ EffectSize_conversion_lOR = c(results_estimated_from_mean$lOR, 
                               results_estimated_from_r$lOR, 
                               results_estimated_from_F$lOR,
                               results_estimated_Binary$lOR) 
-print("EffectSize_conversion_lOR")
-print(EffectSize_conversion_lOR)
- 
- 
- 
- 
- 
 
-EffectSize_conversion_lOR_lCI = c(results_estimated_from_mean$l.lor,
+ EffectSize_conversion_lOR_lCI = c(results_estimated_from_mean$l.lor,
                                   results_estimated_from_r$l.lor,
                                   results_estimated_from_F$l.lor,
                                   results_estimated_Binary$l.or)
- 
- print("EffectSize_conversion_lOR_lCI")
-print(EffectSize_conversion_lOR_lCI)
 
+ EffectSize_conversion_lOR_uCI = c(results_estimated_from_mean$u.lor, 
+                                   results_estimated_from_r$u.lor, 
+                                   results_estimated_from_F$u.lor,
+                                   results_estimated_Binary$u.lor) 
 
-
-
-
-
-
-EffectSize_conversion_lOR_uCI = c(results_estimated_from_mean$u.lor, 
-                                 results_estimated_from_r$u.lor, 
-                                  results_estimated_from_F$u.lor,
-                                 results_estimated_Binary$u.lor) 
-
-print("EffectSize_conversion_lOR_uCI")
- print(EffectSize_conversion_lOR_uCI)        
- 
  
 
  EffectSize_conversion_OR = c(results_estimated_from_mean$OR, 
@@ -176,57 +122,42 @@ print("EffectSize_conversion_lOR_uCI")
                               results_estimated_from_F$OR,
                               results_estimated_Binary$OR) 
  
-print("EffectSize_conversion_OR")
- print(EffectSize_conversion_OR)
-
  
  
  
- 
-EffectSize_conversion_OR_lCI= c(results_estimated_from_mean$l.or,
-                                results_estimated_from_r$l.or, 
+ EffectSize_conversion_OR_lCI= c(results_estimated_from_mean$l.or,
+                                 results_estimated_from_r$l.or, 
                                  results_estimated_from_F$l.or,
-                                results_estimated_Binary$l.or) 
-
- print("EffectSize_conversion_OR_lCI")
- print(EffectSize_conversion_OR_lCI)             
+                                 results_estimated_Binary$l.or) 
+           
  
  EffectSize_conversion_OR_uCI = c(results_estimated_from_mean$u.or, 
                                   results_estimated_from_r$u.or, 
-                                 results_estimated_from_F$u.or,
-                                 results_estimated_Binary$u.or)
-
-print("EffectSize_conversion_OR_uCI")
- print(EffectSize_conversion_OR_uCI)
+                                  results_estimated_from_F$u.or,
+                                  results_estimated_Binary$u.or)
  
 
-Author = c(results_estimated_from_mean$Author, 
-           results_estimated_from_r$Author, 
+ Author = c(results_estimated_from_mean$Author, 
+            results_estimated_from_r$Author, 
             results_estimated_from_F$Author,
-           results_estimated_Binary$Author)
+            results_estimated_Binary$Author)
  
 
-print("Author")
-print(Author)
-
-Construct = c(results_estimated_from_mean$Construct, 
+ Construct = c(results_estimated_from_mean$Construct, 
                results_estimated_from_r$Construct, 
                results_estimated_from_F$Construct,
-              results_estimated_Binary$Construct)
+               results_estimated_Binary$Construct)
  
- 
- print("Construct")
- print(Construct)
 
  varLOR = c(results_estimated_from_mean$varLOR, 
-               results_estimated_from_r$varLOR, 
-               results_estimated_from_F$varLOR,
-               results_estimated_Binary$varLOR)
+            results_estimated_from_r$varLOR, 
+            results_estimated_from_F$varLOR,
+            results_estimated_Binary$varLOR)
  
  Fisher_Z = c(results_estimated_from_mean$fisher.z, 
-                results_estimated_from_r$fisher.z, 
-                results_estimated_from_F$fisher.z,
-                results_estimated_Binary$fisher.z)
+              results_estimated_from_r$fisher.z, 
+              results_estimated_from_F$fisher.z,
+              results_estimated_Binary$fisher.z)
  
  
  variance_Fisher_Z = c(results_estimated_from_mean$var.z, 
@@ -247,18 +178,18 @@ Construct = c(results_estimated_from_mean$Construct,
 
 
  likelihood_data  = cbind.data.frame(Author, 
-                         Construct, 
-                        EffectSize_conversion_lOR, 
-                        EffectSize_conversion_lOR_lCI, 
-                        EffectSize_conversion_lOR_uCI, 
-                         EffectSize_conversion_OR, 
-                         EffectSize_conversion_OR_lCI, 
-                        EffectSize_conversion_OR_uCI,
-                        varLOR,
-                        Fisher_Z,
-                        variance_Fisher_Z,
-                        raw_correlation_coefficient,
-                        Total_N) 
+                                     Construct, 
+                                     EffectSize_conversion_lOR, 
+                                     EffectSize_conversion_lOR_lCI, 
+                                     EffectSize_conversion_lOR_uCI,
+                                     EffectSize_conversion_OR, 
+                                     EffectSize_conversion_OR_lCI, 
+                                     EffectSize_conversion_OR_uCI,
+                                     varLOR,
+                                     Fisher_Z,
+                                     variance_Fisher_Z,
+                                     raw_correlation_coefficient,
+                                     Total_N) 
  
  colnames (likelihood_data) = c('Author', 
                                 'Construct',
