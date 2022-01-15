@@ -6,7 +6,7 @@ data_All_SEEDS = read.csv("/Users/aliya/my_docs/proj/bayesian_meta_analysis/seed
 
 Mean_overSeeds = function(data, Construct_name){
   
-  index = data$Construct_name == Construct_name
+  index = Construct_name
   
   data_filtered_SEEDS = filter(data, Construct_name == data[index,]$Construct_name)
   
