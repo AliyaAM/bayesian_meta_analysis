@@ -10,5 +10,6 @@ source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/QuantOnly_Sourcing_AllS
 
 #reading from this files average over the results from different seeds below: 
 source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/Mean_overSeeds_QUANT_QUAL.R')
+
 source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/Mean_overSeeds_QUANT.R')
 
