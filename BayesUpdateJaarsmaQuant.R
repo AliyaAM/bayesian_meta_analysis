@@ -8,11 +8,11 @@ library(reshape2)
 
 
 
-data = read.csv('/Users/aliya/my_docs/proj/bayes_meta/QuantData_CheckedForAccuracy_20March2020.csv') 
+data = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/QuantData_CheckedForAccuracy_20March2020.csv') 
 print(data)
 
 
-source('/Users/aliya/my_docs/proj/bayes_meta/BayesianMetaAnalysis_QuantJaarsma.R')
+source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/BayesianMetaAnalysis_QuantJaarsma.R')
 
 
 ###################################### THE BAYES UPDATE WITHOUT THE QUALI STUDIES ###########
@@ -416,7 +416,7 @@ print(likelihood_data)
 
 logName = as.character(uncertainty + seed)
 
-file_x <- file.path("/Users/aliya/my_docs/proj/bayes_meta", logName, "Results_ResultsBayesianUpdateQuant.csv")
+file_x <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis", logName, "Results_ResultsBayesianUpdateQuant.csv")
 fn <- as.filename(file_x)
 make_path(fn)
 write.table(ResultsBayesianUpdateQuant, file = file_x, 

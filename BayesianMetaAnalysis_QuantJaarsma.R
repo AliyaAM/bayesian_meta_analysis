@@ -6,23 +6,23 @@ library(bayestestR)
 library(HDInterval)
 
 
-data = read.csv('/Users/aliya/my_docs/proj/bayes_meta/QuantData_CheckedForAccuracy_20March2020.csv') 
+data = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/QuantData_CheckedForAccuracy_20March2020.csv') 
 print(data)
 
 
-source('/Users/aliya/my_docs/proj/bayes_meta/ConvertEffectsizes.R')
+source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/ConvertEffectsizes.R')
 
-source('/Users/aliya/my_docs/proj/bayes_meta/plbeta_function.R') 
+source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/plbeta_function.R') 
 
-source('/Users/aliya/my_docs/proj/bayes_meta/PooledN.R') 
+source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/PooledN.R') 
 
-source('/Users/aliya/my_docs/proj/bayes_meta/PooledOddsRatio_metaanalysis.R')
+source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/PooledOddsRatio_metaanalysis.R')
 
-source('/Users/aliya/my_docs/proj/bayes_meta/ContingenciesTable_MCMC.R')
+source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/ContingenciesTable_MCMC.R')
 
-source('/Users/aliya/my_docs/proj/bayes_meta/Density_ggplot.R')
+source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/Density_ggplot.R')
 
-source('/Users/aliya/my_docs/proj/bayes_meta/N_success.R')  
+source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/N_success.R')  
 
 
 # this function below produces  density, distribution and all summary statistic for: 
@@ -50,7 +50,7 @@ BayesUpdate_Quant <- function(data, Construct, uncertainty, seed) {
   
   print("*********************************************** HYPERPRIOR *************************************************************************************")
   
-  JaarsmaInternationalStudy = read.csv('/Users/aliya/my_docs/proj/bayes_meta/HyperPriorData.csv') 
+  JaarsmaInternationalStudy = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/HyperPriorData.csv') 
   
   variance = 0.018
   mean = 0.43
