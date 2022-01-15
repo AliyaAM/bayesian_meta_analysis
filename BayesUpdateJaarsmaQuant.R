@@ -201,12 +201,10 @@ write.table(ResultsBayesianUpdateQuant, file = '/Users/aliya/my_docs/proj/Result
             col.names = TRUE, qmethod = c("escape", "double"),
             fileEncoding = "" )
 
-print(likelihood_data)
-
 uncertainty = 10
 logName = as.character(uncertainty + seed)
 
-file_x <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis", logName, "Results_ResultsBayesianUpdateQuant.csv")
+file_x <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis/", logName, "Results_ResultsBayesianUpdateQuant.csv")
 fn <- as.filename(file_x)
 make_path(fn)
 write.table(ResultsBayesianUpdateQuant, file = file_x, 

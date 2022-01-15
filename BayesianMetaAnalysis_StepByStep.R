@@ -64,7 +64,7 @@ print(Results_BayesianMeta_Analysis)
 # below we are saving csv file of the results for the specified seed (x10) and uncertainty
 logName = as.character(uncertainty + seed)
 
-file_x <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis", logName, "Results_BayesianMeta_Analysis.csv")
+file_x <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis/", logName, "Results_BayesianMeta_Analysis.csv")
 fn <- as.filename(file_x)
 make_path(fn)
 write.table(Results_BayesianMeta_Analysis, file = file_x, 
