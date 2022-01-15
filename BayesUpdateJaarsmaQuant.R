@@ -196,7 +196,7 @@ ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Sympt
 
 
 print(ResultsBayesianUpdateQuant)
-write.table(ResultsBayesianUpdateQuant, file = '/Users/aliya/my_docs/proj/bayesian_meta_analysis/ResultsBayesianUpdateQuantOnly.csv', append = FALSE, quote = TRUE, sep = ", ",
+write.table(ResultsBayesianUpdateQuant, file = '/Users/aliya/my_docs/proj/ResultsBayesianUpdateQuant23Feb2021_QUANT.csv', append = FALSE, quote = TRUE, sep = ", ",
             eol = "\r", na = "NA", dec = ".", row.names = FALSE,
             col.names = TRUE, qmethod = c("escape", "double"),
             fileEncoding = "" )
