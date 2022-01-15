@@ -127,11 +127,14 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   PriorDistribution = data.frame(Theta, ProbabilityDistribution_Prior, PriorMean, PriorMode, prior_quantile_0.05, prior_quantile_0.95)
   
 
-  #Based on the expert elicitation task the number of successes (ie., physically active when a cusntruct is present, N when PA = 1 and X = 1) were calculated as follows: 
-  #Experts were presentd with 30 scenarios (however ever the data included 30 x 6 experts) descrbing HF patients who either engage in PA at reccomended level or they do not and also exhibit a number of constructs or do not (eg., self-efficacious but does not perceive any social support to be physically active and so on)
-  #For example, there are 15 scenarios where HF patient is efficacious (X = 1) and 16 where they are not (X =0). 
-  #The number of scenarios where X = 1 and the experts judged them as being likely to be physically active based on the qualitative studies they read (PA =1) was expressed as N when PA = 1 and X = 1 (ie physically active given the construct)
-  #Likewise, we calcualted number of physically active gicen the construct is absent (X = 0): 
+  #Six experts completed the expert elicitation task. 
+  #The reviewers made a judgement on whether the hypothetical HF patient met the recommended levels of physical activity or not. 
+  #The number of scenarios where the construct was present (ie., X = 1) and the experts judged them as being likely to be physically active based on the qualitative studies they read (PA = 1) was expressed as N when PA = 1 and X = 1 (ie., physically active given the construct). 
+  #Likewise, we calculated the number of physically active given the construct is absent (X = 0), ie  N – N_(PA=1;X=1 ). 
+  # It is important to note that we used the entire set of data, meaning that the total pool of HF patients would equal to 30 scenarios multiplied by six different expert judgements (30 x 6).  
+  #From this, we estimated alpha and beta parameters for the likelihood distribution using the following formulas (from Spiegelhalter et al 2003 (3): α+N_(PA=1;X=1 ); ß + N – N_█(PA=1;X=1 @).
+  #Using these parameters, we elicited likelihood distribution using dbeta function in R. 
+  
 
   Age_N_PA_X =28
   SelfEfficacy_N_PA_X = 41
