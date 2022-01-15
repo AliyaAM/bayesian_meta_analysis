@@ -154,9 +154,5 @@ print(Symptoms_uncertaintyLevels_MAP)
 print(LVEF_uncertaintyLevels_MAP)
 print(SelfEfficacy_uncertaintyLevels_MAP)
 
-#save plots in a new folder
-plots.dir.path <- list.files(tempdir(), pattern="rs-graphics", full.names = TRUE); 
-plots.png.paths <- list.files(plots.dir.path, pattern=".png", full.names = TRUE)
-file.copy(from=plots.png.paths, to="/Users/aliya/my_docs/proj/bayesian_meta_analysis/seed_MAP_PLOTS")
-print(uncertaintyLevels_MAP)
+
 
