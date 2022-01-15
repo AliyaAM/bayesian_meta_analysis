@@ -1,14 +1,10 @@
 
-
-
 #run Bayesian meta-analysis sourcing from 10 different seeds separately for two procedures: 
 
 #1) combining qualitative and quantitative evidence: 
 source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/QualANDQuant_sourcing_AllSeeds.R')
-
 #2) updating hyperprior with quantitative evidence only 
 source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/QuantOnly_Sourcing_AllSeeds.R')
-
 
 #once the above was done, the results for each seed should be saved in files within the sourced scripts above
 
