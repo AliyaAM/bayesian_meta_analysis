@@ -8,7 +8,7 @@ Source_seed = function(uncertainty, seed) {
   
   source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/BayesianMetaAnalysis_StepByStep.R', local = TRUE)
   
-  MAP_uncertainty_seed_tag = data.frame(Pooled_LOGOdds_Ratio_posterior_string_SEED,
+  MAPQualQuant_uncertainty_seed_tag = data.frame(Pooled_LOGOdds_Ratio_posterior_string_SEED,
                                         LowerCI_LogOddsRatio_posterior_string_SEED, 
                                         UpperCI_LogOddsRatio_posterior_string_SEED,
                                         posterior_alpha_Ratio_posterior_string_SEED,
@@ -19,7 +19,7 @@ Source_seed = function(uncertainty, seed) {
                                         uncertainty, 
                                         seed)
 
-  names(MAP_uncertainty_seed_tag) <- c("LogOR", 
+  names(MAPQualQuant_uncertainty_seed_tag) <- c("LogOR", 
                                        "LogOR_CI_lower",
                                        "LogOR_CI_upper",
                                        "posterior_alpha", 
@@ -44,57 +44,57 @@ Source_seed = function(uncertainty, seed) {
                      "LVEF",
                      "SelfEfficacy")
   
-  MAP_uncertainty_seed_tag = cbind(MAP_uncertainty_seed_tag, Construct_name)
+  MAPQualQuant_uncertainty_seed_tag = cbind(MAPQualQuant_uncertainty_seed_tag, Construct_name)
   
-  return(MAP_uncertainty_seed_tag)   
+  return(MAPQualQuant_uncertainty_seed_tag)   
   
 }
 
 #uncertainty level is set to 10. This choice does not change the final results due to narrow space from which distributions are sampled within BayesianMetaAnalysis_StepByStep.R function 
 #this was tested in a sensetivity analysis comparing the results of two analyses 1) where uncertainty was set to 10; 2) where uncertainty was set to 0.1 
 
-uncertaintyLevels_MAP = Source_seed(uncertainty = 10, seed = 888100)
+uncertaintyLevels_MAPQualQuant = Source_seed(uncertainty = 10, seed = 888100)
 
-MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888101)
+MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888101)
 
-uncertaintyLevels_MAP = rbind(uncertaintyLevels_MAP, MAP_uncertainty_seed_tag)
+uncertaintyLevels_MAPQualQuant = rbind(uncertaintyLevels_MAPQualQuant, MAPQualQuant_uncertainty_seed_tag)
 
-MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888102)
-uncertaintyLevels_MAP = rbind(uncertaintyLevels_MAP, MAP_uncertainty_seed_tag)
+MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888102)
+uncertaintyLevels_MAPQualQuant = rbind(uncertaintyLevels_MAPQualQuant, MAPQualQuant_uncertainty_seed_tag)
 
-MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888103)
+MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888103)
 
-uncertaintyLevels_MAP = rbind(uncertaintyLevels_MAP, MAP_uncertainty_seed_tag)
+uncertaintyLevels_MAPQualQuant = rbind(uncertaintyLevels_MAPQualQuant, MAPQualQuant_uncertainty_seed_tag)
 
-MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888104)
-uncertaintyLevels_MAP = rbind(uncertaintyLevels_MAP, MAP_uncertainty_seed_tag)
+MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888104)
+uncertaintyLevels_MAPQualQuant = rbind(uncertaintyLevels_MAPQualQuant, MAPQualQuant_uncertainty_seed_tag)
 
-MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888105)
+MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888105)
 
-uncertaintyLevels_MAP = rbind(uncertaintyLevels_MAP, MAP_uncertainty_seed_tag)
+uncertaintyLevels_MAPQualQuant = rbind(uncertaintyLevels_MAPQualQuant, MAPQualQuant_uncertainty_seed_tag)
 
-MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888106)
-uncertaintyLevels_MAP = rbind(uncertaintyLevels_MAP, MAP_uncertainty_seed_tag)
+MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888106)
+uncertaintyLevels_MAPQualQuant = rbind(uncertaintyLevels_MAPQualQuant, MAPQualQuant_uncertainty_seed_tag)
 
-MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888107)
+MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888107)
 
-uncertaintyLevels_MAP = rbind(uncertaintyLevels_MAP, MAP_uncertainty_seed_tag)
+uncertaintyLevels_MAPQualQuant = rbind(uncertaintyLevels_MAPQualQuant, MAPQualQuant_uncertainty_seed_tag)
 
-MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888108)
-uncertaintyLevels_MAP = rbind(uncertaintyLevels_MAP, MAP_uncertainty_seed_tag)
+MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888108)
+uncertaintyLevels_MAPQualQuant = rbind(uncertaintyLevels_MAPQualQuant, MAPQualQuant_uncertainty_seed_tag)
 
-MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888110)
+MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888110)
 
-uncertaintyLevels_MAP = rbind(uncertaintyLevels_MAP, MAP_uncertainty_seed_tag)
+uncertaintyLevels_MAPQualQuant = rbind(uncertaintyLevels_MAPQualQuant, MAPQualQuant_uncertainty_seed_tag)
 
-MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888111)
-uncertaintyLevels_MAP = rbind(uncertaintyLevels_MAP, MAP_uncertainty_seed_tag)
+MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888111)
+uncertaintyLevels_MAPQualQuant = rbind(uncertaintyLevels_MAPQualQuant, MAPQualQuant_uncertainty_seed_tag)
 
 #save the results of the Bayesian meta-analysis of the qualitative combined with quantitative evidence that was run from 10 different seeds below: 
-file_uncertaintyLevels_MAP <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis/seeds_MAP_23Feb2021.csv")
-fn_uncertaintyLevels_MAP <- as.filename(file_uncertaintyLevels_MAP)
-make_path(fn_uncertaintyLevels_MAP)
-write.table(uncertaintyLevels_MAP, file = file_uncertaintyLevels_MAP, 
+file_uncertaintyLevels_MAPQualQuant <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis/seeds_MAPQualQuant_23Feb2021.csv")
+fn_uncertaintyLevels_MAPQualQuant <- as.filename(file_uncertaintyLevels_MAPQualQuant)
+make_path(fn_uncertaintyLevels_MAPQualQuant)
+write.table(uncertaintyLevels_MAPQualQuant, file = file_uncertaintyLevels_MAPQualQuant, 
             append = FALSE, 
             quote = TRUE, 
             sep = ",", 
@@ -108,51 +108,51 @@ write.table(uncertaintyLevels_MAP, file = file_uncertaintyLevels_MAP,
 
 #save all plots produced by the BayesianMetaAnalysis_StepByStep.R function below: 
 
-All_plot = ggplot(data = uncertaintyLevels_MAP, aes(seed, MAP)) + 
+All_plot = ggplot(data = uncertaintyLevels_MAPQualQuant, aes(seed, MAP)) + 
   geom_point(aes(colour = factor(Construct_name)), size = 4)
 
-print(uncertaintyLevels_MAP)
+print(uncertaintyLevels_MAPQualQuant)
 
-Age_uncertaintyLevels_MAP_plot = ggplot(data = uncertaintyLevels_MAP, aes(seed, MAP)) + 
+Age_uncertaintyLevels_MAPQualQuant_plot = ggplot(data = uncertaintyLevels_MAPQualQuant, aes(seed, MAP)) + 
   geom_point(aes(colour = factor()), size = 4)
 
 
-Comorbidity_uncertaintyLevels_MAP = ggplot(data = uncertaintyLevels_MAP, aes(seed, MAP)) + 
+Comorbidity_uncertaintyLevels_MAPQualQuant = ggplot(data = uncertaintyLevels_MAPQualQuant, aes(seed, MAP)) + 
   geom_point()
 
-SocialSupport_uncertaintyLevels_MAP = ggplot(data = uncertaintyLevels_MAP, aes(seed, MAP)) + 
+SocialSupport_uncertaintyLevels_MAPQualQuant = ggplot(data = uncertaintyLevels_MAPQualQuant, aes(seed, MAP)) + 
   geom_point()
 
-NegativeAttitute_uncertaintyLevels_MAP = ggplot(data = uncertaintyLevels_MAP, aes(seed, MAP)) + 
+NegativeAttitute_uncertaintyLevels_MAPQualQuant = ggplot(data = uncertaintyLevels_MAPQualQuant, aes(seed, MAP)) + 
   geom_point()
 
-PositiveAttitute_uncertaintyLevels_MAP = ggplot(data = uncertaintyLevels_MAP, aes(seed, MAP)) + 
+PositiveAttitute_uncertaintyLevels_MAPQualQuant = ggplot(data = uncertaintyLevels_MAPQualQuant, aes(seed, MAP)) + 
   geom_point()
 
-SixMWT_uncertaintyLevels_MAP = ggplot(data = uncertaintyLevels_MAP, aes(seed,  MAP)) + 
+SixMWT_uncertaintyLevels_MAPQualQuant = ggplot(data = uncertaintyLevels_MAPQualQuant, aes(seed,  MAP)) + 
   geom_point()
 
-Functioning_uncertaintyLevels_MAP = ggplot(data = uncertaintyLevels_MAP, aes(seed, MAP)) + 
+Functioning_uncertaintyLevels_MAPQualQuant = ggplot(data = uncertaintyLevels_MAPQualQuant, aes(seed, MAP)) + 
   geom_point()
 
-Symptoms_uncertaintyLevels_MAP = ggplot(data = uncertaintyLevels_MAP, aes(seed, MAP)) + 
+Symptoms_uncertaintyLevels_MAPQualQuant = ggplot(data = uncertaintyLevels_MAPQualQuant, aes(seed, MAP)) + 
   geom_point()
 
-LVEF_uncertaintyLevels_MAP = ggplot(data = uncertaintyLevels_MAP, aes(seed, MAP)) + 
+LVEF_uncertaintyLevels_MAPQualQuant = ggplot(data = uncertaintyLevels_MAPQualQuant, aes(seed, MAP)) + 
   geom_point()
 
-SelfEfficacy_uncertaintyLevels_MAP = ggplot(data = uncertaintyLevels_MAP, aes(seed, MAP)) + 
+SelfEfficacy_uncertaintyLevels_MAPQualQuant = ggplot(data = uncertaintyLevels_MAPQualQuant, aes(seed, MAP)) + 
   geom_point()
 
-print(Comorbidity_uncertaintyLevels_MAP)
-print(SocialSupport_uncertaintyLevels_MAP)
-print(NegativeAttitute_uncertaintyLevels_MAP)
-print(PositiveAttitute_uncertaintyLevels_MAP)
-print(SixMWT_uncertaintyLevels_MAP)
-print(Functioning_uncertaintyLevels_MAP)
-print(Symptoms_uncertaintyLevels_MAP)
-print(LVEF_uncertaintyLevels_MAP)
-print(SelfEfficacy_uncertaintyLevels_MAP)
+print(Comorbidity_uncertaintyLevels_MAPQualQuant)
+print(SocialSupport_uncertaintyLevels_MAPQualQuant)
+print(NegativeAttitute_uncertaintyLevels_MAPQualQuant)
+print(PositiveAttitute_uncertaintyLevels_MAPQualQuant)
+print(SixMWT_uncertaintyLevels_MAPQualQuant)
+print(Functioning_uncertaintyLevels_MAPQualQuant)
+print(Symptoms_uncertaintyLevels_MAPQualQuant)
+print(LVEF_uncertaintyLevels_MAPQualQuant)
+print(SelfEfficacy_uncertaintyLevels_MAPQualQuant)
 
 
 
