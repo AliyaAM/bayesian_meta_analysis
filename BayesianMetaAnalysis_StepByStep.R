@@ -1,4 +1,7 @@
 
+
+#This script runs Bayesian meta-analysis for each identified construct -- barrier or enabler to physical activity -- separately (eg., self-efficacy, social support)
+
 library(tidyverse)
 library(dplyr)
 library(assertthat)
@@ -6,24 +9,15 @@ library(ggplot2)
 library(reshape2)  
 library(filenamer) 
 
-x = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/input.csv')  # requires this data for all indexed functions that read information for each construct across studies 
-print(x)
+x = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/input.csv')  #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately. 
+data = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/QuantData_CheckedForAccuracy_20March2020.csv')  #data extracted from from the quantative studies 
 
-data = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/QuantData_CheckedForAccuracy_20March2020.csv') 
-print(data) #data from the quant studies 
-
-source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/BayesUpdateStepByStep.R', local = TRUE)
-
-source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/VariableType.R')
+source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/BayesUpdateStepByStep.R', local = TRUE) # this function (BayesUpdateStepByStep) runs the Bayesian meta-analysis that combines qualitative and quantitative evidence 
+source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/VariableType.R') #this function gives information on how many studies assessed physical activity as continious variable/binary/categorical. Because all quantitative results are converted to log OR in order to be comptable with qualitative evidence, we treated all results as binary. 
 
 
-###################################### THE BAYES UPDATE three steps ###########
-########################################################################### Bayes update Jaarsma Hyper prior + quali studies (expert elicitation) + quant studies = posterior 
-
-print("uncertainty")
-print(uncertainty)
-
-
+#### Bayes update is performed as follows: Jaarsma Hyper prior + qualitative studies (i.e, the reuslts of the the expert elicitation) + the findings of the quantitative studies = posterior 
+#### The Bayes update is performed for each construct separately: 
 
 Results_Age = BayesUpdateStepByStep(x =x, Construct = "Age", uncertainty = uncertainty, seed = seed)
 print(Results_Age)
@@ -67,7 +61,7 @@ Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_Sel
 
 print(Results_BayesianMeta_Analysis)
 
-############################### saving csv file of the results for this seed and this uncertainty ############################
+# below we are saving csv file of the results for the specified seed (x10) and uncertainty
 logName = as.character(uncertainty + seed)
 
 file_x <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis", logName, "Results_BayesianMeta_Analysis.csv")
@@ -84,8 +78,9 @@ write.table(Results_BayesianMeta_Analysis, file = file_x,
             col.names = TRUE, 
             fileEncoding = "" )
 
-#seed_string = read.csv(file_x) 
-#print(seed_string)
+#below we are averaging the results of the Bayesian meta-analysis such as:
+#MAP, CrI, Pooled_LOGOdds_Ratio_posterior,LowerCI_LogOddsRatio, UpperCI_LogOddsRatio,posterior_alpha_Ratio,posterior_beta_Ratio, mean_posterior, posterior_CredibleInterval_0.05, posterior_CredibleInterval_0.95
+
 mean_posterior_string_SEED = Results_BayesianMeta_Analysis$mean_posterior
 print(mean_posterior_string_SEED)
 
@@ -119,13 +114,12 @@ print(posterior_CredibleInterval_0.95_string_SEED)
 plots.dir.path <- list.files(tempdir(), pattern="rs-graphics", full.names = TRUE); 
 plots.png.paths <- list.files(plots.dir.path, pattern=".png", full.names = TRUE)
 
+# save the averaged over seeds results in the directory below: 
 x_directory <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis", logName)
 file.copy(from=plots.png.paths, to=x_directory)
 
 
-
-#################################################################################### count how many pair-wise analyses were continious-continious; continious-binary, continious categorical (etc)
-
+#count how many pair-wise analyses were continious-continious; continious-binary, continious categorical (etc)
 Age_num = VarPairType(VarData = VarData, Construct = "Age")
 Comorbidity_num = VarPairType(VarData = VarData, Construct = "Comorbidity")
 SocialSupport_num = VarPairType(VarData = VarData, Construct = "SocialSupport")
@@ -162,10 +156,7 @@ Number_ofStudies_PerComparison_MixedBayes = rbind(Age_num,
 
 Comparison_MixedBayes  = cbind(Construct_name,Number_ofStudies_PerComparison_MixedBayes)
 
-print(Comparison_MixedBayes)
-
-
-
+# save results below: 
 file_x2 <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis", logName, "Comparison_MixedBayes.csv")
 fn <- as.filename(file_x2)
 make_path(fn)
@@ -179,5 +170,3 @@ write.table(Comparison_MixedBayes, file = file_x2,
             row.names = FALSE, 
             col.names = TRUE, 
             fileEncoding = "" )
-
-print(mean_posterior_string_SEED)

@@ -1,9 +1,12 @@
-#source the Bayesian meta-analysis (full) over different seeds 
+
+
+#source the Bayesian meta-analysis that included both qualitative and quantitative evidence  starting at 10 different seeds 
+#seeds are used to account for variations in MCMC sampling 
+#the final results are a summary of 10 seeds averaged 
+
 Source_seed = function(uncertainty, seed) {
   
   source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/BayesianMetaAnalysis_StepByStep.R', local = TRUE)
-  
-  print("COMPLETED inside the function!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
   
   MAP_uncertainty_seed_tag = data.frame(Pooled_LOGOdds_Ratio_posterior_string_SEED,
                                         LowerCI_LogOddsRatio_posterior_string_SEED, 
@@ -15,8 +18,7 @@ Source_seed = function(uncertainty, seed) {
                                         posterior_CredibleInterval_0.95_string_SEED, 
                                         uncertainty, 
                                         seed)
-  print("made df df df df df df df df df df df")
-  
+
   names(MAP_uncertainty_seed_tag) <- c("LogOR", 
                                        "LogOR_CI_lower",
                                        "LogOR_CI_upper",
@@ -27,8 +29,10 @@ Source_seed = function(uncertainty, seed) {
                                        "posterior_CredibleInterval_0.95", 
                                        "uncertainty", 
                                        "seed")
-  print("after naming")
   
+  #The data is sourced within BayesianMetaAnalysis_StepByStep.R function 
+  #below is the list of constructs that were indentified within qualitative and quantitative evidence (Construct_name)
+
   Construct_name = c("Age",
                      "Comorbidity",
                      "SocialSupport",
@@ -46,10 +50,10 @@ Source_seed = function(uncertainty, seed) {
   
 }
 
+#uncertainty level is set to 10. This choice does not change the final results due to narrow space from which distributions are sampled within BayesianMetaAnalysis_StepByStep.R function 
+#this was tested in a sensetivity analysis comparing the results of two analyses 1) where uncertainty was set to 10; 2) where uncertainty was set to 0.1 
 
 uncertaintyLevels_MAP = Source_seed(uncertainty = 10, seed = 888100)
-
-print("done with function")
 
 MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888101)
 
@@ -86,9 +90,7 @@ uncertaintyLevels_MAP = rbind(uncertaintyLevels_MAP, MAP_uncertainty_seed_tag)
 MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888111)
 uncertaintyLevels_MAP = rbind(uncertaintyLevels_MAP, MAP_uncertainty_seed_tag)
 
-
-print("rbinded the second fucntion")
-
+#save the results of the Bayesian meta-analysis run from 10 different seeds below: 
 file_uncertaintyLevels_MAP <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis/seeds_MAP_23Feb2021.csv")
 fn_uncertaintyLevels_MAP <- as.filename(file_uncertaintyLevels_MAP)
 make_path(fn_uncertaintyLevels_MAP)
@@ -103,15 +105,13 @@ write.table(uncertaintyLevels_MAP, file = file_uncertaintyLevels_MAP,
             col.names = TRUE, 
             fileEncoding = "" )
 
-print(" exported uncertaintyLevels_MAP file")
+
+#save all plots produced by the BayesianMetaAnalysis_StepByStep.R function below: 
 
 All_plot = ggplot(data = uncertaintyLevels_MAP, aes(seed, MAP)) + 
   geom_point(aes(colour = factor(Construct_name)), size = 4)
 
 print(uncertaintyLevels_MAP)
-
-print("made the first plot")
-
 
 Age_uncertaintyLevels_MAP_plot = ggplot(data = uncertaintyLevels_MAP, aes(seed, MAP)) + 
   geom_point(aes(colour = factor()), size = 4)
@@ -143,8 +143,6 @@ LVEF_uncertaintyLevels_MAP = ggplot(data = uncertaintyLevels_MAP, aes(seed, MAP)
 
 SelfEfficacy_uncertaintyLevels_MAP = ggplot(data = uncertaintyLevels_MAP, aes(seed, MAP)) + 
   geom_point()
-
-
 
 print(Comorbidity_uncertaintyLevels_MAP)
 print(SocialSupport_uncertaintyLevels_MAP)

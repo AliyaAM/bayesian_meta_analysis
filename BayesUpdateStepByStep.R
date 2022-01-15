@@ -1,151 +1,103 @@
 
-
+#this function (BayesUpdateStepByStep) runs the Bayesian meta-analysis that combines qualitative and quantitative evidence 
 
 library(ggplot2)
 library(reshape2)  
 library(tibble)
 
-x = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/input.csv')
-print(x)
+x = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/input.csv') #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately. 
+data = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/QuantData_CheckedForAccuracy_20March2020.csv')  #data extracted from from the quantative studies 
+JaarsmaInternationalStudy = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/HyperPriorData.csv') #data used for eliciting the hyperprior (general physical activity levels in HF estimated from a large internaitonal study (Jaarsma et al., 2013)
 
 
-data = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/QuantData_CheckedForAccuracy_20March2020.csv') 
-print(data)
+source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/ConvertEffectsizes.R')   #### convert effect sizes from individual studies  (F-value, Binary (Absolute numbers and proportions), r coeffcient and SMD) into log odds ratios. All quantitative results are converted to log OR in order to be comptable with qualitative evidence, we treated all results as binary. 
 
-source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/ConvertEffectsizes.R')   #### convert effect sizes from individual studies  (F-value, Binary (Absolute numbers and proportions), r coeffcient and SMD) into log odds ratio
+source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/PooledN.R') # calculate the total number of participants (N) across studies that evaluated each construct, read from the csv file QuantData
 
-source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/PooledN.R') # calculate the total sample size (N) for the construct across studies, read from the csv file QuantData
-
-source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/PooledOddsRatio_metaanalysis.R')  #run the frequentisit (REML) meta-analysis of quant data. the Overall Effect estimate is (log) Odds Ratio  (the pooled Log OR for each Construct)
+source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/PooledOddsRatio_metaanalysis.R')  #run the frequentisit meta-analysis (REML) pooling the findings from quantitative studies, stratified by construct. The Overall Effect estimate is (log) Odds Ratio, a list of pooled Log ORs, one per construct). 
 
 source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/ContingenciesTable_MCMC.R') #estimate the contingencies table for each study using Monte Carlo Markov Chain rejection sampling (the total N and Log odds ratio formulas are used as the rejection criteria)
 
 source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/Density_ggplot.R') #produce illustrations: plot density and distribution of probabality of physical activity happening given the construct. 
 
-source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/N_success.R')  #calculate the proportion of total sample engaging in physical activity when construct present
+source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/N_success.R')  #calculate the proportion of total sample engaging in physical activity when construct is present
 
 
 
+#function for computin prior, likelihood and posterior density. reference: https://rpubs.com/RRisto/betadist
+#function for metropolis-hestings sampling, reference: https://theoreticalecology.wordpress.com/2010/09/17/metropolis-hastings-mcmc-in-r/
 
 
-# this function below produces distribution density for the: 
-#############################################################  (a) hyperprior: the levels of physical activity worldwide (Jaarsma et al., 2013); 
-#############################################################  (b) the prior elicited from the experts' task;
-#############################################################  (c) the likelihood (pooled estimates from teh quantitative studies); 
-#############################################################  (d) and posterior (the bayes update implimmmented per Spighelhalter et al., 2013 reccomendation).
-
-# using bayesmeta R function. 
-#given the alpha and beta paramenters, N, and Odds Ratio. 
-# for each Construct, estimate alpha and beta parameters from median and variance from the qualitative prior using estBetaParams function
-# here we use the median based on experts elicitaiton task,  I estimate for m, and sample variance for variance, 
-#this is only true if we only care about sample variance an assume that this variance is representative of a true variance 
-#but also if we only care about the answers provided by the sample)
+#  below we will  produce distribution density for the: 
+###### (a) Hyperprior: the levels of physical activity in HF worldwide, general physical activity levels in HF estimated from a large internaitonal study (Jaarsma et al., 2013),
+###### (b) the Prior elicited from the expert elicitation task which was based on the qualitative evidence; 
+###### (c) Likelihood (pooled log OR estimates from the quantitative studies); 
+###### (d) and Posterior (the posterior distribution obtained by means of Bayes update (first update Hyperprior with Prior, the update that with the Likelihood). Bayes Update is implimmmented per Spighelhalter et al., 2013 reccomendations) 
+#reference: Spiegelhalter DJ, Abrams KR, Myles JP. Bayesian Approaches to Clinical Trials and Health-Care Evaluation. Chichester, UK: John Wiley & Sons, Ltd; 2003
 
 
 BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   
-  print(uncertainty)
-  
+  #below we index the data by the name of construct
   index = x$Construct == Construct
   
-  print("started running BayesBeta")
-  
-  print("****************************************** Bayesian meta-analysis results for *************************************************************")
-  
-  print(Construct)  
-  
-  print("*********************************************** HYPERPRIOR *************************************************************************************")
-  
-  JaarsmaInternationalStudy = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/HyperPriorData.csv') 
+  #data for the hyperprior: 
+  JaarsmaInternationalStudy = JaarsmaInternationalStudy
+ 
+  #variance and mean estimated from Jaarsma study:    
   variance = 0.018
   mean = 0.43
   
-  #HyperPrior_a = mean*variance
-  #HyperPrior_b = (1-mean)*variance
-  #print(HyperPrior_a)
-  #print(HyperPrior_b)
+  #calculate a and b parameters for the hyperprior distribution (which is a beta distribution, Spiegelhalter et al., 2003)
   
   HyperPrior_a = ((1 - mean) / variance - 1 / mean) * mean ^ 2
-  print(HyperPrior_a)
   HyperPrior_b = (HyperPrior_a * (1 /mean - 1))
-  print(HyperPrior_b)
-  
 
-  
-  print("got HyperPrior_a")
-  print(HyperPrior_a)
-  print("got HyperPrior_b")
-  print(HyperPrior_b)
-  
+  #the mean of the prior distriution of PA (HYPERPRIOR)
   mean_prior = HyperPrior_a/(HyperPrior_a+HyperPrior_b)
+  
+  #the mode of the prior distribution of PA (HYPERPRIOR) is
   mode_prior = (HyperPrior_a-1) / (HyperPrior_a+HyperPrior_b-2)
+  
+  #the variance of the prior distribution of PA (HYPERPRIOR) is
   variance_prior = (HyperPrior_a * HyperPrior_b) / ((HyperPrior_a+HyperPrior_b)^2*(HyperPrior_a+HyperPrior_b+1))
   
-  print(Construct)
-  
-  print("alpha parameter for the beta distribution of PA (HYPERPRIOR) is")
-  print(HyperPrior_a)
-  
-  print("beta parameter for the beta distribution of of PA (HYPERPRIOR) is")
-  print(HyperPrior_b)
-  print("given the parameters a and b, the mean of the prior distriution of PA (HYPERPRIOR) is")
-  print(mean_prior)
-  
-  print("given the parameters a and b, the mode of the prior distribution of PA (HYPERPRIOR) is")
-  print(mode_prior) 
-  
-  print("given the parameters a and b, the variance of the prior distribution of PA (HYPERPRIOR) is")
-  print(variance_prior)
-  
+
+  #below we are sampling the entire beta distribution for the hyperprior given a and b parameters. 
   
   Theta = seq(0.01, 0.99, 0.01)
   prior_nonnormalised = dbeta(Theta,  HyperPrior_a,  HyperPrior_b, ncp = 0)
-  print("prior mean")
   PriorMean = mean(prior_nonnormalised)
   
+  #the beta distribution is normalised below (following Spiegelhalter et al., 2003 reccomendations)
   prior = prior_nonnormalised/sum(prior_nonnormalised)
-  print("Prior for the Construct: ")
-  print(Construct)
-  print(prior_nonnormalised)
-  print("prior mean normalised")
   Mean_normalised = mean(prior)
   
   
-  print("*********************************************************************HYPERPRIOR Credible Iinterval start below: ")
+ #HYPERPRIOR Credible Iinterval are calculated below:
   
-  
-  print("quantile_0.05 is/ 95 % Lower Credible Interval is")
   p = rbeta(Theta, shape1 = HyperPrior_a, shape2 = HyperPrior_b, ncp = 0)
   q =  qbeta(p = p, shape1 = HyperPrior_a, shape2 = HyperPrior_b, ncp = 0)
   
   prior_quantile_0.05 = qbeta(0.05,  HyperPrior_a, HyperPrior_b)
   print(prior_quantile_0.05)
   
-  print("quantile_0.95 is / 95 % Upper Credible Interval is")
   prior_quantile_0.95 = qbeta(0.95,  HyperPrior_a, HyperPrior_b,ncp = 0)
   print(prior_quantile_0.95)
   
-  print("prior mode is")
+  #mode 
   PriorMode = qbeta(0.5,  HyperPrior_a, HyperPrior_b,ncp = 0)
   print(PriorMode)
   
-  print("90% chance that the value is between") 
-  print(prior_quantile_0.05) 
-  print("and") 
-  print(prior_quantile_0.95)
-  
-  print("***************************************************************************HYPERPRIOR Credible Interval ended: ")
-  
-  
+
+  #The prior_cumsum is below:
   density = data.frame(Theta, prior, prior_nonnormalised, PriorMean, PriorMode, prior_quantile_0.05, prior_quantile_0.95)
   print(density)
   prior_cumsum = cumsum(density$prior_nonnormalised)
-  print("The prior_cumsum is below:")
-  print(prior_cumsum)
   
   density = cbind(density, prior_cumsum)
   
-  print("The prior_CI is below:")
+  #The  CIs are below:
   prior_CI = ifelse(
     prior_cumsum<0.03|prior_cumsum>0.97,
     "outside CI",  "inside CI"
@@ -160,60 +112,27 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   print(density)
   
   
-  print("**************************************************HYPERPRIOR Log Odds *******************************************")
-  
+  #calculate HYPERPRIOR Log Odds: 
   Variance_Prob_PA_JaarsmaInternationalStudy = 0.0189523150981809
   ProbPA_JaarsmaInternationalStudy = 0.433382295
   Prob_NoPA_JaarsmaInternationalStudy = 0.566617705
   
-  
   Odds_prior = ((1- ProbPA_JaarsmaInternationalStudy)/ProbPA_JaarsmaInternationalStudy)/((1-Prob_NoPA_JaarsmaInternationalStudy)/Prob_NoPA_JaarsmaInternationalStudy)
   
   LogOdds_priorEstimate = log(ProbPA_JaarsmaInternationalStudy) + log(1-Prob_NoPA_JaarsmaInternationalStudy) - log(Prob_NoPA_JaarsmaInternationalStudy) - log(1-ProbPA_JaarsmaInternationalStudy)
-  #Plotting the dnesities using the funciton called plotDensity
-  
-  #graph_Prior_Density = plotDensity(data = density,
-  #                                  aes( x = density$Theta, 
-  #                                       y = density$prior_nonnormalised,
-  #                                       fill = density$prior_CI),
-  #                                  mean = density$PriorMean, 
-  #                                  mode = density$PriorMode,
-  #                                  quantile_0.05 = density$prior_quantile_0.05,
-  #                                  quantile_0.95 = density$prior_quantile_0.95,
-  #                                  xlabTitle = paste("Hyperprior probability of physical activity"), 
-  #                                  ylabTitle = "Probability density", 
-  #                                  
-  #                                  title = "Jaarsma et al 2013: Physical activity levels in HF")
-  #print(graph_Prior_Density)
+
   
   ProbabilityDistribution_Prior = pbeta(Theta, HyperPrior_a, HyperPrior_b, ncp = 0)
   ProbabilityDistribution_Prior = ProbabilityDistribution_Prior/sum(ProbabilityDistribution_Prior)
   PriorDistribution = data.frame(Theta, ProbabilityDistribution_Prior, PriorMean, PriorMode, prior_quantile_0.05, prior_quantile_0.95)
   
-  
-  
- # graph_Prior_Distribution = plotDensity(data = PriorDistribution,
-  #                                       aes( x = PriorDistribution$Theta, 
-  #                                            y = PriorDistribution$ProbabilityDistribution_Prior,
-  #                                            fill = NULL),
-  #                                       mean = PriorDistribution$PriorMean, 
-  #                                       mode = PriorDistribution$PriorMode,
-  #                                       quantile_0.05 = PriorDistribution$prior_quantile_0.05,
-  #                                       quantile_0.95 = PriorDistribution$prior_quantile_0.95,
-  #                                       xlabTitle = paste("Hyperprior probability of physical activity"), 
-  #                                       ylabTitle = "Probability distirbution", 
-  #                                       title = "Jaarsma et al 2013: Physical activity levels in HF")
-#  print(graph_Prior_Distribution)
-  
-  
-  # print prior  dbeta(x, a,b), pbeta(x, a,b), qbeta(x, a,b) in one graph later
-  
-  
-  print("Finished computing the HYPERprior distribution for Construct:")
-  print(Construct)
-  print("************************ Prior number of successes ******************************")
-  
-  
+
+  #Based on the expert elicitation task the number of successes (ie., physically active when a cusntruct is present, N when PA = 1 and X = 1) were calculated as follows: 
+  #Experts were presentd with 30 scenarios (however ever the data included 30 x 6 experts) descrbing HF patients who either engage in PA at reccomended level or they do not and also exhibit a number of constructs or do not (eg., self-efficacious but does not perceive any social support to be physically active and so on)
+  #For example, there are 15 scenarios where HF patient is efficacious (X = 1) and 16 where they are not (X =0). 
+  #The number of scenarios where X = 1 and the experts judged them as being likely to be physically active based on the qualitative studies they read (PA =1) was expressed as N when PA = 1 and X = 1 (ie physically active given the construct)
+  #Likewise, we calcualted number of physically active gicen the construct is absent (X = 0): 
+
   Age_N_PA_X =28
   SelfEfficacy_N_PA_X = 41
   SocialSupport_N_PA_X = 38
@@ -315,71 +234,28 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   x = cbind(x, Number_successes)
   print(x)
   
-  print("*********************************Hyper prior Update with Qualitative Results ***************************************************************")
+  #below we are updating Hyperprior  with Qualitative Results elicited from the expert elicitation task for each construct separately: 
+  #formulas for calculating posterior beta and alpha parameters for the updated distribution (i.e., hyperprior with qualitative prior) below are from Spieghelhalter et al. 2003 
   
-  print(Construct)
-  
-  #formulas for calulating posterior beta and alpha parameters for the updated distribution (i.,e hyperprior with qualitative prior) below are from Spieghelhalter et al 2003 
-  
-  print("posterior alpha")
   posterior_alpha_Qual = HyperPrior_a + x[index,]$PriorExpert_N_PA_X 
-  print(posterior_alpha_Qual)
-  
-  print("posterior beta")
   posterior_beta_Qual = HyperPrior_b + x[index,]$PriorExpert_N_noPA_X
-  print(posterior_beta_Qual)
-  
-  print("posterior Mean: ")
-  
   mean_posterior_Qual = posterior_alpha_Qual/(posterior_alpha_Qual+posterior_beta_Qual)
-  print(mean_posterior_Qual)
-  
-  print(" posteriorMode")
   mode_posterior_Qual =(posterior_alpha_Qual-1)/(posterior_alpha_Qual+posterior_beta_Qual-2)
-  print(mode_posterior_Qual)
-  
-  print("posterior variance")
   variance_posterior_Qual = (posterior_alpha_Qual * posterior_beta_Qual) / ((posterior_alpha_Qual+posterior_beta_Qual)^2*(posterior_alpha_Qual+posterior_beta_Qual+1))
-  print(variance_posterior_Qual)
-  
-  
-  #Five Percentchance below 90% Credible interval: 
-  print("*********************************************************************Hyper prior Update with Qualitative Results Credible Interval start below: ")
-  print("quantile_0.05 is/ 95 % Lower Credible Interval is")
+
+  #Credible intervals: 
   posterior_quantile_0.05_Qual = qbeta(0.05, posterior_alpha_Qual,posterior_beta_Qual)
-  print(posterior_quantile_0.05_Qual)
-  
-  print("quantile_0.95 is / 95 % Upper Credible Interval is")
   posterior_quantile_0.95_Qual = qbeta(0.95, posterior_alpha_Qual,posterior_beta_Qual)
-  print(posterior_quantile_0.95_Qual)
-  
-  print("posterior mode is (experiment if this actually conferges with the above")
   posterior_mode_Qual = qbeta(0.5, posterior_alpha_Qual,posterior_beta_Qual)
-  print(posterior_mode_Qual)
-  
-  print("90% chance that the value is between") 
-  print(posterior_quantile_0.05_Qual) 
-  print("and") 
-  print(posterior_quantile_0.95_Qual)
-  
-  
-  print("***************************************************************************Hyper prior Update with Qualitative Results Credible Interval ended: ")
-  
-  posterior1_Qual = dbeta(Theta, posterior_alpha_Qual, posterior_beta_Qual)
-  posterior1_normalised_Qual = posterior1_Qual/sum(posterior1_Qual)
 
   
+  #the posterior distribution that combined hyperprior with prior: 
+  posterior1_Qual = dbeta(Theta, posterior_alpha_Qual, posterior_beta_Qual)
+  posterior1_normalised_Qual = posterior1_Qual/sum(posterior1_Qual)
   length(posterior1_Qual)
   length(Theta)
-  
   plot(Theta, posterior1_Qual)
-  
-  
-  
-  
-  print("plotting graph Posterior density distribution")
   density_posterior_Qual = data.frame(Theta, posterior1_Qual, mode_posterior_Qual, mean_posterior_Qual, posterior_quantile_0.05_Qual, posterior_quantile_0.95_Qual)
-  
   
   graph_Posterior_Qual = plotDensity(data = density_posterior_Qual,
                                 aes( x = density_posterior_Qual$Theta, 
@@ -420,39 +296,31 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
                                                         ylabTitle = "Probability distribution", 
                                                         title = paste("Expert Belief: Probability of physical activity given", print(Construct)))
   
-  print("****************************************** TOTAL N across quant studies ******************************************************************")
+ #calculate the TOTAL N across quant studies, stratified by construct: 
   
-  
-  print("Calculate total N for this Construct:")
-  print(Construct)
   PooledN_output = PooledN(data = data, Construct = Construct)
-  print("N is")
-  N =PooledN_output$N
-  print("total N for this construct across the included studies =")
-  print(N)
-  
-  print("****************************************** Odds Ratio Pooled OR across Quant Studies ******************************************************")
-  
-  print("Odds Ratio for this Construct:")
-  print(Construct)
-  
+  N = PooledN_output$N
+
+  #run the frequentisit meta-analysis (REML) pooling the findings from quantitative studies, stratified by construct. The Overall Effect estimate is (log) Odds Ratio, a list of pooled Log ORs, one per construct). 
+  #using function: PooledOddsRatio_metaanalysis.R, which runs metafor library 
   
   meta_data_likelihoodResults = metaDataLikelihood(likelihood_data = likelihood_data, Construct = Construct)
   LOGOdds_Ratio = meta_data_likelihoodResults$LOGOdds_Ratio
   
-  print("log OR is")
-  print(LOGOdds_Ratio)
   
-  print("number of studies is")
+  #the number of quantitative studies that evaluted each construct: 
   k =  meta_data_likelihoodResults$k
 
   LowerCI_LogOddsRatio = meta_data_likelihoodResults$LowerCI_LogOddsRatio 
   UpperCI_LogOddsRatio = meta_data_likelihoodResults$UpperCI_LogOddsRatio
   
   
-  print("**************************************** LIKELIIHOOD ***************************************************************************************")
+  # the number of people who were physically active given a construct across the included studies was estimated using MCMC rejection sampling, with the rejection sampling where the simultanious rejection criteria were: 
+  # 1) the contingency table has to add up to the Total N; 2) probabilities contingency table should add up to log OR 
+  #estimate the contingencies table  using Monte Carlo Markov Chain rejection sampling (the total N and Log odds ratio formulas are used as the rejection criteria)
+
   
-  #https://mc-stan.org/bayesplot/articles/plotting-mcmc-draws.html  plotting mcmc 
+  #https://mc-stan.org/bayesplot/articles/plotting-mcmc-draws.html  source for plotting mcmc 
   
   set.seed(seed)
   tolerance = 1e-5
@@ -475,14 +343,6 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   N_PA = ContingenciesTable$N_PA_X + ContingenciesTable$N_PA_noX 
   N_X =  ContingenciesTable$N_noPA_X + ContingenciesTable$N_PA_X
   
-  print(N)
-  print(N_PA)
-  print(N_PA_X)
-  print(N_PA_noX)
-  print(N_noPA_X)
-  
-  print(sprintf("the total N is: %s, N_PA: %s ||| N_X: %s ||| N_PA_X: %s  ||| N_PAnoX:  %s, N_noPA_X: %s", N, N_PA, N_X ,N_PA_X, N_PA_noX, N_noPA_X))
-  
 
   posterior_density = function(beta, 
                                N_PA_X, 
@@ -503,7 +363,6 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
     
     Likelihood_PA_X = sum(dbinom(x = Vector_of_PA_X, size = 1, prob = probability_PA_X, log = TRUE))
   
-    #MAKE THE BELOW UNCERTAINTY AS AN ARGUMENT TO A FUNCTION AND SOURCES THE CODE USING DIFFERENT SEEDS (x10) -- was done 
     PA_prior = sum(dnorm(beta, 0, uncertainty, log = TRUE))
 
     Posterior = Likelihood_PA_X + PA_prior
@@ -511,11 +370,9 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   }
   
   
-  #I put the proposal calculations separetly so I can get mcmc object out as a histagram (while also having the results) 
-  #Below I estimate the probability density and distirbution of PA|X from the contigency table. The probabilitydistirbutions are plotted using the Markov chain Monte Carlo with Gibbs sampling. 
-#the results are  based on 50 000 iterations produced after the initial period of another 50 000 iterations. This was sufficient to achieve convergence. Convergence/Acceptance diagnostics were performed on the 50 000 monitored iterations.
-  # The convergence/acceptance was monitored using  the Brooks–Gelman–Rubin statistic (Brooks and Gelman, 1998) with three chains starting from widely dispersed initial values. 
-  #For Markov chain Monte Carlo with a single chain, convergence/acceptance was assessed graphically with trace plots. 
+  #The parameters for beta and alpha were sampled using Metropolis samling below: 
+  #function for metropolis-hestings sampling, was adopted to this review from reference: https://theoreticalecology.wordpress.com/2010/09/17/metropolis-hastings-mcmc-in-r/
+
   
   run_metropolis_MCMC = function(startingValues, iterations){
     samples = array(dim = c(iterations+1,2), dimnames = NULL)
@@ -572,7 +429,7 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
     return(samples)} 
   
   
-  print(" Start calculating Probability_PA_X")
+  # calculating Probability_PA_X below: 
   
   startingValues = c(0, 0.5)
   samples =  run_metropolis_MCMC(startingValues = startingValues, iterations = 100000)
@@ -592,69 +449,33 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   print(samples)
   
   a = mean(samples[-(1:burnIn),1])
-  
   b = mean(samples[-(1:burnIn),2]) 
   
-  print("the mean alpha is below")
-  print(a)
-  print("the mean beta is below")
-  print(b)
   
-  # the mcmc object above is an array and I only need the last 100 values which are values it converged on in the convernage MH sampling. Samples is an array of (ittirations, 2) 2 are alpha and beta 
-  #taking the last 100 values for beta, and 100 values for alpha and taking a mean of it is going to be an accurate estimate of alpha and beta. 
-  print("the samples 1 are below")
+  # take the last 100 values from the mcmc object above which are values it converged on in the convernage MH sampling. Samples are an array of (ittirations, 2) 2 are alpha and beta 
+  #taking the last 100 values for beta, and 100 values for alpha and taking a mean of it is going to be an accurate estimate of alpha and beta, due to a large burnin (50000)
+  
   alpha_and_beta = tail(samples[-(1:burnIn),1], n=100)
-  
-  
   alpha = mean(alpha_and_beta[1])
-  print(alpha)
-  
-  
-  print("the samples 2 are below")
   beta = mean(alpha_and_beta[2])
-  print(beta)
-  
-  
-  
-  
-  print(sprintf("the total N is: %s, N_PA: %s ||| N_X: %s ||| N_PA_X: %s  ||| N_PAnoX:  %s, N_noPA_X: %s", N, N_PA, N_X ,N_PA_X, N_PA_noX, N_noPA_X))
-  
   probability_PA_X_expit = expit(b)
   
-  #Let’s say you are working with probabilities very close to 1. 
-  #Then the appropriate representation is not logp but log(1−p). To convert a probability from a log-complement scale to the logit scale, use lower.tail = FALSE:
-  
+
+  #elicit the entire distribution: 
   
   probability_PA_X_all = rlogis(n = N_PA_X, location = a, scale = b)
-  
   Theta = seq(0, 1, 1/N_PA_X)
-  
-  print(Theta)
-  
   probability_PA_X_distribution  = plogis(q = Theta, location = a, scale = b,lower.tail = FALSE, log.p = TRUE)
   MeanDistribution = mean(probability_PA_X_distribution)
   MeanDistribution_value = MeanDistribution
   MeanDistribution = rep(MeanDistribution, times = N_PA_X+1)
-  
   probability_PA_X_quantile = qlogis(p = probability_PA_X_distribution, location =a, lower.tail = FALSE, scale = b, log.p = TRUE)
   
+  #elicit density: 
   probability_PA_X_density = dlogis(x = Theta, location = a, scale = b, log = TRUE)
   probability_PA_X_density_normalised = probability_PA_X_density/sum(probability_PA_X_density)
-  
-  print("the rlogis is below")
-  print(probability_PA_X_all)
-  
-
   probability_PA_X_density_expit = expit(probability_PA_X_density)
   probability_PA_X_Density_fromDATA_normalised = probability_PA_X_density_expit/sum(probability_PA_X_density_expit)
-  
-  
-  print("the density::::::::::::::: is below")
-  print(probability_PA_X_density)
-  print(probability_PA_X_Density_fromDATA_normalised)
-  
-  
-  
   MeanDensity = mean(probability_PA_X_density)
   MeanDensity_value = MeanDensity
   MeanDensity = rep(MeanDensity, times =  N_PA_X+1)
@@ -673,19 +494,7 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   ModeDensity = rep(ModeDensity, times =  N_PA_X+1)
   
   
-  
-  
-  print(sprintf("theta %s, probability_PA_X_density %s, MeanDensity %s,  ModeDensity %s, first_Quantilie_Density %s, second_Quantilie_Density %s", length(Theta), length(probability_PA_X_density_normalised), length(MeanDensity), length(ModeDensity), length(first_Quantilie_Density), length(second_Quantilie_Density)))
-  print(dim(Theta))
-  print(dim(probability_PA_X_density_normalised))
-  print(dim(MeanDensity))
-  print(dim(ModeDensity))
-  print(dim(first_Quantilie_Density))
-  print(dim(second_Quantilie_Density))
-  
   Prob_PA_X_DATA = data.frame(Theta, probability_PA_X_density, probability_PA_X_density_normalised, MeanDensity, ModeDensity, first_Quantilie_Density, second_Quantilie_Density)
-  print(head(Prob_PA_X_DATA))
-  
   dim(Theta)
   dim(probability_PA_X_density)
   dim(MeanDensity)
@@ -696,14 +505,12 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   
   Prob_PA_X_DATA_cumsum = cumsum(probability_PA_X_density_normalised)
   likelihood_CI = ifelse(
-    Prob_PA_X_DATA_cumsum<0.025|Prob_PA_X_DATA_cumsum>0.975,
-    "outside CI","inside CI")
-  
-  
-  
+  Prob_PA_X_DATA_cumsum<0.025|Prob_PA_X_DATA_cumsum>0.975,
+  "outside CI","inside CI")
   Prob_PA_X_DATA = cbind(Prob_PA_X_DATA, likelihood_CI)
   print(head(Prob_PA_X_DATA))
   
+  #plot the density distribution: 
   graph_Likelihood_Probability_PA_X_density = plotDensity(data = Prob_PA_X_DATA,
                                                           aes(x = Prob_PA_X_DATA$Theta, 
                                                               y = Prob_PA_X_DATA$probability_PA_X_density,
@@ -720,11 +527,9 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
                                                           
                                                           title = Construct)
   print(graph_Likelihood_Probability_PA_X_density)
-  print("Density graph is printed")
   
-  
+
   Prob_PA_X_DATA_distribution = data.frame(Theta, probability_PA_X_distribution, MeanDistribution, ModeDensity, ModeDensity_value, first_Quantilie_Density, second_Quantilie_Density)
-  
   Prob_PA_X_DATA_distribution_cumsum = cumsum(probability_PA_X_distribution)
   Distribution_CI = ifelse(
     Prob_PA_X_DATA_distribution_cumsum<0.025|Prob_PA_X_DATA_distribution_cumsum>0.975,
@@ -733,33 +538,9 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   
   
   Prob_PA_X_DATA_distribution = cbind(Prob_PA_X_DATA_distribution, Distribution_CI)
-  print(head(Prob_PA_X_DATA_distribution))
-  print(Prob_PA_X_DATA_distribution)
+
   
-  #graph_Likelihood_Probability_PA_X_distribution = plotDensity(data = Prob_PA_X_DATA_distribution,
-  #                                                        aes(x = Prob_PA_X_DATA_distribution$Theta, 
-  #                                                            y = Prob_PA_X_DATA_distribution$probability_PA_X_distribution,
-  #                                                            fill = NULL),
-  #                                                        mean = MeanDistribution, 
-  #                                                        mode = ModeDensity_value,
-  #                                                        quantile_0.05 = first_Quantilie_Density_value,
-  #                                                        quantile_0.95 = second_Quantilie_Density_value,
-  #                                                        xlabTitle = paste(print(sprintf("Join probability density of physical activity and %s, pooled estimate from quantitiative studies.", Construct))), 
-  #                                                        ylabTitle = "Data: Probability Density", 
-  #                                                        
-  #                                                        title = Construct)
-  #print(graph_Likelihood_Probability_PA_X_distribution)
-  
-  #print("Distribution graph is printed")
-  
-  
-  
-  
-  
-  print("****************************************** N_PA_X: Number of people engaging in PA given Construct X **************************************")
-  
-  
-  
+  # concatinate the results for the likelihood distribution 
   Likelihood_FromSampledBeta = data.frame(N_PA_X, 
                                           probability_PA_X_expit, 
                                           MeanDensity_value,
@@ -768,79 +549,40 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
                                           N_noPA_noX, 
                                           N_noPA_X, 
                                           N_PA_noX) 
-  print("the likelihoood results summary to be outputted as Likelihood_FromSampledBeta")
-  print(Likelihood_FromSampledBeta)
+
   
-  print("****************************************** POSTERIOR ****************************************************************************************")
-  
-  #the posterior below is produced using Bayes update as specified by Spigielhalter et al. (2003) for beta-bernoulli distribution update (p60-62)
-  print(Construct)
-  
-  
-  print("posterior alpha")
+  #below we update the prior with likelihood for each construct  
+  #the parameters for the posterior below are  produced using Bayes update as specified by Spigielhalter et al. (2003) for beta-bernoulli distribution update (p60-62)
+
   posterior_alpha = posterior_alpha_Qual + N_PA_X
-  print(posterior_alpha)
-  
-  print("posterior beta")
   posterior_beta = posterior_beta_Qual + N - N_PA_X
-  print(posterior_beta)
-  
-  print("posterior Mean: ")
-  
   mean_posterior = posterior_alpha/(posterior_alpha+posterior_beta)
-  print(mean_posterior)
-  
-  print(" posteriorMode")
   mode_posterior =(posterior_alpha-1)/(posterior_alpha+posterior_beta-2)
-  print(mode_posterior)
-  
-  print("posterior variance")
   variance_posterior = (posterior_alpha * posterior_beta) / ((posterior_alpha+posterior_beta)^2*(posterior_alpha+posterior_beta+1))
-  print(variance_posterior)
+
   
-  
-  #Five Percentchance below 90% Credible interval: 
-  print("*********************************************************************POSTERIOR Credible Interval start below: ")
-  print("quantile_0.05 is/ 95 % Lower Credible Interval is")
+  #POSTERIOR Credible Intervals are estimated below: 
   posterior_quantile_0.05 = qbeta(0.05, posterior_alpha,posterior_beta)
-  print(posterior_quantile_0.05)
-  
-  print("quantile_0.95 is / 95 % Upper Credible Interval is")
   posterior_quantile_0.95 = qbeta(0.95, posterior_alpha,posterior_beta)
-  print(posterior_quantile_0.95)
-  
-  print("posterior mode is (experiment if this actually conferges with the above")
+
   posterior_mode = qbeta(0.5, posterior_alpha,posterior_beta)
-  print(posterior_mode)
-  
-  print("90% chance that the value is between") 
-  print(posterior_quantile_0.05) 
-  print("and") 
-  print(posterior_quantile_0.95)
-  
-  
-  print("***************************************************************************POSTERIOR Credible Interval ended: ")
-  
+
+  # elicit the entire posterior 
   posterior1 = dbeta(Theta, posterior_alpha, posterior_beta)
   posterior1_normalised = posterior1/sum(posterior1)
   
   #an alternative way of deriving the posterior is below, however, it will not print the plot syaing the finite value for y is required. The below is incorrect and is not reported but check with Spighelhalter again
-  
   posterior3 = dbeta(Theta, HyperPrior_a * LOGOdds_Ratio, HyperPrior_b * (1/LOGOdds_Ratio))
   posterior3_normalised = posterior3/sum(posterior3)
-  
   length(posterior1)
   length(Theta)
   
+  #plot the posterior: 
   plot(Theta, posterior1)
   
+  #plot the posterior using ggplot: 
   
-  
-  
-  print("plotting graph Posterior density distribution")
   density_posterior = data.frame(Theta, posterior1, mode_posterior, mean_posterior, posterior_quantile_0.05, posterior_quantile_0.95)
-  
-  
   graph_Posterior = plotDensity(data = density_posterior,
                                 aes( x = density_posterior$Theta, 
                                      y = density_posterior$posterior1,
@@ -867,20 +609,6 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
                                                  posterior_quantile_0.95)
   
   
-  
-  #graph_PosteriorProbability_distribution = plotDensity(data = PosteriorProbability_distribution,
-   #                                                     aes( x = PosteriorProbability_distribution$Theta, 
-    #                                                         y = PosteriorProbability_distribution$ProbabilityDistribution_Posterior,
-     #                                                        fill = NULL),
-      #                                                  mode = PosteriorProbability_distribution$mode_posterior,
-       #                                                 mean = PosteriorProbability_distribution$mean_posterior, 
-        #                                                quantile_0.05 = PosteriorProbability_distribution$posterior_quantile_0.05,
-         #                                               quantile_0.95 = PosteriorProbability_distribution$posterior_quantile_0.95,
-          #                                              xlabTitle = paste("Posterior probability of physical activity conditioned on", print(Construct)),  
-           #                                             ylabTitle = "Probability distribution", 
-            #                                            title = Construct)
-  
-  #print(graph_PosteriorProbability_distribution)
   return(params = (data.frame(Construct = Construct, 
                               prior_alpha = HyperPrior_a, 
                               prior_beta = HyperPrior_b, 
@@ -910,8 +638,3 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
                               posterior_CredibleInterval_0.95 = posterior_quantile_0.95)))
   
 }
-
-
-
-#function for computin prior, likelihood and posterior density. reference: https://rpubs.com/RRisto/betadist
-#function for metropolis-hestings sampling, reference: https://theoreticalecology.wordpress.com/2010/09/17/metropolis-hastings-mcmc-in-r/
