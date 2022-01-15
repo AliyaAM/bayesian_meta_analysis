@@ -4,6 +4,8 @@
 #seeds are used to account for variations in MCMC sampling 
 #the final results are a summary of 10 seeds averaged 
 
+library(filenamer) # library for as.filename
+
 Source_seed = function(uncertainty, seed) {
   
   source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/BayesianMetaAnalysis_StepByStep.R', local = TRUE)

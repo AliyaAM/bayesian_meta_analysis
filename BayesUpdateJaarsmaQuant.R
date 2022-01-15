@@ -8,7 +8,7 @@ library(dplyr)
 library(assertthat)
 library(ggplot2)
 library(reshape2)  
-library(filenamer)
+library(filenamer) # library for as.filename
 
 
 

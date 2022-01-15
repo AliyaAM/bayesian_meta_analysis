@@ -1,7 +1,7 @@
 
 
 # this script sources Baesian meta-analysis that includes quantitative evidence only from 10 different seeds 
-library(filenamer)
+library(filenamer) # library for as.filename
 
 Source_seed = function(uncertainty, seed) {
   
