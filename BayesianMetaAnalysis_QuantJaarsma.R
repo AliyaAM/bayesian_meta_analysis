@@ -203,17 +203,13 @@ mean = 0.43
   print("finished plot")
   print(graph_Posterior)
   
-  ProbabilityDistribution_Posterior = pbeta(Theta, posterior_alpha, posterior_beta)
-  print("done with pbeta")
-  ProbabilityDistribution_Posterior_normalised = ProbabilityDistribution_Posterior/sum(ProbabilityDistribution_Posterior)
-  
 
   return(params = (data.frame(Construct = Construct, 
                               prior_alpha = HyperPrior_a, 
                               prior_beta = HyperPrior_b, 
                               mean_prior = mean_prior,
                               PriorMean = PriorMean,
-                              Mean_normalised =Mean_normalised,
+                              Mean_normalised = Mean_normalised,
                               PriorMode = PriorMode,
                               Odds_prior = Odds_prior, 
                               LogOdds_priorEstimate = LogOdds_priorEstimate, 
@@ -242,4 +238,4 @@ mean = 0.43
 }
 
 
-
+print("done")
