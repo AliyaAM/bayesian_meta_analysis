@@ -414,13 +414,6 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
         
         samples[i+1,] = proposal
         
-   
-        
-        alpha = proposal[1]
-        probability_PA_X_expit = expit(proposal[2])
-        scale = proposal[2]
-
-        
         
       }else{
         samples[i+1,] = samples[i,]
