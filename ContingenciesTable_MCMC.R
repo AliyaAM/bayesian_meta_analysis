@@ -10,11 +10,11 @@ tolerance = 1e-2
 nmc = 1e+8
 
 ContingenciesTable_MCMC = function(N, LOGOdds_Ratio){
+  
+  
   N = N
   LOGOdds_Ratio = LOGOdds_Ratio
-  print("The N and LOgOddsRatio for this Construct is:")
-  print(N)
-  print(LOGOdds_Ratio)
+
   
   r1 = rbinom(1, N, prob = 0.5)
   N_PA_X= rbinom(1, r1, prob =0.5)
@@ -72,8 +72,6 @@ ContingenciesTable_MCMC = function(N, LOGOdds_Ratio){
     
     #sample the frequencies 2x2 table before sampling posterior distribution (in a separate loop)
     
-    sprintf("The starting values for the contingecies are", samples_Contingencies[1,j], samples_Contingencies[2,j], samples_Contingencies[3,j], samples_Contingencies[4,j])
-    
     
     if((abs((samples_Contingencies[1,j] + samples_Contingencies[2,j] + samples_Contingencies[3,j] + samples_Contingencies[4,j]) - N) < tolerance)
        && (abs(log((samples_Contingencies[1,j]/samples_Contingencies[4,j])/(samples_Contingencies[2,j]/samples_Contingencies[3,j])) - LOGOdds_Ratio) < tolerance)){
@@ -84,9 +82,7 @@ ContingenciesTable_MCMC = function(N, LOGOdds_Ratio){
       N_PA_noX = samples_Contingencies[3,j]
       N_noPA_noX = samples_Contingencies[4,j]
 
-      
-      print(sprintf("N_PA_X:%s, N_noPA_X: %s, N_PA_noX %s, N_noPA_noX:%s",  N_PA_X, N_noPA_X, N_PA_noX, N_noPA_noX))
-      
+  
       
       return(params = list(N_PA_X = N_PA_X, N_noPA_X = N_noPA_X, N_PA_noX = N_PA_noX, N_noPA_noX = N_noPA_noX))
       #acceptance = 1-mean(duplicated(Chain[-(1:burnIn),]))

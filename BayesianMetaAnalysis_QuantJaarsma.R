@@ -27,9 +27,9 @@ source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/PooledN.R')
 
 source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/PooledOddsRatio_metaanalysis.R')
 
-print('PooledOddsRatio_metaanalysis')
-
 source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/ContingenciesTable_MCMC.R')
+
+print("finishedContingenciesTable_MCMC")
 
 source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/Density_ggplot.R')
 
