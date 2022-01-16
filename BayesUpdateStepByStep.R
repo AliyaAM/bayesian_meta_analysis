@@ -314,10 +314,7 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   
   #https://mc-stan.org/bayesplot/articles/plotting-mcmc-draws.html  source for plotting mcmc 
   
-  set.seed(seed)
-  tolerance = 1e-5
-  nmc = 1e+9
-  
+
   
   expit<-function(x){exp(x)/(1+exp(x))}
   
@@ -369,7 +366,6 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   run_metropolis_MCMC = function(startingValues, iterations){
     samples = array(dim = c(iterations+1,2), dimnames = NULL)
     samples[1,] = startingValues
-    
     
     
     for (i in 1:iterations){
