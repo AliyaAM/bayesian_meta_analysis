@@ -219,6 +219,17 @@ write.table(ResultsBayesianUpdateQuant, file = file_x,
             col.names = TRUE, 
             fileEncoding = "" )
 
+
+plots.dir.path <- list.files(tempdir(), pattern="rs-graphics", full.names = TRUE); 
+plots.png.paths <- list.files(plots.dir.path, pattern=".png", full.names = TRUE)
+
+# save the averaged over seeds results in the directory below: 
+#x_directory <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis", logName)
+
+x_directory <- file.path(paste(OUTPUT_ROOT, logName, "/seed_MAP_PLOTS_QUANT", sep=""))
+
+file.copy(from=plots.png.paths, to=x_directory)
+
 mean_posterior_string_SEED = ResultsBayesianUpdateQuant$mean_posterior
 print(mean_posterior_string_SEED)
 
