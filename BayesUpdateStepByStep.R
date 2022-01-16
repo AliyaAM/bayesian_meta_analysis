@@ -413,8 +413,8 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   # calculating Probability_PA_X below: 
   
   startingValues = c(0, 0.5)
-  samples =  run_metropolis_MCMC(startingValues = startingValues, iterations = 100000)
-  burnIn = 50000
+  samples =  run_metropolis_MCMC(startingValues = startingValues, iterations = 100)
+  burnIn = 50
   
   acceptance = 1-mean(duplicated(samples[-(1:burnIn),]))
   
