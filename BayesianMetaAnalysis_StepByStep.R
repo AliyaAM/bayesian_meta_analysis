@@ -14,7 +14,6 @@ data = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv
 paste(SOURCE_ROOT, "BayesUpdateStepByStep.R", sep="")
 
 source(paste(SOURCE_ROOT, "BayesUpdateStepByStep.R", sep=""), local = TRUE) # this function (BayesUpdateStepByStep) runs the Bayesian meta-analysis that combines qualitative and quantitative evidence 
-source(paste(SOURCE_ROOT, "VariableType.R", sep="")) #this function gives information on how many studies assessed physical activity as continious variable/binary/categorical. Because all quantitative results are converted to log OR in order to be comptable with qualitative evidence, we treated all results as binary. 
 
 #### Bayes update is performed as follows: Jaarsma Hyper prior + qualitative studies (i.e, the reuslts of the the expert elicitation) + the findings of the quantitative studies = posterior 
 #### The Bayes update is performed for each construct separately: 
