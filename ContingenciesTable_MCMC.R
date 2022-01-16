@@ -6,9 +6,6 @@ library(ggplot2)
 library(rstan) 
 
 
-set.seed(15022021)
-tolerance = 1e-2 
-nmc = 1e+8
 
 ContingenciesTable_MCMC = function(N, LOGOdds_Ratio){
   
