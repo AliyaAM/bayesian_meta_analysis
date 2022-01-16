@@ -1,13 +1,22 @@
 
+## Set the root directory to look for source code.
+SOURCE_ROOT = "/Users/aliya/my_docs/proj/bayesian_meta_analysis/"
+## Set the root location on the user's local machine to save output files.
+OUTPUT_ROOT = "/Users/aliya/my_docs/proj/bayesian_meta_analysis/"
+
 data_All_SEEDS = read.csv(paste(SOURCE_ROOT, "seedsMAP_Quant_only.csv", sep=""))
 head(data_All_SEEDS)
 
 
-data_All_SEEDS$Construct_name
+#unique(data_All_SEEDS$Construct_name)
+
+#Age_n = filter(data_All_SEEDS, data_All_SEEDS$Construct_name == "Age")
+
+
 
 Mean_overSeeds = function(data, Construct_name){
   
-  index = Construct_name
+  index = data$Construct_name == Construct_name
   
   data_filtered_SEEDS = filter(data, Construct_name == data[index,]$Construct_name)
   
@@ -27,39 +36,39 @@ Mean_overSeeds = function(data, Construct_name){
 }
 
 
-Age_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "Age")
-Comorbidity_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "Comorbidity")
-SocialSupport_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "SocialSupport")
-NegativeAttitute_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "NegativeAttitute")
-PositiveAttitute_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "PositiveAttitute")
-SixMWT_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "6MWT")
-Functioning_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "Functioning")
-Symptoms_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "Symptoms")
-LVEF_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "LVEF")
-SelfEfficacy_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "SelfEfficacy")
-Depression_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "Depression")
-Digoxin_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "Digoxin")
-Doppler_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "Doppler")
-Dysphoria_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "Dysphoria")
-Education_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "Education")
-Employment_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "Employment")
-Ethnicity_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "Ethnicity")
-Functioning_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "Functioning")
-HFDuration_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "HFDuration")
-HFrEF_Yes_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "HFrEF_Yes")
-highproBNP_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "highproBNP")
-Hostility_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "Hostility")
-Income_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "Income")
-LAV_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "LAV")
-LVAD_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "LVAD")
-LVR_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "LVR")
-Partner_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "Partner")
-PeakVO2_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "PeakVO2")
-PercievedExersion_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "PercievedExersion")
-QoL_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "QoL")
-RenalFunction_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "RenalFunction")
-Smoking_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "Smoking")
-Symptoms_distress_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = "Symptoms_distress")
+Age_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " Age")
+Comorbidity_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " Comorbidity")
+SocialSupport_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " SocialSupport")
+NegativeAttitute_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " NegativeAttitute")
+PositiveAttitute_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " PositiveAttitute")
+SixMWT_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " 6MWT")
+Functioning_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " Functioning")
+Symptoms_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " Symptoms")
+LVEF_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " LVEF")
+SelfEfficacy_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " SelfEfficacy")
+Depression_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " Depression")
+Digoxin_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " Digoxin")
+Doppler_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " Doppler")
+Dysphoria_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " Dysphoria")
+Education_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " Education")
+Employment_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " Employment")
+Ethnicity_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " Ethnicity")
+Functioning_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " Functioning")
+HFDuration_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " HFDuration")
+HFrEF_Yes_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " HFrEF_Yes")
+highproBNP_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " highproBNP")
+Hostility_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " Hostility")
+Income_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " Income")
+LAV_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " LAV")
+LVAD_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " LVAD")
+LVR_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " LVR")
+Partner_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " Partner")
+PeakVO2_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " PeakVO2")
+PercievedExersion_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " PercievedExersion")
+QoL_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " QoL")
+RenalFunction_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " RenalFunction")
+Smoking_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " Smoking")
+Symptoms_distress_Mean_overSEEDS = Mean_overSeeds(data = data_All_SEEDS, Construct_name = " Symptoms_distress")
 
 
 
