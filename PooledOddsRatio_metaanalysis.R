@@ -2,12 +2,11 @@
 library(dplyr)
 library(metafor)
 
-x = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/input.csv')  # requires this data for all indexed functions that read information for each construct across studies 
+x = read.csv(paste(SOURCE_ROOT, "input.csv", sep=""))  # requires this data for all indexed functions that read information for each construct across studies 
 
 
-source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/ConvertEffectsizes.R')
-
-source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/PooledN.R') 
+source(paste(SOURCE_ROOT, "ConvertEffectsizes.R", sep=""))
+source(paste(SOURCE_ROOT, "PooledN.R", sep=""))
 
 #source('/Users/aliya/my_docs/THESIS/BayesianMetaAnalysis/N_success.R')
 

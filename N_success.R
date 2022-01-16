@@ -1,8 +1,7 @@
 
 
-
-source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/PooledN.R')
-source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/PooledOddsRatio_metaanalysis.R')
+source(paste(SOURCE_ROOT, "PooledN.R", sep=""))
+source(paste(SOURCE_ROOT, "PooledOddsRatio_metaanalysis.R", sep=""))
 
 
 N_success=function(N, Odds_Ratio) {
@@ -24,13 +23,6 @@ N_success=function(N, Odds_Ratio) {
   N_PA_X = N * (1/(Odds_Ratio+1))
   N_noPA_X = N - N * (1/(Odds_Ratio+1))
   
-
-  print("number of successes across pooled studies for this Construct:")
-  print(N_PA_X)
-  
-  
-  print("number of people who did not exercise but had this Construct, across pooled studies:")
-  print(N_noPA_X)
   
   
   return(params = list(N_PA_X = N_PA_X, N_noPA_X = N_noPA_X))

@@ -8,7 +8,9 @@ library(compute.es)
 library(dplyr)
 library(dplyr)
 
-data = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/QuantData_CheckedForAccuracy_20March2020.csv') 
+
+
+data = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep="")) 
 
 results_estimated_from_F = data.frame()
 results_estimated_from_r = data.frame()
@@ -204,9 +206,10 @@ for (estimate_type in data$estimate_type) {
                                 "variance_Fisher_Z",
                                 "raw_correlation_coefficient", 
                                 "Total_N")
-
  
- write.table(likelihood_data, file = '/Users/aliya/my_docs/proj/bayesian_meta_analysis/likelihood_data.csv', 
+ #write.table(likelihood_data, file = '/Users/aliya/my_docs/proj/bayesian_meta_analysis/likelihood_data.csv', 
+ write.table(likelihood_data, file = paste(OUTPUT_ROOT, "likelihood_data.csv", sep=""), 
+ 
              append = FALSE, 
              quote = TRUE, 
              sep = " ", 

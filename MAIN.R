@@ -1,6 +1,9 @@
 
 library(filenamer)
 
+#paste(SOURCE_ROOT, "HyperPriorData.csv", sep="")
+#paste(OUTPUT_ROOT, "seeds_MAPQualQuant.csv", sep="")
+
 ## Set the root directory to look for source code.
 SOURCE_ROOT = "/Users/aliya/my_docs/proj/bayesian_meta_analysis/"
 ## Set the root location on the user's local machine to save output files.

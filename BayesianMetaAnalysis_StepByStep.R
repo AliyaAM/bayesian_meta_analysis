@@ -120,7 +120,7 @@ plots.png.paths <- list.files(plots.dir.path, pattern=".png", full.names = TRUE)
 # save the averaged over seeds results in the directory below: 
 #x_directory <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis", logName)
 
-x_directory <- file.path(paste(OUTPUT_ROOT, logName, "Results_BayesianMeta_Analysis.csv", sep=""))
+x_directory <- file.path(paste(OUTPUT_ROOT, logName, "/Results_BayesianMeta_Analysis.csv", sep=""))
 
 file.copy(from=plots.png.paths, to=x_directory)
 
@@ -163,7 +163,7 @@ Number_ofStudies_PerComparison_MixedBayes = rbind(Age_num,
 Comparison_MixedBayes  = cbind(Construct_name,Number_ofStudies_PerComparison_MixedBayes)
 
 # save results below: 
-file_x2 <- file.path(paste(OUTPUT_ROOT, logName, "Comparison_MixedBayes.csv", sep="")) 
+file_x2 <- file.path(paste(OUTPUT_ROOT, logName, "/Comparison_MixedBayes.csv", sep="")) 
 fn <- as.filename(file_x2)
 make_path(fn)
 write.table(Comparison_MixedBayes, file = file_x2, 
