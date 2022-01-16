@@ -80,19 +80,15 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   q =  qbeta(p = p, shape1 = HyperPrior_a, shape2 = HyperPrior_b, ncp = 0)
   
   prior_quantile_0.05 = qbeta(0.05,  HyperPrior_a, HyperPrior_b)
-  print(prior_quantile_0.05)
-  
+
   prior_quantile_0.95 = qbeta(0.95,  HyperPrior_a, HyperPrior_b,ncp = 0)
-  print(prior_quantile_0.95)
-  
+
   #mode 
   PriorMode = qbeta(0.5,  HyperPrior_a, HyperPrior_b,ncp = 0)
-  print(PriorMode)
-  
+
 
   #The prior_cumsum is below:
   density = data.frame(Theta, prior, prior_nonnormalised, PriorMean, PriorMode, prior_quantile_0.05, prior_quantile_0.95)
-  print(density)
   prior_cumsum = cumsum(density$prior_nonnormalised)
   
   density = cbind(density, prior_cumsum)
@@ -102,14 +98,9 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
     prior_cumsum<0.03|prior_cumsum>0.97,
     "outside CI",  "inside CI"
   )
-  print(prior_CI)
-  
+
   density = cbind(density, prior_CI)
   
-  print("Got prior_Confidence Intervals")
-  print("for Cosntruct")
-  print(Construct)
-  print(density)
   
   
   #calculate HYPERPRIOR Log Odds: 
@@ -232,11 +223,9 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
                            PriorExpert_N_PA_noX,
                            PriorExpert_N_noPA_X,
                            PriorExpert_N_noPA_noX) 
-  print(Number_successes)
-  print(x)
+ 
   x = cbind(x, Number_successes)
-  print(x)
-  
+
   #below we are updating Hyperprior  with Qualitative Results elicited from the expert elicitation task for each construct separately: 
   #formulas for calculating posterior beta and alpha parameters for the updated distribution (i.e., hyperprior with qualitative prior) below are from Spieghelhalter et al. 2003 
   
@@ -433,16 +422,10 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   
   acceptance = 1-mean(duplicated(samples[-(1:burnIn),]))
   
-  
-  print("acceptance is:")
-  print(acceptance)
-  
   hist(samples[-(1:burnIn),1],nclass=30, main="Posterior of alpha, scale", xlab="alpha" )
   
   hist(samples[-(1:burnIn),2],nclass=30, main="Posterior of beta, location", xlab="beta" )
   
-  print("samples are below")
-  print(samples)
   
   a = mean(samples[-(1:burnIn),1])
   b = mean(samples[-(1:burnIn),2]) 
@@ -504,8 +487,7 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   Prob_PA_X_DATA_cumsum<0.025|Prob_PA_X_DATA_cumsum>0.975,
   "outside CI","inside CI")
   Prob_PA_X_DATA = cbind(Prob_PA_X_DATA, likelihood_CI)
-  print(head(Prob_PA_X_DATA))
-  
+
   #plot the density distribution: 
   graph_Likelihood_Probability_PA_X_density = plotDensity(data = Prob_PA_X_DATA,
                                                           aes(x = Prob_PA_X_DATA$Theta, 
@@ -620,14 +602,17 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
                               posterior_CredibleInterval_0.05_Qual = posterior_quantile_0.05_Qual, 
                               posterior_CredibleInterval_0.95_Qual = posterior_quantile_0.95_Qual,
                               
+                              
                               Total_N_Construct = N, 
                               Number_ofStudies_assessing_Construct = k, 
                               Pooled_LOGOdds_Ratio = LOGOdds_Ratio,
                               LowerCI_LogOddsRatio = LowerCI_LogOddsRatio, 
                               UpperCI_LogOddsRatio = UpperCI_LogOddsRatio,
                               
+                              
                               posterior_alpha = posterior_alpha,
                               posterior_beta = posterior_beta,  
+                              acceptance_Metropolis_MCMC = acceptance, 
                               mode_posterior =  mode_posterior,
                               mean_posterior = mean_posterior, 
                               posterior_CredibleInterval_0.05 = posterior_quantile_0.05, 
