@@ -71,43 +71,44 @@ Source_seed = function(uncertainty, seed) {
   
 }
 
+seed = as.integer(Sys.time())
 
-uncertaintyLevels_MAP = Source_seed(uncertainty = 10, seed = 888100)
+uncertaintyLevels_MAP = Source_seed(uncertainty = 10, seed = seed + 1)
 
 
-MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888101)
-
-uncertaintyLevels_MAP = rbind(uncertaintyLevels_MAP, MAP_uncertainty_seed_tag)
-
-MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888102)
-uncertaintyLevels_MAP = rbind(uncertaintyLevels_MAP, MAP_uncertainty_seed_tag)
-
-MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888103)
+MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = seed + 2)
 
 uncertaintyLevels_MAP = rbind(uncertaintyLevels_MAP, MAP_uncertainty_seed_tag)
 
-MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888104)
+MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = seed + 3)
 uncertaintyLevels_MAP = rbind(uncertaintyLevels_MAP, MAP_uncertainty_seed_tag)
 
-MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888105)
-
-uncertaintyLevels_MAP = rbind(uncertaintyLevels_MAP, MAP_uncertainty_seed_tag)
-
-MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888106)
-uncertaintyLevels_MAP = rbind(uncertaintyLevels_MAP, MAP_uncertainty_seed_tag)
-
-MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888107)
+MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = seed + 4)
 
 uncertaintyLevels_MAP = rbind(uncertaintyLevels_MAP, MAP_uncertainty_seed_tag)
 
-MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888108)
+MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = seed + 5)
 uncertaintyLevels_MAP = rbind(uncertaintyLevels_MAP, MAP_uncertainty_seed_tag)
 
-MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888110)
+MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = seed + 6)
 
 uncertaintyLevels_MAP = rbind(uncertaintyLevels_MAP, MAP_uncertainty_seed_tag)
 
-MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888111)
+MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = seed + 7)
+uncertaintyLevels_MAP = rbind(uncertaintyLevels_MAP, MAP_uncertainty_seed_tag)
+
+MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = seed + 8)
+
+uncertaintyLevels_MAP = rbind(uncertaintyLevels_MAP, MAP_uncertainty_seed_tag)
+
+MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = seed + 9)
+uncertaintyLevels_MAP = rbind(uncertaintyLevels_MAP, MAP_uncertainty_seed_tag)
+
+MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = seed + 10)
+
+uncertaintyLevels_MAP = rbind(uncertaintyLevels_MAP, MAP_uncertainty_seed_tag)
+
+MAP_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = seed + 11)
 uncertaintyLevels_MAP = rbind(uncertaintyLevels_MAP, MAP_uncertainty_seed_tag)
 
 

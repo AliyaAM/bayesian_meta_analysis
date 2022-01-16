@@ -55,41 +55,46 @@ Source_seed = function(uncertainty, seed) {
 #uncertainty level is set to 10. This choice does not change the final results due to narrow space from which distributions are sampled within BayesianMetaAnalysis_StepByStep.R function 
 #this was tested in a sensetivity analysis comparing the results of two analyses 1) where uncertainty was set to 10; 2) where uncertainty was set to 0.1 
 
-uncertaintyLevels_MAPQualQuant = Source_seed(uncertainty = 10, seed = 888100)
+#because it is an MCMC method we need to run analysis from different seeds and average over. We ran this analysis from ten different seeds below: 
+#the seed was set to current time following standard procedure for MCMC 
 
-MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888101)
+seed = as.integer(Sys.time())
 
-uncertaintyLevels_MAPQualQuant = rbind(uncertaintyLevels_MAPQualQuant, MAPQualQuant_uncertainty_seed_tag)
+uncertaintyLevels_MAPQualQuant = Source_seed(uncertainty = 10, seed = seed + 1)
 
-MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888102)
-uncertaintyLevels_MAPQualQuant = rbind(uncertaintyLevels_MAPQualQuant, MAPQualQuant_uncertainty_seed_tag)
-
-MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888103)
+MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = seed + 2)
 
 uncertaintyLevels_MAPQualQuant = rbind(uncertaintyLevels_MAPQualQuant, MAPQualQuant_uncertainty_seed_tag)
 
-MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888104)
+MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = seed + 3)
 uncertaintyLevels_MAPQualQuant = rbind(uncertaintyLevels_MAPQualQuant, MAPQualQuant_uncertainty_seed_tag)
 
-MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888105)
-
-uncertaintyLevels_MAPQualQuant = rbind(uncertaintyLevels_MAPQualQuant, MAPQualQuant_uncertainty_seed_tag)
-
-MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888106)
-uncertaintyLevels_MAPQualQuant = rbind(uncertaintyLevels_MAPQualQuant, MAPQualQuant_uncertainty_seed_tag)
-
-MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888107)
+MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = seed + 4)
 
 uncertaintyLevels_MAPQualQuant = rbind(uncertaintyLevels_MAPQualQuant, MAPQualQuant_uncertainty_seed_tag)
 
-MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888108)
+MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = seed + 5)
 uncertaintyLevels_MAPQualQuant = rbind(uncertaintyLevels_MAPQualQuant, MAPQualQuant_uncertainty_seed_tag)
 
-MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888110)
+MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = seed + 6)
 
 uncertaintyLevels_MAPQualQuant = rbind(uncertaintyLevels_MAPQualQuant, MAPQualQuant_uncertainty_seed_tag)
 
-MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = 888111)
+MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = seed + 7)
+uncertaintyLevels_MAPQualQuant = rbind(uncertaintyLevels_MAPQualQuant, MAPQualQuant_uncertainty_seed_tag)
+
+MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = seed + 8)
+
+uncertaintyLevels_MAPQualQuant = rbind(uncertaintyLevels_MAPQualQuant, MAPQualQuant_uncertainty_seed_tag)
+
+MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = seed + 9)
+uncertaintyLevels_MAPQualQuant = rbind(uncertaintyLevels_MAPQualQuant, MAPQualQuant_uncertainty_seed_tag)
+
+MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = seed + 10)
+
+uncertaintyLevels_MAPQualQuant = rbind(uncertaintyLevels_MAPQualQuant, MAPQualQuant_uncertainty_seed_tag)
+
+MAPQualQuant_uncertainty_seed_tag = Source_seed(uncertainty = 10, seed = seed + 11)
 uncertaintyLevels_MAPQualQuant = rbind(uncertaintyLevels_MAPQualQuant, MAPQualQuant_uncertainty_seed_tag)
 
 #save the results of the Bayesian meta-analysis of the qualitative combined with quantitative evidence that was run from 10 different seeds below: 
