@@ -73,8 +73,8 @@ QuantUpdate_Doppler = BayesUpdate_Quant(data = data, Construct = "Doppler", unce
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Doppler)
 
 
-QuantUpdate_Dysphoria = BayesUpdate_Quant(data = data, Construct = "Dysphoria", uncertainty = uncertainty, seed = seed)
-ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Dysphoria)
+#QuantUpdate_Dysphoria = BayesUpdate_Quant(data = data, Construct = "Dysphoria", uncertainty = uncertainty, seed = seed)
+#ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Dysphoria)
 
 
 QuantUpdate_Education = BayesUpdate_Quant(data = data, Construct = "Education", uncertainty = uncertainty, seed = seed)
@@ -132,8 +132,8 @@ QuantUpdate_Partner = BayesUpdate_Quant(data = data, Construct = "Partner", unce
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Partner)
 
 
-QuantUpdate_PeakVO2 = BayesUpdate_Quant(data = data, Construct = "PeakVO2", uncertainty = uncertainty, seed = seed)
-ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_PeakVO2)
+#QuantUpdate_PeakVO2 = BayesUpdate_Quant(data = data, Construct = "PeakVO2", uncertainty = uncertainty, seed = seed)
+#ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_PeakVO2)
 
 
 QuantUpdate_PercievedExersion = BayesUpdate_Quant(data = data, Construct = "PercievedExersion", uncertainty = uncertainty, seed = seed)
