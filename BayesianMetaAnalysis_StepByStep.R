@@ -10,11 +10,11 @@ library(reshape2)
 library(filenamer) # library for as.filename
 
 x = read.csv(paste(SOURCE_ROOT, "input.csv", sep=""))  #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately.
-data = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/QuantData_CheckedForAccuracy_20March2020.csv')  #data extracted from from the quantative studies 
+data = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep=""))  #data extracted from from the quantative studies 
+paste(SOURCE_ROOT, "BayesUpdateStepByStep.R", sep="")
 
-source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/BayesUpdateStepByStep.R', local = TRUE) # this function (BayesUpdateStepByStep) runs the Bayesian meta-analysis that combines qualitative and quantitative evidence 
-source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/VariableType.R') #this function gives information on how many studies assessed physical activity as continious variable/binary/categorical. Because all quantitative results are converted to log OR in order to be comptable with qualitative evidence, we treated all results as binary. 
-
+source(paste(SOURCE_ROOT, "BayesUpdateStepByStep.R", sep=""), local = TRUE) # this function (BayesUpdateStepByStep) runs the Bayesian meta-analysis that combines qualitative and quantitative evidence 
+source(paste(SOURCE_ROOT, "VariableType.R", sep="")) #this function gives information on how many studies assessed physical activity as continious variable/binary/categorical. Because all quantitative results are converted to log OR in order to be comptable with qualitative evidence, we treated all results as binary. 
 
 #### Bayes update is performed as follows: Jaarsma Hyper prior + qualitative studies (i.e, the reuslts of the the expert elicitation) + the findings of the quantitative studies = posterior 
 #### The Bayes update is performed for each construct separately: 
@@ -64,9 +64,10 @@ print(Results_BayesianMeta_Analysis)
 uncertainty = 10
 
 # below we are saving csv file of the results for the specified seed (x10) and uncertainty
-logName = as.character(uncertainty + seed)
+logName = as.character(paste(uncertainty, seed, sep="__"))
 
-file_x <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis/", logName, "Results_BayesianMeta_Analysis.csv")
+#file_x <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis/", logName, "Results_BayesianMeta_Analysis.csv")
+file_x <- file.path(paste(OUTPUT_ROOT, logName, "/Results_BayesianMeta_Analysis.csv", sep=""))
 fn <- as.filename(file_x)
 make_path(fn)
 write.table(Results_BayesianMeta_Analysis, file = file_x, 
@@ -117,7 +118,10 @@ plots.dir.path <- list.files(tempdir(), pattern="rs-graphics", full.names = TRUE
 plots.png.paths <- list.files(plots.dir.path, pattern=".png", full.names = TRUE)
 
 # save the averaged over seeds results in the directory below: 
-x_directory <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis", logName)
+#x_directory <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis", logName)
+
+x_directory <- file.path(paste(OUTPUT_ROOT, logName, "Results_BayesianMeta_Analysis.csv", sep=""))
+
 file.copy(from=plots.png.paths, to=x_directory)
 
 
@@ -159,7 +163,7 @@ Number_ofStudies_PerComparison_MixedBayes = rbind(Age_num,
 Comparison_MixedBayes  = cbind(Construct_name,Number_ofStudies_PerComparison_MixedBayes)
 
 # save results below: 
-file_x2 <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis", logName, "Comparison_MixedBayes.csv")
+file_x2 <- file.path(paste(OUTPUT_ROOT, logName, "Comparison_MixedBayes.csv", sep="")) 
 fn <- as.filename(file_x2)
 make_path(fn)
 write.table(Comparison_MixedBayes, file = file_x2, 

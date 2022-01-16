@@ -203,9 +203,9 @@ write.table(ResultsBayesianUpdateQuant, file = '/Users/aliya/my_docs/proj/Result
             fileEncoding = "" )
 
 uncertainty = 10
-logName = as.character(uncertainty + seed)
+logName = as.character(paste(uncertainty, seed, sep="__"))
 
-file_x <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis/", logName, "Results_ResultsBayesianUpdateQuant.csv")
+file_x <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis/", logName, "/Results_ResultsBayesianUpdateQuant.csv", sep="")
 fn <- as.filename(file_x)
 make_path(fn)
 write.table(ResultsBayesianUpdateQuant, file = file_x, 
