@@ -120,7 +120,7 @@ plots.png.paths <- list.files(plots.dir.path, pattern=".png", full.names = TRUE)
 # save the averaged over seeds results in the directory below: 
 #x_directory <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis", logName)
 
-x_directory <- file.path(paste(OUTPUT_ROOT, logName, "/Results_BayesianMeta_Analysis.csv", sep=""))
+x_directory <- file.path(paste(OUTPUT_ROOT, logName, sep=""))
 
 file.copy(from=plots.png.paths, to=x_directory)
 
