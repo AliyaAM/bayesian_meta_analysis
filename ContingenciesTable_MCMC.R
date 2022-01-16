@@ -1,8 +1,9 @@
-library(coda)
 
-library("bayesplot")
-library("ggplot2")
-library("rstan") 
+
+library(coda)
+library(bayesplot)
+library(ggplot2)
+library(rstan) 
 
 
 set.seed(15022021)

@@ -1,5 +1,21 @@
 
+library(tidyverse)
+library(dplyr)
+library(assertthat)
+library(ggplot2)
 library(filenamer)
+library(reshape2)  
+library(tibble)
+library(compute.es)
+library(metafor)
+library(bayesplot)
+library(ggplot2)
+library(rstan) 
+library(coda)
+library(bayestestR)
+library(HDInterval)
+library(assertthat)
+
 
 #paste(SOURCE_ROOT, "HyperPriorData.csv", sep="")
 #paste(OUTPUT_ROOT, "seeds_MAPQualQuant.csv", sep="")
@@ -10,6 +26,11 @@ library(filenamer)
 SOURCE_ROOT = "/Users/aliya/my_docs/proj/bayesian_meta_analysis/"
 ## Set the root location on the user's local machine to save output files.
 OUTPUT_ROOT = "/Users/aliya/my_docs/proj/bayesian_meta_analysis/"
+
+#data 
+x = read.csv(paste(SOURCE_ROOT, "input.csv", sep=""))  #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately. 
+data = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep=""))  #data extracted from from the quantitative studies 
+JaarsmaInternationalStudy = read.csv(paste(SOURCE_ROOT, "HyperPriorData.csv", sep="")) #empirical hyperprior 
 
 #run Bayesian meta-analysis sourcing from 10 different seeds separately for two procedures: 
 

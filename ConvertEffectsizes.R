@@ -1,12 +1,10 @@
 
 
 #https://www.rdocumentation.org/packages/ExtDist/versions/0.6-3/topics/Beta
-#this function is working
 
-# without rbindfill it is the same but long
 library(compute.es)
 library(dplyr)
-library(dplyr)
+
 
 
 
