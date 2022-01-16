@@ -8,7 +8,11 @@ library(rstan)
 print("Error in if ((abs((samples_Contingencies[1, j] + samples_Contingencies[2,  : 
                                                                        missing value where TRUE/FALSE needed
                                                                        In addition: There were 50 or more warnings (use warnings() to see the first 50")
-nmc = 1e+10
+print("Error in array(dim = c(4, nmc), dimnames = NULL) : 
+  negative length vectors are not allowed
+      In addition: There were 50 or more warnings (use warnings() to see the first 50))")
+
+nmc = 1e+8
 
 tolerance_N = 1
 tolerance_logOR = 1e-4
