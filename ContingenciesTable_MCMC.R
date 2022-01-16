@@ -7,8 +7,8 @@ library(rstan)
 
 
 set.seed(15022021)
-tolerance = 1e-2 
-nmc = 1e+8
+tolerance = 1e-4
+nmc = 1e+5
 
 ContingenciesTable_MCMC = function(N, LOGOdds_Ratio){
   
