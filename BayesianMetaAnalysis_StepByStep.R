@@ -19,46 +19,35 @@ source(paste(SOURCE_ROOT, "BayesUpdateStepByStep.R", sep=""), local = TRUE) # th
 #### The Bayes update is performed for each construct separately: 
 
 Results_Age = BayesUpdateStepByStep(x =x, Construct = "Age", uncertainty = uncertainty, seed = seed)
-print(Results_Age)
 Results_BayesianMeta_Analysis = rbind(Results_Age)
 
 Results_Comorbidity = BayesUpdateStepByStep(x, Construct = "Comorbidity", uncertainty = uncertainty, seed = seed)
-print(Results_Comorbidity)
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_Comorbidity)
 
 Results_SocialSupport = BayesUpdateStepByStep(x, Construct = "SocialSupport", uncertainty = uncertainty, seed = seed)
-print(Results_SocialSupport)
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_SocialSupport)
 
 Results_negative_attitude = BayesUpdateStepByStep(x, Construct = "NegativeAttitute", uncertainty = uncertainty, seed = seed)
-print(Results_negative_attitude)
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_negative_attitude)
 
 Results_positive_attitude = BayesUpdateStepByStep(x, Construct = "PositiveAttitute", uncertainty = uncertainty, seed = seed)
-print(Results_positive_attitude)
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_positive_attitude)
 
 Results_positive_Soma_6MWT= BayesUpdateStepByStep(x, Construct = "6MWT", uncertainty = uncertainty, seed = seed)
-print(Results_positive_Soma_6MWT)
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_positive_Soma_6MWT)
 
 Results_Soma_Functioning =  BayesUpdateStepByStep(x, Construct = "Functioning", uncertainty = uncertainty, seed = seed)
-print(Results_Soma_Functioning)
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_Soma_Functioning)
 
 Results_Symptoms_Dyspnoea = BayesUpdateStepByStep(x, Construct = "Symptoms", uncertainty = uncertainty, seed = seed)
-print(Results_Symptoms_Dyspnoea)
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_Symptoms_Dyspnoea)
 
 Results_Symptoms_Soma_EF= BayesUpdateStepByStep(x, Construct = "LVEF", uncertainty = uncertainty, seed = seed)
-print(Results_Symptoms_Soma_EF)
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_Symptoms_Soma_EF)
 
 Results_SelfEfficacy = BayesUpdateStepByStep(x = x, Construct ="SelfEfficacy", uncertainty = uncertainty, seed = seed)
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_SelfEfficacy)
 
-
-print(Results_BayesianMeta_Analysis)
 
 uncertainty = 10
 
