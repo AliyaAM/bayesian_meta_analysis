@@ -2,7 +2,8 @@
 
 #read the results from the analysis of the qualitative combined with quantitative evidence for all 10 different seeds: 
 
-data_All_SEEDS = read.csv("/Users/aliya/my_docs/proj/bayesian_meta_analysis/seeds_MAPQualQuant.csv")
+
+data_All_SEEDS = read.csv(paste(SOURCE_ROOT, "seeds_MAPQualQuant.csv", sep=""))
 
 Mean_overSeeds = function(data, Construct_name){
   
@@ -60,9 +61,8 @@ Construct_name = c("Age",
 
 Mean_results_over_SEEDS = cbind(Mean_results_over_SEEDS, Construct_name)
 
-# final results for Bayesian analysis combining qualitative and quantitative evidence saved below: 
 
-file_Mean_results_over_SEEDS <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis/Mean_results_over_SEEDS_Qual_and_Quant_FINAL_RESULT.csv")
+file_Mean_results_over_SEEDS <- file.path(paste(OUTPUT_ROOT, "Mean_results_over_SEEDS_Qual_and_Quant_FINAL_RESULT.csv", sep=""))
 fn_Mean_results_over_SEEDS <- as.filename(file_Mean_results_over_SEEDS)
 make_path(fn_Mean_results_over_SEEDS)
 write.table(Mean_results_over_SEEDS, file = file_Mean_results_over_SEEDS, 
