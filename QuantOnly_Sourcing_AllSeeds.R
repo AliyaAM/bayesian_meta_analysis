@@ -29,8 +29,7 @@ Source_seed = function(uncertainty, seed) {
                                        "posterior_CredibleInterval_0.95", 
                                        "uncertainty", 
                                        "seed")
-  print("after naming")
-  
+
   Construct_name = c("Age",
                      "Comorbidity",
                      "SocialSupport",
