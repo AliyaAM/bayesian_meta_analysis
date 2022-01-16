@@ -44,7 +44,7 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   #data for the hyperprior: 
   JaarsmaInternationalStudy = JaarsmaInternationalStudy
  
-  #variance and mean estimated from Jaarsma study:    
+  #variance and mean estimated from Jaarsma study (empirical hyperprior):    
   variance = 0.018
   mean = 0.43
   
@@ -496,7 +496,7 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
                                                           CILowerhyperprior = 0.220057520487314, 
                                                           quantile_0.05 = first_Quantilie_Density_value,
                                                           quantile_0.95 = second_Quantilie_Density_value,
-                                                          xlabTitle = paste(print(sprintf("Join probability density of physical activity and %s, pooled estimate from quantitiative studies.", Construct))), 
+                                                          xlabTitle = paste(print(sprintf("Joint probability density of physical activity and %s, pooled estimate from quantitative studies.", Construct))), 
                                                           ylabTitle = "Data: Probability Density", 
                                                           
                                                           title = Construct)
