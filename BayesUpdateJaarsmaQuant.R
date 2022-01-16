@@ -11,12 +11,10 @@ library(reshape2)
 library(filenamer) # library for as.filename
 
 
+x = read.csv(paste(SOURCE_ROOT, "input.csv", sep=""))  #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately. 
+data = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep=""))  #data extracted from from the quantitative studies 
 
-x = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/input.csv')  #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately. 
-data = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/QuantData_CheckedForAccuracy_20March2020.csv')  #data extracted from from the quantitative studies 
-
-
-source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/BayesianMetaAnalysis_QuantJaarsma.R') # function that runs Bayesian meta-analysis of quantitative evidence
+source(paste(SOURCE_ROOT, "BayesianMetaAnalysis_QuantJaarsma.R", sep="")) # function that runs Bayesian meta-analysis of quantitative evidence
 
 
 ## THE BAYES UPDATE WITHOUT THE PRIOR ELICITED FROM THE QUALITATIVE STUDIES
@@ -195,9 +193,11 @@ QuantUpdate_Symptoms_distress = BayesUpdate_Quant(data = data, Construct = "Symp
 print(QuantUpdate_Symptoms_distress)
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Symptoms_distress)
 
+# paste(SOURCE_ROOT, "BayesianMetaAnalysis_QuantJaarsma.R", sep="")
+#paste(OUTPUT_ROOT, "ResultsBayesianUpdateQuant23Feb2021_QUANT.csv", sep="")
 
 print(ResultsBayesianUpdateQuant)
-write.table(ResultsBayesianUpdateQuant, file = '/Users/aliya/my_docs/proj/ResultsBayesianUpdateQuant23Feb2021_QUANT.csv', append = FALSE, quote = TRUE, sep = ", ",
+write.table(ResultsBayesianUpdateQuant, file = paste(OUTPUT_ROOT, "ResultsBayesianUpdateQuant23Feb2021_QUANT.csv", sep=""), append = FALSE, quote = TRUE, sep = ", ",
             eol = "\r", na = "NA", dec = ".", row.names = FALSE,
             col.names = TRUE, qmethod = c("escape", "double"),
             fileEncoding = "" )
@@ -205,7 +205,7 @@ write.table(ResultsBayesianUpdateQuant, file = '/Users/aliya/my_docs/proj/Result
 uncertainty = 10
 logName = as.character(paste(uncertainty, seed, sep="__"))
 
-file_x <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis/", logName, "/Results_ResultsBayesianUpdateQuant.csv", sep="")
+file_x <- file.path(paste(OUTPUT_ROOT, logName, "/Results_ResultsBayesianUpdateQuant.csv", sep=""))
 fn <- as.filename(file_x)
 make_path(fn)
 write.table(ResultsBayesianUpdateQuant, file = file_x, 

@@ -12,26 +12,27 @@ library(tibble)
 library(bayestestR)
 library(HDInterval)
 
-x = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/input.csv')  #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately. 
 
-data = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/QuantData_CheckedForAccuracy_20March2020.csv')  #data extracted from from the quantitative studies 
+x = read.csv(paste(SOURCE_ROOT, "input.csv", sep=""))  #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately. 
 
-JaarsmaInternationalStudy = read.csv('/Users/aliya/my_docs/proj/bayesian_meta_analysis/HyperPriorData.csv') #empirical hyperprior 
+data = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep=""))  #data extracted from from the quantitative studies 
+
+JaarsmaInternationalStudy = read.csv(paste(SOURCE_ROOT, "HyperPriorData.csv", sep="")) #empirical hyperprior 
 
 
-source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/ConvertEffectsizes.R')
+source(paste(SOURCE_ROOT, "ConvertEffectsizes.R", sep="")) #### convert effect sizes from individual studies  (F-value, Binary (Absolute numbers and proportions), r coeffcient and SMD) into log odds ratios. All quantitative results are converted to log OR in order to be comptable with qualitative evidence, we treated all results as binary. 
 
-source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/plbeta_function.R') 
+source(paste(SOURCE_ROOT, "plbeta_function.R", sep="")) 
 
-source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/PooledN.R') 
+source(paste(SOURCE_ROOT, "PooledN.R", sep=""))  # calculate the total number of participants (N) across studies that evaluated each construct, read from the csv file QuantData
 
-source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/PooledOddsRatio_metaanalysis.R')
+source(paste(SOURCE_ROOT, "PooledOddsRatio_metaanalysis.R", sep="")) #run the frequentisit meta-analysis (REML) pooling the findings from quantitative studies, stratified by construct. The Overall Effect estimate is (log) Odds Ratio, a list of pooled Log ORs, one per construct). 
 
-source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/ContingenciesTable_MCMC.R')
+source(paste(SOURCE_ROOT, "ContingenciesTable_MCMC.R", sep="")) #estimate the contingencies table for each study using Monte Carlo Markov Chain rejection sampling (the total N and Log odds ratio formulas are used as the rejection criteria)
 
-source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/Density_ggplot.R')
+source(paste(SOURCE_ROOT, "Density_ggplot.R", sep="")) #produce illustrations: plot density and distribution of probabality of physical activity happening given the construct. 
 
-source('/Users/aliya/my_docs/proj/bayesian_meta_analysis/N_success.R')  
+source(paste(SOURCE_ROOT, "N_success.R", sep=""))  #calculate the proportion of total sample engaging in physical activity when construct is present
 
 
 # this function below produces  density, distribution and all summary statistic for: 
