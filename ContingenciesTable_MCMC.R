@@ -10,7 +10,7 @@ print("Error in if ((abs((samples_Contingencies[1, j] + samples_Contingencies[2,
                                                                        In addition: There were 50 or more warnings (use warnings() to see the first 50")
 nmc = 1e+10
 
-tolerance_N = 1e-1
+tolerance_N = 1
 tolerance_logOR = 1e-4
 
 ContingenciesTable_MCMC = function(N, LOGOdds_Ratio){
