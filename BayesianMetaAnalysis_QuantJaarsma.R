@@ -132,8 +132,7 @@ mean = 0.43
  #LIKELIIHOOD: 
   
   #https://mc-stan.org/bayesplot/articles/plotting-mcmc-draws.html  plotting mcmc 
-  tolerance = 1e-5
-  nmc = 1e+7
+
   
   expit<-function(x){exp(x)/(1+exp(x))}
   
