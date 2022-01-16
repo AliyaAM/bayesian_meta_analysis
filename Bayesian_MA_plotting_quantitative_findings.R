@@ -6,9 +6,11 @@ library(dplyr)
 #source('/Users/aliya/my_docs/proj/bayes_meta/Density_ggplot.R')
 
 theme_set(theme_minimal())
-data = read.csv("/Users/aliya/my_docs/proj/bayes_meta/Quant_Mean_results_over_SEEDS_23Feb2021_Quant.csv")
-head(data)
 
+OUTPUT_ROOT = "/Users/aliya/my_docs/proj/bayesian_meta_analysis/"
+
+data = read.csv(paste(OUTPUT_ROOT, "Quant_Mean_results_over_SEEDS_QUANTonly_FINAL_RESULTS.csv", sep=""))
+data$Construct_name
 density_by_cosntruct = function(data, Construct_name){
   index = data$Construct_name == Construct_name
   Theta = seq(0.01, 0.99, 0.01)
