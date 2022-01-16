@@ -46,3 +46,15 @@ source(paste(SOURCE_ROOT, "QuantOnly_Sourcing_AllSeeds.R", sep=""))
 source(paste(SOURCE_ROOT, "Mean_overSeeds_QUANT_QUAL.R", sep=""))
 source(paste(SOURCE_ROOT, "Mean_overSeeds_QUANT.R", sep=""))
 
+#plot the findings of the anlaysis of quantitative evidence (i.e., hyperprior was updated with quantitative evidence)
+source(paste(SOURCE_ROOT, "Bayesian_MA_plotting_quantitative_findings.R", sep=""))
+
+#plot the findings of the analysis combining qualitative and quantitative evidence (i.e., hyperprior was updated with prior elicited from the experts, then the resultant distribution was updated with the quantitative evidence)
+#note: fewer constructs were evaluated in both qualitative and quantitative evidence 
+source(paste(SOURCE_ROOT, "Bayesian_MA_plotting_Qual_plus_QUANT_findings.R", sep=""))
+
+#plot the fidings with and without qualitative evidence next to each other for comparison
+source(paste(SOURCE_ROOT, "Bayesian_MA_plot_Compare_Quant_Qual", sep=""))
+
+
+
