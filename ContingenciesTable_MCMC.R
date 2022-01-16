@@ -15,7 +15,7 @@ print("Error in array(dim = c(4, nmc), dimnames = NULL) :
 nmc = 1e+8
 
 tolerance_N = 1
-tolerance_logOR = 1e-4
+tolerance_logOR = 1e-3
 
 ContingenciesTable_MCMC = function(N, LOGOdds_Ratio){
   
