@@ -9,13 +9,9 @@ library(dplyr)
 
 theme_set(theme_minimal())
 
-data_qual = read.csv("/Users/aliya/my_docs/proj/bayes_meta/Mean_results_over_SEEDS_23Feb2021.csv")
+data_qual = read.csv(paste(OUTPUT_ROOT, "Mean_results_over_SEEDS_Qual_and_Quant_FINAL_RESULT.csv", sep=""))
 
-data_QUANT = read.csv("/Users/aliya/my_docs/proj/bayes_meta/QUANT_Mean_results_over_SEEDS_23Feb2021_QUANT.csv")
-head(data)
-
-
-head(data)
+data_QUANT = read.csv(paste(OUTPUT_ROOT, "Quant_Mean_results_over_SEEDS_QUANTonly_FINAL_RESULTS.csv", sep=""))
 
 density_by_cosntruct = function(data, Construct_name, type_evidence){
   index = data$Construct_name == Construct_name
