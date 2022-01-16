@@ -82,6 +82,10 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   prior_quantile_0.05 = qbeta(0.05,  HyperPrior_a, HyperPrior_b)
 
   prior_quantile_0.95 = qbeta(0.95,  HyperPrior_a, HyperPrior_b,ncp = 0)
+  
+  MAP_hyperPrior = 0.422856163424018
+  HDILower_hyperPrior =  0.220057520487314
+  HDIUpper_hyperPrior =  0.640617186187267
 
   #mode 
   PriorMode = qbeta(0.5,  HyperPrior_a, HyperPrior_b,ncp = 0)
@@ -257,14 +261,16 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
                                 mean = density_posterior_Qual$mean_posterior_Qual, 
                                 quantile_0.05 = density_posterior_Qual$posterior_quantile_0.05_Qual,
                                 quantile_0.95 = density_posterior_Qual$posterior_quantile_0.95_Qual,
-                                MAPhyperprior = 0.422856163424018,
-                                CIUpperhyperprior = 0.640617186187267, 
-                                CILowerhyperprior = 0.220057520487314, 
+                                MAPhyperprior = MAP_hyperPrior,
+                                CIUpperhyperprior = HDIUpper_hyperPrior, 
+                                CILowerhyperprior = HDILower_hyperPrior, 
                                 xlabTitle = paste("Probability of physical activity for", print(Construct)),  
                                 ylabTitle = "Probability density", 
                                 title = paste("Expert Belief: Probability of physical activity given", print(Construct)))
   
   print(graph_Posterior_Qual)
+  
+
   
   ProbabilityDistribution_Posterior_Qual = qbeta(Theta, posterior_alpha_Qual, posterior_beta_Qual)
   PosteriorProbability_distribution_Qual = data.frame(Theta, 
@@ -491,9 +497,9 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
                                                               fill = Prob_PA_X_DATA$likelihood_CI),
                                                           mean = MeanDensity_value, 
                                                           mode = ModeDensity_value,
-                                                          MAPhyperprior = 0.422856163424018,
-                                                          CIUpperhyperprior = 0.640617186187267, 
-                                                          CILowerhyperprior = 0.220057520487314, 
+                                                          MAPhyperprior = MAP_hyperPrior,
+                                                          CIUpperhyperprior = HDIUpper_hyperPrior, 
+                                                          CILowerhyperprior = HDILower_hyperPrior, 
                                                           quantile_0.05 = first_Quantilie_Density_value,
                                                           quantile_0.95 = second_Quantilie_Density_value,
                                                           xlabTitle = paste(print(sprintf("Joint probability density of physical activity and %s, pooled estimate from quantitative studies.", Construct))), 
@@ -565,12 +571,14 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
                                 mean = density_posterior$mean_posterior, 
                                 quantile_0.05 = density_posterior$posterior_quantile_0.05,
                                 quantile_0.95 = density_posterior$posterior_quantile_0.95,
-                                MAPhyperprior = 0.422856163424018,
-                                CIUpperhyperprior = 0.640617186187267, 
-                                CILowerhyperprior = 0.220057520487314, 
+                                MAPhyperprior = MAP_hyperPrior,
+                                CIUpperhyperprior = HDIUpper_hyperPrior, 
+                                CILowerhyperprior = HDILower_hyperPrior, 
                                 xlabTitle = paste("Posterior probability of physical activity for", print(Construct)),  
                                 ylabTitle = "Probability density", 
                                 title = Construct)
+  
+
   
   print(graph_Posterior)
   
