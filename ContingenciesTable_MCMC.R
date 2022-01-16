@@ -6,7 +6,6 @@ library(ggplot2)
 library(rstan) 
 
 
-set.seed(15022021)
 tolerance = 1e-4
 nmc = 1e+5
 
