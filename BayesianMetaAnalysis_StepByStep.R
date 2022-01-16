@@ -73,33 +73,15 @@ write.table(Results_BayesianMeta_Analysis, file = file_x,
 #MAP, CrI, Pooled_LOGOdds_Ratio_posterior,LowerCI_LogOddsRatio, UpperCI_LogOddsRatio,posterior_alpha_Ratio,posterior_beta_Ratio, mean_posterior, posterior_CredibleInterval_0.05, posterior_CredibleInterval_0.95
 
 mean_posterior_string_SEED = Results_BayesianMeta_Analysis$mean_posterior
-print(mean_posterior_string_SEED)
-
 Pooled_LOGOdds_Ratio_posterior_string_SEED = Results_BayesianMeta_Analysis$Pooled_LOGOdds_Ratio
-print(Pooled_LOGOdds_Ratio_posterior_string_SEED)
-
 Pooled_LOGOdds_Ratio_posterior_string_SEED = Results_BayesianMeta_Analysis$Pooled_LOGOdds_Ratio
-print(Pooled_LOGOdds_Ratio_posterior_string_SEED)
-
 LowerCI_LogOddsRatio_posterior_string_SEED = Results_BayesianMeta_Analysis$LowerCI_LogOddsRatio
 UpperCI_LogOddsRatio_posterior_string_SEED = Results_BayesianMeta_Analysis$UpperCI_LogOddsRatio
-
 posterior_alpha_Ratio_posterior_string_SEED = Results_BayesianMeta_Analysis$posterior_alpha
-print(posterior_alpha_Ratio_posterior_string_SEED)
-
 posterior_alpha_Ratio_posterior_string_SEED = Results_BayesianMeta_Analysis$posterior_alpha
-print(posterior_alpha_Ratio_posterior_string_SEED)
-
 posterior_beta_Ratio_posterior_string_SEED = Results_BayesianMeta_Analysis$posterior_beta
-print(posterior_beta_Ratio_posterior_string_SEED)
-
-
 posterior_CredibleInterval_0.05_string_SEED = Results_BayesianMeta_Analysis$posterior_CredibleInterval_0.05
-print(posterior_CredibleInterval_0.05_string_SEED)
-
-
 posterior_CredibleInterval_0.95_string_SEED = Results_BayesianMeta_Analysis$posterior_CredibleInterval_0.95
-print(posterior_CredibleInterval_0.95_string_SEED)
 
 
 plots.dir.path <- list.files(tempdir(), pattern="rs-graphics", full.names = TRUE); 
