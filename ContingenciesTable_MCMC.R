@@ -8,8 +8,10 @@ library(rstan)
 print("Error in if ((abs((samples_Contingencies[1, j] + samples_Contingencies[2,  : 
                                                                        missing value where TRUE/FALSE needed
                                                                        In addition: There were 50 or more warnings (use warnings() to see the first 50")
-tolerance = 1e-4
-nmc = 1e+5
+nmc = 1e+10
+
+tolerance_N = 1e-1
+tolerance_logOR = 1e-4
 
 ContingenciesTable_MCMC = function(N, LOGOdds_Ratio){
   
@@ -73,10 +75,10 @@ ContingenciesTable_MCMC = function(N, LOGOdds_Ratio){
     samples_Contingencies[4,j] = r2 - samples_Contingencies[3,j]
     
     #sample the frequencies 2x2 table before sampling posterior distribution (in a separate loop)
+
     
-    
-    if((abs((samples_Contingencies[1,j] + samples_Contingencies[2,j] + samples_Contingencies[3,j] + samples_Contingencies[4,j]) - N) < tolerance)
-       && (abs(log((samples_Contingencies[1,j]/samples_Contingencies[4,j])/(samples_Contingencies[2,j]/samples_Contingencies[3,j])) - LOGOdds_Ratio) < tolerance)){
+    if((abs((samples_Contingencies[1,j] + samples_Contingencies[2,j] + samples_Contingencies[3,j] + samples_Contingencies[4,j]) - N) < tolerance_N)
+       && (abs(log((samples_Contingencies[1,j]/samples_Contingencies[4,j])/(samples_Contingencies[2,j]/samples_Contingencies[3,j])) - LOGOdds_Ratio) < tolerance_logOR)){
       
       
       N_PA_X = samples_Contingencies[1,j]
