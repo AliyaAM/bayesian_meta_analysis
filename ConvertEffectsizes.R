@@ -206,16 +206,20 @@ for (estimate_type in data$estimate_type) {
                                 "Total_N")
  
  #write.table(likelihood_data, file = '/Users/aliya/my_docs/proj/bayesian_meta_analysis/likelihood_data.csv', 
- write.table(likelihood_data, file = paste(OUTPUT_ROOT, "likelihood_data.csv", sep=""), 
  
+ 
+ filename_likelihood_data <- file.path(paste(OUTPUT_ROOT, "likelihood_data.csv", sep=""))
+ fn_filename_likelihood_data <- as.filename(filename_likelihood_data)
+ make_path(fn_filename_likelihood_data)
+ write.table(likelihood_data, file = filename_likelihood_data, 
              append = FALSE, 
              quote = TRUE, 
-             sep = " ", 
+             sep = ",", 
              eol = "\r", 
              na = "NA", 
              dec = ".",
              row.names = FALSE, 
              col.names = TRUE, 
-             qmethod = c("escape", "double"),
              fileEncoding = "" )
  
+
