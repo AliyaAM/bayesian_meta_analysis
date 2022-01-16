@@ -120,11 +120,11 @@ plots.png.paths <- list.files(plots.dir.path, pattern=".png", full.names = TRUE)
 # save the averaged over seeds results in the directory below: 
 #x_directory <- file.path("/Users/aliya/my_docs/proj/bayesian_meta_analysis", logName)
 
-
 x_directory <- file.path(paste(OUTPUT_ROOT, logName, "/seed_MAP_PLOTS", sep=""))
+dir.create(x_directory)
+file.copy(from = plots.png.paths, to=x_directory)
 
-file.copy(from=plots.png.paths, to=x_directory)
-
+print("testing for error in Bayesian_Meta_Analysis_StepBYStep.R saved the plots from directory to dedicated for the seed folder")
 
 #count how many pair-wise analyses were continious-continious; continious-binary, continious categorical (etc)
 Age_num = VarPairType(VarData = VarData, Construct = "Age")
