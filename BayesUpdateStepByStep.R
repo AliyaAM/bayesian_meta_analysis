@@ -362,7 +362,7 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   #The parameters for beta and alpha were sampled using Metropolis samling below: 
   #function for metropolis-hestings sampling, was adopted to this review from reference: https://theoreticalecology.wordpress.com/2010/09/17/metropolis-hastings-mcmc-in-r/
 
-  
+
   run_metropolis_MCMC = function(startingValues, iterations){
     samples = array(dim = c(iterations+1,2), dimnames = NULL)
     samples[1,] = startingValues
