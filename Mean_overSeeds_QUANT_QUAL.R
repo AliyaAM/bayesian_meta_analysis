@@ -3,11 +3,12 @@
 #read the results from the analysis of the qualitative combined with quantitative evidence for all 10 different seeds: 
 
 
+
 data_All_SEEDS = read.csv(paste(SOURCE_ROOT, "seeds_MAPQualQuant.csv", sep=""))
 
 Mean_overSeeds = function(data, Construct_name){
   
-  index = Construct_name
+  index = data$Construct_name == Construct_name
   
   data_filtered_SEEDS = filter(data, Construct_name == data[index,]$Construct_name)
   

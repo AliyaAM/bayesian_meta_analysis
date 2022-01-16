@@ -7,8 +7,6 @@ library(dplyr)
 
 theme_set(theme_minimal())
 
-OUTPUT_ROOT = "/Users/aliya/my_docs/proj/bayesian_meta_analysis/"
-
 data = read.csv(paste(OUTPUT_ROOT, "Quant_Mean_results_over_SEEDS_QUANTonly_FINAL_RESULTS.csv", sep=""))
 data$Construct_name
 density_by_cosntruct = function(data, Construct_name){
