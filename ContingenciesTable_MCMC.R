@@ -5,7 +5,9 @@ library(bayesplot)
 library(ggplot2)
 library(rstan) 
 
-
+print("Error in if ((abs((samples_Contingencies[1, j] + samples_Contingencies[2,  : 
+                                                                       missing value where TRUE/FALSE needed
+                                                                       In addition: There were 50 or more warnings (use warnings() to see the first 50")
 tolerance = 1e-4
 nmc = 1e+5
 
