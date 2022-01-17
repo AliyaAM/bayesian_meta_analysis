@@ -155,7 +155,7 @@ plot5 = ggplot(d, aes(x, y, height = height, group = y)) +
 print(plot5)
 
 plot4 = ggplot(density_ALL_cosntruct, aes(x = Theta, y = construct, height=posterior, group = construct)) +
-  geom_density_ridges(stat = "identity", scale = 2) +
+  geom_density_ridges(stat = "identity", scale = 5) +
   xlim(0, 1)
 # +
 
