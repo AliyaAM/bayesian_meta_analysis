@@ -546,7 +546,7 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   return(params = list(posterior_alpha, posterior_beta))
   }
   
-  
+  likelihood_data = likelihood_data
   posterior_alphaANDbeta_function_output = posterior_alphaANDbeta_function(data = likelihood_data, posterior_alpha_Qual = posterior_alpha_Qual, LOGOdds_Ratio = LOGOdds_Ratio, Construct = Construct)
   posterior_alpha = posterior_alphaANDbeta_function_output$posterior_alpha
   posterior_beta = posterior_alphaANDbeta_function_output$posterior_beta
@@ -557,8 +557,8 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
 
   
   #POSTERIOR Credible Intervals are estimated below: 
-  posterior_quantile_0.05 = qbeta(0.05, posterior_alpha,posterior_beta)
-  posterior_quantile_0.95 = qbeta(0.95, posterior_alpha,posterior_beta)
+  #posterior_quantile_0.05 = qbeta(0.05, posterior_alpha,posterior_beta)
+  #posterior_quantile_0.95 = qbeta(0.95, posterior_alpha,posterior_beta)
 
   #posterior_mode = qbeta(0.5, posterior_alpha,posterior_beta)
 
@@ -597,45 +597,45 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   
   #print(graph_Posterior)
   
-  ProbabilityDistribution_Posterior = qbeta(Theta, posterior_alpha, posterior_beta)
-  PosteriorProbability_distribution = data.frame(Theta, 
-                                                 ProbabilityDistribution_Posterior,
-                                                 mode_posterior, 
-                                                 mean_posterior, 
-                                                 posterior_quantile_0.05,
-                                                 posterior_quantile_0.95)
+  #ProbabilityDistribution_Posterior = qbeta(Theta, posterior_alpha, posterior_beta)
+  #PosteriorProbability_distribution = data.frame(Theta, 
+                                                 #ProbabilityDistribution_Posterior,
+                                                 #mode_posterior, 
+                                                 #mean_posterior, 
+                                                 #posterior_quantile_0.05,
+                                                 #posterior_quantile_0.95)
   
   
   return(params = (data.frame(Construct = Construct, 
-                              prior_alpha = HyperPrior_a, 
-                              prior_beta = HyperPrior_b, 
-                              PriorMean = PriorMean, 
-                              PriorMode = PriorMode,
-                              prior_CredibleInterval_0.05 = prior_quantile_0.05, 
-                              prior_CredibleInterval_0.95 = prior_quantile_0.95, 
+                              #prior_alpha = HyperPrior_a, 
+                              #prior_beta = HyperPrior_b, 
+                              #PriorMean = PriorMean, 
+                              #PriorMode = PriorMode,
+                              #prior_CredibleInterval_0.05 = prior_quantile_0.05, 
+                              #prior_CredibleInterval_0.95 = prior_quantile_0.95, 
                               
-                              posterior_alpha_Qual = posterior_alpha_Qual,
-                              posterior_beta_Qual = posterior_beta_Qual,  
-                              mode_posterior_Qual =  mode_posterior_Qual,
-                              mean_posterior_Qual = mean_posterior_Qual, 
-                              posterior_CredibleInterval_0.05_Qual = posterior_quantile_0.05_Qual, 
-                              posterior_CredibleInterval_0.95_Qual = posterior_quantile_0.95_Qual,
+                              #posterior_alpha_Qual = posterior_alpha_Qual,
+                              #posterior_beta_Qual = posterior_beta_Qual,  
+                              #mode_posterior_Qual =  mode_posterior_Qual,
+                              #mean_posterior_Qual = mean_posterior_Qual, 
+                              #posterior_CredibleInterval_0.05_Qual = posterior_quantile_0.05_Qual, 
+                              #posterior_CredibleInterval_0.95_Qual = posterior_quantile_0.95_Qual,
                               
                               
-                              Total_N_Construct = N, 
-                              Number_ofStudies_assessing_Construct = k, 
-                              Pooled_LOGOdds_Ratio = LOGOdds_Ratio,
-                              LowerCI_LogOddsRatio = LowerCI_LogOddsRatio, 
-                              UpperCI_LogOddsRatio = UpperCI_LogOddsRatio,
-                              N_PA_X = N_PA_X, 
+                              #Total_N_Construct = N, 
+                              #Number_ofStudies_assessing_Construct = k, 
+                              #Pooled_LOGOdds_Ratio = LOGOdds_Ratio,
+                              #LowerCI_LogOddsRatio = LowerCI_LogOddsRatio, 
+                              #UpperCI_LogOddsRatio = UpperCI_LogOddsRatio,
+                              #N_PA_X = N_PA_X, 
                               
                               
                               posterior_alpha = posterior_alpha,
                               posterior_beta = posterior_beta,  
-                              acceptance_Metropolis_MCMC = acceptance, 
-                              mode_posterior =  mode_posterior,
-                              mean_posterior = mean_posterior, 
-                              posterior_CredibleInterval_0.05 = posterior_quantile_0.05, 
-                              posterior_CredibleInterval_0.95 = posterior_quantile_0.95)))
+                              acceptance_Metropolis_MCMC = acceptance)))
+                              #mode_posterior =  mode_posterior,
+                              #mean_posterior = mean_posterior,
+                              #posterior_CredibleInterval_0.05 = posterior_quantile_0.05, 
+                              #posterior_CredibleInterval_0.95 = posterior_quantile_0.95)))
   
 }
