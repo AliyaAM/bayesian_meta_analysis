@@ -422,8 +422,8 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   # calculating Probability_PA_X below: 
   
   startingValues = c(0, 0.5)
-  samples =  run_metropolis_MCMC(startingValues = startingValues, iterations = 100000)
-  burnIn = 50000
+  samples =  run_metropolis_MCMC(startingValues = startingValues, iterations = 1000000)
+  burnIn = 500000
   
   acceptance = 1-mean(duplicated(samples[-(1:burnIn),]))
   
@@ -562,7 +562,7 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   length(Theta)
   
   #plot the posterior: 
-  plot(Theta, posterior1)
+  #plot(Theta, posterior1)
   
   #plot the posterior using ggplot: 
   
