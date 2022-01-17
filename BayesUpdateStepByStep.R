@@ -16,7 +16,7 @@ source(paste(SOURCE_ROOT, "PooledN.R", sep="")) # calculate the total number of 
 
 source(paste(SOURCE_ROOT, "PooledOddsRatio_metaanalysis.R", sep=""))  #run the frequentisit meta-analysis (REML) pooling the findings from quantitative studies, stratified by construct. The Overall Effect estimate is (log) Odds Ratio, a list of pooled Log ORs, one per construct). 
 
-source(paste(SOURCE_ROOT, "ContingenciesTable_MCMC.R", sep="")) #estimate the contingencies table for each study using Monte Carlo Markov Chain rejection sampling (the total N and Log odds ratio formulas are used as the rejection criteria)
+#source(paste(SOURCE_ROOT, "ContingenciesTable_MCMC.R", sep="")) #estimate the contingencies table for each study using Monte Carlo Markov Chain rejection sampling (the total N and Log odds ratio formulas are used as the rejection criteria)
 
 source(paste(SOURCE_ROOT, "Density_ggplot.R", sep="")) #produce illustrations: plot density and distribution of probabality of physical activity happening given the construct. 
 
@@ -325,39 +325,41 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   expit<-function(x){exp(x)/(1+exp(x))}
   
   
-  ContingenciesTable = ContingenciesTable_MCMC(N = N, LOGOdds_Ratio = LOGOdds_Ratio)
+  #ContingenciesTable = ContingenciesTable_MCMC(N = N, LOGOdds_Ratio = LOGOdds_Ratio)
   
   
   
   
-  N_noPA_noX = ContingenciesTable$N_noPA_noX
-  N_PA_X = ContingenciesTable$N_PA_X
-  N_noPA_X = ContingenciesTable$N_noPA_X
-  N_PA_noX =  ContingenciesTable$N_PA_noX
+  #N_noPA_noX = ContingenciesTable$N_noPA_noX
+  #N_PA_X = ContingenciesTable$N_PA_X
+  #N_noPA_X = ContingenciesTable$N_noPA_X
+  #N_PA_noX =  ContingenciesTable$N_PA_noX
   
-  N_PA = ContingenciesTable$N_PA_X + ContingenciesTable$N_PA_noX 
-  N_X =  ContingenciesTable$N_noPA_X + ContingenciesTable$N_PA_X
+  #N_PA = ContingenciesTable$N_PA_X + ContingenciesTable$N_PA_noX 
+  #N_X =  ContingenciesTable$N_noPA_X + ContingenciesTable$N_PA_X
   
 
   posterior_density = function(beta, 
-                               N_PA_X, 
-                               N_noPA_X, 
-                               N_PA_noX,     
-                               N_PA, 
-                               N_X, 
-                               N){
+                               #N_PA_X, 
+                               #N_noPA_X, 
+                               #N_PA_noX,     
+                               #N_PA, 
+                               #N_X, 
+                               #N
+                               LOGOdds_Ratio){
     
     
     probability_PA_X = expit(beta[2])
     
-    Vector_of_PA_X = rbinom(n = N_PA, size = 1, prob = probability_PA_X)
+    #Vector_of_PA_X = rbinom(n = N_PA, size = 1, prob = probability_PA_X)
     
-    probability_PA_X_all = rlogis(n = N_PA_X, location = beta[1], scale =beta[2])
-    probability_PA_X_distribution  = plogis(q =probability_PA_X_all, location = beta[1], scale = beta[2], log.p = TRUE)
-    probability_PA_X_quantile = qlogis(probability_PA_X_distribution, location = beta[1], scale = beta[2], log.p = TRUE)
+    #probability_PA_X_all = rlogis(n = N_PA_X, location = beta[1], scale =beta[2])
+    #probability_PA_X_distribution  = plogis(q =probability_PA_X_all, location = beta[1], scale = beta[2], log.p = TRUE)
+    #probability_PA_X_quantile = qlogis(probability_PA_X_distribution, location = beta[1], scale = beta[2], log.p = TRUE)
     
-    Likelihood_PA_X = sum(dbinom(x = Vector_of_PA_X, size = 1, prob = probability_PA_X, log = TRUE))
-  
+    #Likelihood_PA_X = sum(dbinom(x = Vector_of_PA_X, size = 1, prob = probability_PA_X, log = TRUE))
+    Likelihood_PA_X = LOGOdds_Ratio
+    
     PA_prior = sum(dnorm(beta, 0, uncertainty, log = TRUE))
 
     Posterior = Likelihood_PA_X + PA_prior
@@ -381,26 +383,28 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
       proposal = samples[i,] +  rnorm(n = 2, mean = 0, sd = 0.1)
       
       new_parameterList_likelihood = posterior_density(beta = proposal, 
-                                         N_PA_X = N_PA_X, 
-                                         N_noPA_X = N_noPA_X, 
-                                         N_PA_noX = N_PA_noX, 
-                                         N_PA = N_PA, 
-                                         N_X =  N_X, 
-                                         N = N) 
+                                         #N_PA_X = N_PA_X, 
+                                         #N_noPA_X = N_noPA_X, 
+                                         #N_PA_noX = N_PA_noX, 
+                                         #N_PA = N_PA, 
+                                         #N_X =  N_X, 
+                                         #N = N
+                                         LOGOdds_Ratio) 
     
       
       old_parameterList_likelihood = posterior_density(beta = samples[i,], 
-                                         N_PA_X = N_PA_X, 
-                                         N_noPA_X = N_noPA_X,
-                                         N_PA_noX = N_PA_noX, 
-                                         N_PA = N_PA, 
-                                         N_X =  N_X, 
-                                         N = N)
+                                         #N_PA_X = N_PA_X, 
+                                         #N_noPA_X = N_noPA_X,
+                                         #N_PA_noX = N_PA_noX, 
+                                         #N_PA = N_PA, 
+                                         #N_X =  N_X, 
+                                         #N = N
+                                         LOGOdds_Ratio)
       
 
       
       
-      likelihood_ratio = exp(new_parameterList_likelihood$Posterior - old_parameterList_likelihood$Posterior) #convergence criterion 
+      likelihood_ratio = new_parameterList_likelihood$Posterior - old_parameterList_likelihood$Posterior #convergence criterion 
  
       
       U <- runif(1)  
@@ -444,12 +448,12 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
 
   #elicit the entire distribution: 
   
-  probability_PA_X_all = rlogis(n = N_PA_X, location = a, scale = b)
-  Theta = seq(0, 1, 1/N_PA_X)
+  #probability_PA_X_all = rlogis(n = N_PA_X, location = a, scale = b)
+  #Theta = seq(0, 1, 1/N_PA_X)
   probability_PA_X_distribution  = plogis(q = Theta, location = a, scale = b,lower.tail = FALSE, log.p = TRUE)
   MeanDistribution = mean(probability_PA_X_distribution)
   MeanDistribution_value = MeanDistribution
-  MeanDistribution = rep(MeanDistribution, times = N_PA_X+1)
+  #MeanDistribution = rep(MeanDistribution, times = N_PA_X+1)
   probability_PA_X_quantile = qlogis(p = probability_PA_X_distribution, location =a, lower.tail = FALSE, scale = b, log.p = TRUE)
   
   #elicit density: 
@@ -459,20 +463,20 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   probability_PA_X_Density_fromDATA_normalised = probability_PA_X_density_expit/sum(probability_PA_X_density_expit)
   MeanDensity = mean(probability_PA_X_density)
   MeanDensity_value = MeanDensity
-  MeanDensity = rep(MeanDensity, times =  N_PA_X+1)
+  # = rep(MeanDensity, times =  N_PA_X+1)
 
   
   first_Quantilie_Density = qlogis(0.05,  a, b)
   first_Quantilie_Density_value = first_Quantilie_Density
-  first_Quantilie_Density = rep(first_Quantilie_Density, times =  N_PA_X+1)
+  #first_Quantilie_Density = rep(first_Quantilie_Density, times =  N_PA_X+1)
   
   second_Quantilie_Density = qlogis(0.95, a, b)
   second_Quantilie_Density_value = second_Quantilie_Density
-  second_Quantilie_Density = rep(second_Quantilie_Density, times =  N_PA_X+1)
+  #second_Quantilie_Density = rep(second_Quantilie_Density, times =  N_PA_X+1)
   
   ModeDensity = qlogis(0.5,  a, b)
   ModeDensity_value = ModeDensity
-  ModeDensity = rep(ModeDensity, times =  N_PA_X+1)
+  #ModeDensity = rep(ModeDensity, times =  N_PA_X+1)
   
   
   Prob_PA_X_DATA = data.frame(Theta, probability_PA_X_density, probability_PA_X_density_normalised, MeanDensity, ModeDensity, first_Quantilie_Density, second_Quantilie_Density)
@@ -521,21 +525,22 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
 
   
   # concatinate the results for the likelihood distribution 
-  Likelihood_FromSampledBeta = data.frame(N_PA_X, 
-                                          probability_PA_X_expit, 
-                                          MeanDensity_value,
-                                          a,
-                                          b,
-                                          N_noPA_noX, 
-                                          N_noPA_X, 
-                                          N_PA_noX) 
+  #Likelihood_FromSampledBeta = data.frame(N_PA_X, 
+                                          #probability_PA_X_expit, 
+                                          #MeanDensity_value,
+                                          #a,
+                                          #b,
+                                         # N_noPA_noX, 
+                                         # N_noPA_X, 
+                                         # N_PA_noX) 
 
   
   #below we update the prior with likelihood for each construct  
   #the parameters for the posterior below are  produced using Bayes update as specified by Spigielhalter et al. (2003) for beta-bernoulli distribution update (p60-62)
 
+  N_PA_X = probability_PA_X_expit * N
   posterior_alpha = posterior_alpha_Qual + N_PA_X
-  posterior_beta = posterior_beta_Qual + N - N_PA_X
+  posterior_beta = posterior_beta_Qual + (N - N_PA_X)
   mean_posterior = posterior_alpha/(posterior_alpha+posterior_beta)
   mode_posterior =(posterior_alpha-1)/(posterior_alpha+posterior_beta-2)
   variance_posterior = (posterior_alpha * posterior_beta) / ((posterior_alpha+posterior_beta)^2*(posterior_alpha+posterior_beta+1))
