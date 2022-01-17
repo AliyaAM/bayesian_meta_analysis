@@ -543,7 +543,7 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   
   posterior_alpha = posterior_alpha_Qual * LOGOdds_Ratio
   posterior_beta = posterior_beta_Qual * LOGOdds_Ratio
-  return(posterior_alpha, posterior_beta)
+  return(params = list(posterior_alpha, posterior_beta))
   }
   
   
