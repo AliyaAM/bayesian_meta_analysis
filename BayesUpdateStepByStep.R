@@ -231,7 +231,7 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   x = cbind(x, Number_successes)
 
   #below we are updating Hyperprior  with Qualitative Results elicited from the expert elicitation task for each construct separately: 
-  #formulas for calculating posterior beta and alpha parameters for the updated distribution (i.e., hyperprior with qualitative prior) below are from Spieghelhalter et al. 2003 
+  #formulas for calculating posterior beta and alpha parameters for the updated distribution (i.e., hyperprior with qualitative prior) below are from Spieghelhalter et al. 2003, p60: 
   
   posterior_alpha_Qual = HyperPrior_a + x[index,]$PriorExpert_N_PA_X 
   posterior_beta_Qual = HyperPrior_b + x[index,]$PriorExpert_N_noPA_X
