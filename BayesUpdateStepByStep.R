@@ -439,10 +439,10 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   # take the last 100 values from the mcmc object above which are values it converged on in the convernage MH sampling. Samples are an array of (ittirations, 2) 2 are alpha and beta 
   #taking the last 100 values for beta, and 100 values for alpha and taking a mean of it is going to be an accurate estimate of alpha and beta, due to a large burnin (50000)
   
-  alpha_and_beta = tail(samples[-(1:burnIn),1], n=100)
+  alpha_and_beta = tail(samples[-(1:burnIn),1], n=10)
   alpha = mean(alpha_and_beta[1])
   beta = mean(alpha_and_beta[2])
-  probability_PA_X = beta
+  probability_PA_X = exp(beta)
   
 
   #elicit the entire distribution: 
