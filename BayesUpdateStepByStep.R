@@ -422,8 +422,8 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   # calculating Probability_PA_X below: 
   
   startingValues = c(0, 0.5)
-  samples =  run_metropolis_MCMC(startingValues = startingValues, iterations = 1000000)
-  burnIn = 500000
+  samples =  run_metropolis_MCMC(startingValues = startingValues, iterations = 100)
+  burnIn = 50
   
   acceptance = 1-mean(duplicated(samples[-(1:burnIn),]))
   
@@ -439,7 +439,7 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   # take the last 100 values from the mcmc object above which are values it converged on in the convernage MH sampling. Samples are an array of (ittirations, 2) 2 are alpha and beta 
   #taking the last 100 values for beta, and 100 values for alpha and taking a mean of it is going to be an accurate estimate of alpha and beta, due to a large burnin (50000)
   
-  alpha_and_beta = tail(samples[-(1:burnIn),1], n=100)
+  alpha_and_beta = tail(samples[-(1:burnIn),1], n=10)
   alpha = mean(alpha_and_beta[1])
   beta = mean(alpha_and_beta[2])
   probability_PA_X =beta
@@ -537,7 +537,7 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   #below we update the prior with likelihood for each construct  
   #the parameters for the posterior below are  produced using Bayes update as specified by Spigielhalter et al. (2003) for beta-bernoulli distribution update (p60-62)
 
-  N_PA_X = probability_PA_X * N
+  N_PA_X = MeanDensity_value * N
   posterior_alpha = posterior_alpha_Qual + N_PA_X
   posterior_beta = posterior_beta_Qual + N - N_PA_X
   mean_posterior = posterior_alpha/(posterior_alpha+posterior_beta)
