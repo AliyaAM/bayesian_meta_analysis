@@ -538,8 +538,8 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   #the parameters for the posterior below are  produced using Bayes update as specified by Spigielhalter et al. (2003) for beta-bernoulli distribution update (p60-62)
 
   N_PA_X = probability_PA_X_Density_fromDATA_normalised * N
-  posterior_alpha = posterior_alpha_Qual + N_PA_X
-  posterior_beta = posterior_beta_Qual + N - N_PA_X
+  posterior_alpha = posterior_alpha_Qual * LOGOdds_Ratio
+  posterior_beta = posterior_beta_Qual * 1/LOGOdds_Ratio
   mean_posterior = posterior_alpha/(posterior_alpha+posterior_beta)
   mode_posterior =(posterior_alpha-1)/(posterior_alpha+posterior_beta-2)
   variance_posterior = (posterior_alpha * posterior_beta) / ((posterior_alpha+posterior_beta)^2*(posterior_alpha+posterior_beta+1))
