@@ -29,7 +29,7 @@ source(paste(SOURCE_ROOT, "N_success.R", sep=""))  #calculate the proportion of 
 
 
 #  below we will  produce distribution density for the: 
-###### (a) Hyperprior: the levels of physical activity in HF worldwide, general physical activity levels in HF estimated from a large internaitonal study (Jaarsma et al., 2013),
+###### (a) HYPERPRIOR: the levels of physical activity in HF worldwide, general physical activity levels in HF estimated from a large internaitonal study (Jaarsma et al., 2013),
 ###### (b) the Prior elicited from the expert elicitation task which was based on the qualitative evidence; 
 ###### (c) Likelihood (pooled log OR estimates from the quantitative studies); 
 ###### (d) and Posterior (the posterior distribution obtained by means of Bayes update (first update Hyperprior with Prior, the update that with the Likelihood). Bayes Update is implimmmented per Spighelhalter et al., 2013 reccomendations) 
@@ -41,48 +41,56 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   #below we index the data by the name of construct
   index = x$Construct == Construct
   
-  #data for the hyperprior: 
+  #data for the HYPERPRIOR: 
   JaarsmaInternationalStudy = JaarsmaInternationalStudy
   
-  #Total N, variance and mean estimate for the probability of physical activity in general HF populationfrom Jaarsma study (empirical hyperprior):    
+  #T
+  total N, variance and mean estimate for the probability of physical activity in general HF populationfrom Jaarsma study (empirical hyperprior):    
   Total_N_hyperprior = JaarsmaInternationalStudy$TotalN[20]
   Variance_hyperprior = JaarsmaInternationalStudy$Variance[20]
   Mean_probability_hyperprior = JaarsmaInternationalStudy$Proportion_highPA[20]
   
 
-  #elicit hyperprior distribution as a Gaussian (aka normal) distribution with mean value = mean from Jaarsma, and variance from Jaarsma 
+  #elicit HYPERPRIOR distribution as a Gaussian (aka normal) distribution with mean value = mean from Jaarsma, and variance from Jaarsma 
   
 
-  Theta = seq(0.01, 0.99, 0.01)
+  Probability = seq(0.01, 0.99, 0.01)
   hyperprior = rnorm(Total_N_hyperprior,  Mean_probability_hyperprior,  Variance_hyperprior)
   plot(hyperprior)
  
  #HYPERPRIOR Credible Iinterval are calculated below:
-  
-  p_hyperprior = pnorm(Theta, Mean_probability_hyperprior,  Variance_hyperprior, lower.tail = TRUE, log.p = FALSE)
+  p_hyperprior = pnorm(Probability, Mean_probability_hyperprior,  Variance_hyperprior, lower.tail = TRUE, log.p = FALSE)
   hyperprior_quantile_0.05 = qnorm(0.05, Mean_probability_hyperprior,  Variance_hyperprior, lower.tail = TRUE, log.p = FALSE)
   hyperprior_quantile_0.95 = qnorm(0.95,  Mean_probability_hyperprior,  Variance_hyperprior, lower.tail = TRUE, log.p = FALSE)
 
 
-  #The prior_cumsum is below:
-  Hyperprior_density = dnorm(Theta, Mean_probability_hyperprior,  Variance_hyperprior, log = FALSE)
-  plot(Hyperprior_density)
+  #the HYPERPRIOR_cumsum is below:
+  Hyperprior_density = dnorm(Probability, Mean_probability_hyperprior,  Variance_hyperprior, log = FALSE)
   Hyperprior_density_normalised = Hyperprior_density/sum(Hyperprior_density)
-  plot(Hyperprior_density_normalised)
-  Hyperprior_density_cumsum = cumsum(Hyperprior_density)
-  
-  density = cbind(Hyperprior_density, Hyperprior_density_cumsum)
-  
-  #The  CIs are below:
-  Hyperprior_density_CI = ifelse(
-    Hyperprior_density_cumsum<0.03|Hyperprior_density_cumsum>0.97,
+  data_density_Hyperprior = data.frame(Probability, Hyperprior_density_normalised)
+  data_density_Hyperprior$Hyperprior_density_cumsum = cumsum(Hyperprior_density_normalised)
+
+
+  #the CIs of the HYPERPRIOR are below:
+  data_density_Hyperprior$Hyperprior_density_CI = ifelse(
+    data_density_Hyperprior$Hyperprior_density_cumsum<0.025|data_density_Hyperprior$Hyperprior_density_cumsum>0.975,
     "outside CI",  "inside CI"
   )
 
-  density = cbind(density, Hyperprior_density_CI)
+ #plot HYPERPRIOR:
+  plotting=function(data, ... ,title ) {
+    library(ggplot2)
+    ggplot(data, ...)+
+      geom_bar(stat="identity", alpha=0.5)+
+      theme_minimal()+
+      theme(axis.text.y = element_blank())+
+      ylab("Probability density")+
+      ggtitle(title)+
+      labs(fill='95% confidence interval')
+  }
   
+  plotting(data=data_density_Hyperprior, aes(x=Probability, y=Hyperprior_density_normalised, fill=Hyperprior_density_CI), mean = Mean_probability_hyperprior, title="Hyperprior")
   
-
 
   #Six experts completed the expert elicitation task. 
   #The reviewers made a judgement on whether the hypothetical HF patient met the recommended levels of physical activity or not. 
