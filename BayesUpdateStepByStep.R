@@ -539,7 +539,7 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
 
   N_PA_X = probability_PA_X * N
   posterior_alpha = posterior_alpha_Qual + N_PA_X
-  posterior_beta = posterior_beta_Qual + (N - N_PA_X)
+  posterior_beta = posterior_beta_Qual + N - N_PA_X
   mean_posterior = posterior_alpha/(posterior_alpha+posterior_beta)
   mode_posterior =(posterior_alpha-1)/(posterior_alpha+posterior_beta-2)
   variance_posterior = (posterior_alpha * posterior_beta) / ((posterior_alpha+posterior_beta)^2*(posterior_alpha+posterior_beta+1))
