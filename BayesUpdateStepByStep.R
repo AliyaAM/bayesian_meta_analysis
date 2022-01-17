@@ -537,7 +537,7 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   #below we update the prior with likelihood for each construct  
   #the parameters for the posterior below are  produced using Bayes update as specified by Spigielhalter et al. (2003) for beta-bernoulli distribution update (p60-62)
 
-  N_PA_X = MeanDistribution_value * N
+  N_PA_X = probability_PA_X_Density_fromDATA_normalised * N
   posterior_alpha = posterior_alpha_Qual + N_PA_X
   posterior_beta = posterior_beta_Qual + N - N_PA_X
   mean_posterior = posterior_alpha/(posterior_alpha+posterior_beta)
