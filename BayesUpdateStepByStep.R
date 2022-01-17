@@ -43,86 +43,46 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   
   #data for the hyperprior: 
   JaarsmaInternationalStudy = JaarsmaInternationalStudy
- 
-  #variance and mean estimated from Jaarsma study (empirical hyperprior):    
-  variance = 0.018
-  mean = 0.43
   
-  #calculate a and b parameters for the hyperprior distribution (which is a beta distribution, Spiegelhalter et al., 2003)
-  
-  HyperPrior_a = ((1 - mean) / variance - 1 / mean) * mean ^ 2
-  HyperPrior_b = (HyperPrior_a * (1 /mean - 1))
-
-  #the mean of the prior distriution of PA (HYPERPRIOR)
-  mean_prior = HyperPrior_a/(HyperPrior_a+HyperPrior_b)
-  
-  #the mode of the prior distribution of PA (HYPERPRIOR) is
-  mode_prior = (HyperPrior_a-1) / (HyperPrior_a+HyperPrior_b-2)
-  
-  #the variance of the prior distribution of PA (HYPERPRIOR) is
-  variance_prior = (HyperPrior_a * HyperPrior_b) / ((HyperPrior_a+HyperPrior_b)^2*(HyperPrior_a+HyperPrior_b+1))
+  #Total N, variance and mean estimate for the probability of physical activity in general HF populationfrom Jaarsma study (empirical hyperprior):    
+  Total_N_hyperprior = JaarsmaInternationalStudy$TotalN[20]
+  Variance_hyperprior = JaarsmaInternationalStudy$Variance[20]
+  Mean_probability_hyperprior = JaarsmaInternationalStudy$Proportion_highPA[20]
   
 
-  #below we are sampling the entire beta distribution for the hyperprior given a and b parameters. 
+  #elicit hyperprior distribution as a Gaussian (aka normal) distribution with mean value = mean from Jaarsma, and variance from Jaarsma 
   
+
   Theta = seq(0.01, 0.99, 0.01)
-  prior_nonnormalised = dbeta(Theta,  HyperPrior_a,  HyperPrior_b, ncp = 0)
-  PriorMean = mean(prior_nonnormalised)
-  
-  #the beta distribution is normalised below (following Spiegelhalter et al., 2003 reccomendations)
-  prior = prior_nonnormalised/sum(prior_nonnormalised)
-  Mean_normalised = mean(prior)
-  
-  
+  hyperprior = rnorm(Total_N_hyperprior,  Mean_probability_hyperprior,  Variance_hyperprior)
+  plot(hyperprior)
+ 
  #HYPERPRIOR Credible Iinterval are calculated below:
   
-  p = rbeta(Theta, shape1 = HyperPrior_a, shape2 = HyperPrior_b, ncp = 0)
-  q =  qbeta(p = p, shape1 = HyperPrior_a, shape2 = HyperPrior_b, ncp = 0)
-  
-  prior_quantile_0.05 = qbeta(0.05,  HyperPrior_a, HyperPrior_b)
-
-  prior_quantile_0.95 = qbeta(0.95,  HyperPrior_a, HyperPrior_b,ncp = 0)
-  
-  # check the name 
-  
-  MAP_hyperPrior = 0.422856163424018
-  HDILower_hyperPrior =  0.220057520487314
-  HDIUpper_hyperPrior =  0.640617186187267
-
-  #mode 
-  PriorMode = qbeta(0.5,  HyperPrior_a, HyperPrior_b,ncp = 0)
+  p_hyperprior = pnorm(Theta, Mean_probability_hyperprior,  Variance_hyperprior, lower.tail = TRUE, log.p = FALSE)
+  hyperprior_quantile_0.05 = qnorm(0.05, Mean_probability_hyperprior,  Variance_hyperprior, lower.tail = TRUE, log.p = FALSE)
+  hyperprior_quantile_0.95 = qnorm(0.95,  Mean_probability_hyperprior,  Variance_hyperprior, lower.tail = TRUE, log.p = FALSE)
 
 
   #The prior_cumsum is below:
-  density = data.frame(Theta, prior, prior_nonnormalised, PriorMean, PriorMode, prior_quantile_0.05, prior_quantile_0.95)
-  prior_cumsum = cumsum(density$prior_nonnormalised)
+  Hyperprior_density = dnorm(Theta, Mean_probability_hyperprior,  Variance_hyperprior, log = FALSE)
+  plot(Hyperprior_density)
+  Hyperprior_density_normalised = Hyperprior_density/sum(Hyperprior_density)
+  plot(Hyperprior_density_normalised)
+  Hyperprior_density_cumsum = cumsum(Hyperprior_density)
   
-  density = cbind(density, prior_cumsum)
+  density = cbind(Hyperprior_density, Hyperprior_density_cumsum)
   
   #The  CIs are below:
-  prior_CI = ifelse(
-    prior_cumsum<0.03|prior_cumsum>0.97,
+  Hyperprior_density_CI = ifelse(
+    Hyperprior_density_cumsum<0.03|Hyperprior_density_cumsum>0.97,
     "outside CI",  "inside CI"
   )
 
-  density = cbind(density, prior_CI)
+  density = cbind(density, Hyperprior_density_CI)
   
   
-  
-  #calculate HYPERPRIOR Log Odds: 
-  Variance_Prob_PA_JaarsmaInternationalStudy = 0.0189523150981809
-  ProbPA_JaarsmaInternationalStudy = 0.433382295
-  Prob_NoPA_JaarsmaInternationalStudy = 0.566617705
-  
-  Odds_prior = ((1- ProbPA_JaarsmaInternationalStudy)/ProbPA_JaarsmaInternationalStudy)/((1-Prob_NoPA_JaarsmaInternationalStudy)/Prob_NoPA_JaarsmaInternationalStudy)
-  
-  LogOdds_priorEstimate = log(ProbPA_JaarsmaInternationalStudy) + log(1-Prob_NoPA_JaarsmaInternationalStudy) - log(Prob_NoPA_JaarsmaInternationalStudy) - log(1-ProbPA_JaarsmaInternationalStudy)
 
-  
-  ProbabilityDistribution_Prior = pbeta(Theta, HyperPrior_a, HyperPrior_b, ncp = 0)
-  ProbabilityDistribution_Prior = ProbabilityDistribution_Prior/sum(ProbabilityDistribution_Prior)
-  PriorDistribution = data.frame(Theta, ProbabilityDistribution_Prior, PriorMean, PriorMode, prior_quantile_0.05, prior_quantile_0.95)
-  
 
   #Six experts completed the expert elicitation task. 
   #The reviewers made a judgement on whether the hypothetical HF patient met the recommended levels of physical activity or not. 
