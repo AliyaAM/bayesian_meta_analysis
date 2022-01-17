@@ -366,7 +366,6 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
     return(params = list(probability_PA_X = probability_PA_X, Likelihood_PA_X = Likelihood_PA_X, beta = beta, Posterior = Posterior))
   }
   
-  
   #The parameters for beta and alpha were sampled using Metropolis samling below: 
   #function for metropolis-hestings sampling, was adopted to this review from reference: https://theoreticalecology.wordpress.com/2010/09/17/metropolis-hastings-mcmc-in-r/
 
@@ -443,7 +442,7 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   alpha_and_beta = tail(samples[-(1:burnIn),1], n=100)
   alpha = mean(alpha_and_beta[1])
   beta = mean(alpha_and_beta[2])
-  probability_PA_X_expit = expit(b)
+  probability_PA_X = b
   
 
   #elicit the entire distribution: 
@@ -617,6 +616,7 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
                               Pooled_LOGOdds_Ratio = LOGOdds_Ratio,
                               LowerCI_LogOddsRatio = LowerCI_LogOddsRatio, 
                               UpperCI_LogOddsRatio = UpperCI_LogOddsRatio,
+                              N_PA_X = N_PA_X, 
                               
                               
                               posterior_alpha = posterior_alpha,
