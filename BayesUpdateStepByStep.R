@@ -442,21 +442,21 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   alpha_and_beta = tail(samples[-(1:burnIn),1], n=100)
   alpha = mean(alpha_and_beta[1])
   beta = mean(alpha_and_beta[2])
-  probability_PA_X = b
+  probability_PA_X = beta
   
 
   #elicit the entire distribution: 
   
   #probability_PA_X_all = rlogis(n = N_PA_X, location = a, scale = b)
   #Theta = seq(0, 1, 1/N_PA_X)
-  probability_PA_X_distribution  = plogis(q = Theta, location = a, scale = b,lower.tail = FALSE, log.p = TRUE)
+  probability_PA_X_distribution  = plogis(q = Theta, location = alpha, scale = beta,lower.tail = FALSE, log.p = TRUE)
   MeanDistribution = mean(probability_PA_X_distribution)
   MeanDistribution_value = MeanDistribution
   #MeanDistribution = rep(MeanDistribution, times = N_PA_X+1)
-  probability_PA_X_quantile = qlogis(p = probability_PA_X_distribution, location =a, lower.tail = FALSE, scale = b, log.p = TRUE)
+  probability_PA_X_quantile = qlogis(p = probability_PA_X_distribution, location = beta, lower.tail = FALSE, scale = b, log.p = TRUE)
   
   #elicit density: 
-  probability_PA_X_density = dlogis(x = Theta, location = a, scale = b, log = TRUE)
+  probability_PA_X_density = dlogis(x = Theta, location = alpha, scale = beta, log = TRUE)
   probability_PA_X_density_normalised = probability_PA_X_density/sum(probability_PA_X_density)
   probability_PA_X_density_expit = expit(probability_PA_X_density)
   probability_PA_X_Density_fromDATA_normalised = probability_PA_X_density_expit/sum(probability_PA_X_density_expit)
@@ -465,15 +465,15 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   # = rep(MeanDensity, times =  N_PA_X+1)
 
   
-  first_Quantilie_Density = qlogis(0.05,  a, b)
+  first_Quantilie_Density = qlogis(0.05,  alpha, beta)
   first_Quantilie_Density_value = first_Quantilie_Density
   #first_Quantilie_Density = rep(first_Quantilie_Density, times =  N_PA_X+1)
   
-  second_Quantilie_Density = qlogis(0.95, a, b)
+  second_Quantilie_Density = qlogis(0.95, alpha, beta)
   second_Quantilie_Density_value = second_Quantilie_Density
   #second_Quantilie_Density = rep(second_Quantilie_Density, times =  N_PA_X+1)
   
-  ModeDensity = qlogis(0.5,  a, b)
+  ModeDensity = qlogis(0.5,  alpha, beta)
   ModeDensity_value = ModeDensity
   #ModeDensity = rep(ModeDensity, times =  N_PA_X+1)
   
