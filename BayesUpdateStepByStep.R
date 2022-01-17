@@ -359,8 +359,8 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
     #probability_PA_X_distribution  = plogis(q =probability_PA_X_all, location = beta[1], scale = beta[2], log.p = TRUE)
     #probability_PA_X_quantile = qlogis(probability_PA_X_distribution, location = beta[1], scale = beta[2], log.p = TRUE)
     
-    #Likelihood_PA_X = sum(dbinom(x = Vector_of_PA_X, size = 1, prob = probability_PA_X, log = TRUE))
-    Likelihood_PA_X = LOGOdds_Ratio
+    Likelihood_PA_X = sum(dbinom(x = Vector_of_PA_X, size = 1, prob = probability_PA_X, log = TRUE))
+    #Likelihood_PA_X = LOGOdds_Ratio
     
     PA_prior = sum(dnorm(beta, 0, uncertainty, log = TRUE))
 
