@@ -83,6 +83,8 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
 
   prior_quantile_0.95 = qbeta(0.95,  HyperPrior_a, HyperPrior_b,ncp = 0)
   
+  # check the name 
+  
   MAP_hyperPrior = 0.422856163424018
   HDILower_hyperPrior =  0.220057520487314
   HDIUpper_hyperPrior =  0.640617186187267
