@@ -538,53 +538,64 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   #the parameters for the posterior below are  produced using Bayes update as specified by Spigielhalter et al. (2003) for beta-bernoulli distribution update (p60-62)
 
   #N_PA_X = probability_PA_X_Density_fromDATA_normalised * N
-  posterior_alpha = posterior_alpha_Qual * likelihood_data[index,]$LOGOdds_Ratio
-  posterior_beta = posterior_beta_Qual * 1/likelihood_data[index,]$LOGOdds_Ratio
+  
+  posterior_alphaANDbeta_function = function(data, posterior_alpha_Qual, LOGOdds_Ratio, Construct){
+  
+  posterior_alpha = posterior_alpha_Qual * LOGOdds_Ratio
+  posterior_beta = posterior_beta_Qual * LOGOdds_Ratio
+  return(posterior_alpha, posterior_beta)
+  }
+  
+  
+  posterior_alphaANDbeta_function_output = posterior_alphaANDbeta_function(data = likelihood_data, posterior_alpha_Qual = posterior_alpha_Qual, LOGOdds_Ratio = LOGOdds_Ratio, Construct = Construct)
+  posterior_alpha = posterior_alphaANDbeta_function_output$posterior_alpha
+  posterior_beta = posterior_alphaANDbeta_function_output$posterior_beta
+  
   mean_posterior = posterior_alpha/(posterior_alpha+posterior_beta)
   mode_posterior =(posterior_alpha-1)/(posterior_alpha+posterior_beta-2)
-  variance_posterior = (posterior_alpha * posterior_beta) / ((posterior_alpha+posterior_beta)^2*(posterior_alpha+posterior_beta+1))
+  #variance_posterior = (posterior_alpha * posterior_beta) / ((posterior_alpha+posterior_beta)^2*(posterior_alpha+posterior_beta+1))
 
   
   #POSTERIOR Credible Intervals are estimated below: 
   posterior_quantile_0.05 = qbeta(0.05, posterior_alpha,posterior_beta)
   posterior_quantile_0.95 = qbeta(0.95, posterior_alpha,posterior_beta)
 
-  posterior_mode = qbeta(0.5, posterior_alpha,posterior_beta)
+  #posterior_mode = qbeta(0.5, posterior_alpha,posterior_beta)
 
   # elicit the entire posterior 
-  posterior1 = dbeta(Theta, posterior_alpha, posterior_beta)
-  posterior1_normalised = posterior1/sum(posterior1)
+  #posterior1 = dbeta(Theta, posterior_alpha, posterior_beta)
+  #posterior1_normalised = posterior1/sum(posterior1)
   
   #an alternative way of deriving the posterior is below, however, it will not print the plot syaing the finite value for y is required. The below is incorrect and is not reported but check with Spighelhalter again
-  posterior3 = dbeta(Theta, HyperPrior_a * LOGOdds_Ratio, HyperPrior_b * (1/LOGOdds_Ratio))
-  posterior3_normalised = posterior3/sum(posterior3)
-  length(posterior1)
-  length(Theta)
+  #posterior3 = dbeta(Theta, HyperPrior_a * LOGOdds_Ratio, HyperPrior_b * (1/LOGOdds_Ratio))
+  #posterior3_normalised = posterior3/sum(posterior3)
+  #length(posterior1)
+  #length(Theta)
   
   #plot the posterior: 
   #plot(Theta, posterior1)
   
   #plot the posterior using ggplot: 
   
-  density_posterior = data.frame(Theta, posterior1, mode_posterior, mean_posterior, posterior_quantile_0.05, posterior_quantile_0.95)
-  graph_Posterior = plotDensity(data = density_posterior,
-                                aes( x = density_posterior$Theta, 
-                                     y = density_posterior$posterior1,
-                                     fill = NULL),
-                                mode = density_posterior$mode_posterior,
-                                mean = density_posterior$mean_posterior, 
-                                quantile_0.05 = density_posterior$posterior_quantile_0.05,
-                                quantile_0.95 = density_posterior$posterior_quantile_0.95,
-                                MAPhyperprior = MAP_hyperPrior,
-                                CIUpperhyperprior = HDIUpper_hyperPrior, 
-                                CILowerhyperprior = HDILower_hyperPrior, 
-                                xlabTitle = paste("Posterior probability of physical activity for", print(Construct)),  
-                                ylabTitle = "Probability density", 
-                                title = Construct)
+  #density_posterior = data.frame(Theta, posterior1, mode_posterior, mean_posterior, posterior_quantile_0.05, posterior_quantile_0.95)
+  #graph_Posterior = plotDensity(data = density_posterior,
+                               # aes( x = density_posterior$Theta, 
+                                #     y = density_posterior$posterior1,
+                                #     fill = NULL),
+                               # mode = density_posterior$mode_posterior,
+                                #mean = density_posterior$mean_posterior, 
+                                #quantile_0.05 = density_posterior$posterior_quantile_0.05,
+                               # quantile_0.95 = density_posterior$posterior_quantile_0.95,
+                               # MAPhyperprior = MAP_hyperPrior,
+                                #CIUpperhyperprior = HDIUpper_hyperPrior, 
+                                #CILowerhyperprior = HDILower_hyperPrior, 
+                               # xlabTitle = paste("Posterior probability of physical activity for", print(Construct)),  
+                                #ylabTitle = "Probability density", 
+                                #title = Construct)
   
 
   
-  print(graph_Posterior)
+  #print(graph_Posterior)
   
   ProbabilityDistribution_Posterior = qbeta(Theta, posterior_alpha, posterior_beta)
   PosteriorProbability_distribution = data.frame(Theta, 
