@@ -156,7 +156,7 @@ print(plot5)
 
 plot4 = ggplot(density_ALL_cosntruct, aes(x = Theta, y = construct, height=posterior, group = construct)) +
   geom_density_ridges(stat = "identity", scale = 2) +
-  xlim(0.3, 0.65)
+  xlim(0, 1)
 # +
 
 # ylim(c("Age",
