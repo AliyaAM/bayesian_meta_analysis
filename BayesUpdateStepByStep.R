@@ -403,7 +403,7 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
 
       
       
-      likelihood_ratio = new_parameterList_likelihood$Posterior - old_parameterList_likelihood$Posterior #convergence criterion 
+      likelihood_ratio = exp(new_parameterList_likelihood$Posterior - old_parameterList_likelihood$Posterior) #convergence criterion 
  
       
       U <- runif(1)  
