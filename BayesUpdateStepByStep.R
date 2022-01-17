@@ -44,10 +44,10 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   #data for the HYPERPRIOR: 
   JaarsmaInternationalStudy = JaarsmaInternationalStudy
   
-  #T
-  total N, variance and mean estimate for the probability of physical activity in general HF populationfrom Jaarsma study (empirical hyperprior):    
+  #Total N, variance and mean estimate for the probability of physical activity in general HF populationfrom Jaarsma study (empirical hyperprior):    
   Total_N_hyperprior = JaarsmaInternationalStudy$TotalN[20]
   Variance_hyperprior = JaarsmaInternationalStudy$Variance[20]
+  
   Mean_probability_hyperprior = JaarsmaInternationalStudy$Proportion_highPA[20]
   
 
@@ -82,11 +82,12 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
     library(ggplot2)
     ggplot(data, ...)+
       geom_bar(stat="identity", alpha=0.5)+
-      theme_minimal()+
+      theme_classic()+
       theme(axis.text.y = element_blank())+
       ylab("Probability density")+
       ggtitle(title)+
-      labs(fill='95% confidence interval')
+      labs(fill='95% confidence interval')+
+      scale_fill_manual(values = c("#999999", "#0072B2"))
   }
   
   plotting(data=data_density_Hyperprior, aes(x=Probability, y=Hyperprior_density_normalised, fill=Hyperprior_density_CI), mean = Mean_probability_hyperprior, title="Hyperprior")
@@ -200,6 +201,44 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
  
   x = cbind(x, Number_successes)
 
+  #On the basis of the results of the prior elicitation task we calculate the log OR for each construct 
+  logOR_expert_elicitation_task =  log((x[index,]$PriorExpert_N_PA_X*x[index,]$PriorExpert_N_noPA_noX)/(x[index,]$PriorExpert_N_noPA_X*x[index,]PriorExpert_N_PA_noX))
+  variance_expert_elicitation_task = x[index,]$variance
+  variance_expert_elicitation_task = sqrt(variance_expert_elicitation_task)
+  #the total n (scenarios*rater) is 150 (i.e., 150 scenario-rater pairs)
+  Total_N_scenario_expert_pairs = 150
+
+  #we elicit the probability distribution with these two parameters
+  Prior_qual = rnorm(Total_N_scenario_expert_pairs, logOR_expert_elicitation_task, variance_expert_elicitation_task)
+  
+  #Prior_qualCredible Iinterval are calculated below:
+  p_Prior_qual = pnorm(Probability, logOR_expert_elicitation_task, variance_expert_elicitation_task, lower.tail = TRUE, log.p = FALSE)
+  Prior_qual_quantile_0.05 = qnorm(0.05, logOR_expert_elicitation_task, variance_expert_elicitation_task, lower.tail = TRUE, log.p = FALSE)
+  Prior_qual_quantile_0.95 = qnorm(0.95,  logOR_expert_elicitation_task, variance_expert_elicitation_task, lower.tail = TRUE, log.p = FALSE)
+  
+  
+  #the Prior_qual is below:
+  Prior_qual_density = dnorm(Probability, logOR_expert_elicitation_task, variance_expert_elicitation_task, log = FALSE)
+  Prior_qual_density_normalised = Prior_qual_density/sum(Prior_qual_density)
+  data_density_Prior_qual = data.frame(Probability, Prior_qual_density_normalised)
+  data_density_Prior_qual$Prior_qual_density_cumsum = cumsum(Prior_qual_density_normalised)
+  
+  
+  #the CIs of the Prior_qual are below:
+  data_density_Prior_qual$Prior_qual_density_CI = ifelse(
+    data_density_Prior_qual$Prior_qual_density_cumsum<0.025|data_density_Prior_qual$Prior_qual_density_cumsum>0.975,
+    "outside CI",  "inside CI"
+  )
+  
+
+  plotting(data=data_density_Prior_qual, aes(x=Probability, y=Prior_qual_density_normalised, fill=Prior_qual_density_CI), mean = logOR_expert_elicitation_task, title="Prior elicited from the expert task informed by the qualitative evidence")
+  
+  
+  
+  
+  --------------
+    -----
+  
   #below we are updating Hyperprior  with Qualitative Results elicited from the expert elicitation task for each construct separately: 
   #formulas for calculating posterior beta and alpha parameters for the updated distribution (i.e., hyperprior with qualitative prior) below are from Spieghelhalter et al. 2003, p60: 
   
