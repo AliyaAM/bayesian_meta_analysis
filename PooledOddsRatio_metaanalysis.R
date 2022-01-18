@@ -15,7 +15,7 @@ source(paste(SOURCE_ROOT, "PooledN.R", sep=""))
 
 #data = read.csv('/Users/aliya/my_docs/THESIS/BayesianMetaAnalysis/Likelihood_data_clean.csv')
 
-metaDataLikelihood = function(likelihood_data, Construct) {
+metaDataLikelihood = function(likelihood_data, Construct, N) {
   index = likelihood_data$Construct == Construct
   likelihood_data_grouped = filter(likelihood_data, Construct == likelihood_data[index,]$Construct)
 
@@ -34,10 +34,12 @@ metaDataLikelihood = function(likelihood_data, Construct) {
   LOGOdds_Ratio_result = predict(Pooled_lOR_RandomEffect_from_ConverEffectSizes_Subset)
 
   LOGOdds_Ratio = LOGOdds_Ratio_result$pred
+  Standard_error_LogOR = LOGOdds_Ratio_result$se 
+  
+  Standard_deviation_LogOR = Standard_error_LogOR + sqrt(N)
+  
   LowerCI_LogOddsRatio = LOGOdds_Ratio_result$ci.lb
   UpperCI_LogOddsRatio = LOGOdds_Ratio_result$ci.ub
-
-  
   k = Pooled_lOR_RandomEffect_from_ConverEffectSizes_Subset$k
 
 
@@ -54,6 +56,8 @@ metaDataLikelihood = function(likelihood_data, Construct) {
   return(params = list(Construct = Construct, 
                        LOGOdds_Ratio = LOGOdds_Ratio, 
                        k = k, 
+                       Standard_error_LogOR = Standard_error_LogOR, 
+                       Standard_deviation_LogOR = Standard_deviation_LogOR, 
                        LowerCI_LogOddsRatio = LowerCI_LogOddsRatio, 
                        UpperCI_LogOddsRatio = UpperCI_LogOddsRatio))
 }

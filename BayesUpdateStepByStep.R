@@ -212,9 +212,10 @@ BayesUpdateStepByStep = function(x, Construct, uncertainty, seed) {
   PriorExpert_N_PA_noX = x[index,]$PriorExpert_N_PA_noX
   
   # PlogOR_expert_elicitation_task PA given Construct (i.e, Probability_PA_X, condiitonal probability) according to the expert elicitation task 
-  
+  print("logOR_expert_elicitation_task")
   logOR_expert_elicitation_task = log((PriorExpert_N_PA_X*PriorExpert_N_noPA_noX)/(PriorExpert_N_noPA_X*PriorExpert_N_PA_noX))
-
+  print(logOR_expert_elicitation_task)
+  
   #Uncertainty was elicited from teh variance in responses from different experts 
   variance_expert_elicitation_task = x[index,]$variance
   
@@ -268,11 +269,14 @@ BayesUpdateStepByStep = function(x, Construct, uncertainty, seed) {
 
   
   posterior_Qual_mean = (Mean_probability_hyperprior/Variance_hyperprior + logOR_expert_elicitation_task/variance_expert_elicitation_task)/(1/Variance_hyperprior+1/variance_expert_elicitation_task)
+
+  print("posterior_Qual_mean")
+  print(posterior_Qual_mean)
   posterior_Qual_variance =1/(1/Variance_hyperprior+1/variance_expert_elicitation_task)
   
   
   #below we elicit posterior_Qual which is distirbution for probability for physical activity given a construct accroding to the qualitative evidence
-  posterior_Qual_func=function(posterior_Qual_mean, posterior_Qual_variance) {
+  posterior_func=function(posterior_mean, posterior_variance) {
   
       
     Probability = seq( 0 , 1 , length=1000)
@@ -280,29 +284,29 @@ BayesUpdateStepByStep = function(x, Construct, uncertainty, seed) {
     ProbabilityPrior_qual_func = seq( 0 , 1 , length=1000)
     
     #the density distribution for probability for phyical activity given a construct according to teh experts is centred around the logOR elicited from expert responses 
-    posterior_Qual_density = dnorm(logOddsRatio, logOR_expert_elicitation_task,  variance_expert_elicitation_task, log = FALSE)
-    posterior_Qual_density = posterior_Qual_density/sum(posterior_Qual_density)
+    posterior_density = dnorm(logOddsRatio, posterior_mean,  posterior_variance, log = FALSE)
+    posterior_density = posterior_density/sum(posterior_density)
     
     
-    data=data.frame(logOddsRatio, posterior_Qual_density)
-    data$posterior_Qual_density_cumsum=cumsum(data$posterior_Qual_density)
-    data$posterior_Qual_density_CI=ifelse(data$posterior_Qual_density_cumsum<0.025|data$posterior_Qual_density_cumsum>0.975, "outside CI", "inside CI")
+    data=data.frame(logOddsRatio, posterior_density)
+    data$posterior_density_cumsum=cumsum(data$posterior_density)
+    data$posterior_density_CI=ifelse(data$posterior_density_cumsum<0.025|data$posterior_density_cumsum>0.975, "outside CI", "inside CI")
     
     #posterior_Qual Credible Interval are calculated below:
-    data$p_posterior_Qual = pnorm(logOddsRatio, posterior_Qual_mean, posterior_Qual_variance, lower.tail = TRUE, log.p = FALSE)
-    data$posterior_Qual_quantile_0.05 = qnorm(0.05, posterior_Qual_mean, posterior_Qual_variance, lower.tail = TRUE, log.p = FALSE)
-    data$posterior_Qual_quantile_0.95 = qnorm(0.95,  posterior_Qual_mean, posterior_Qual_variance, lower.tail = TRUE, log.p = FALSE)
+    data$p_posterior_Qual = pnorm(logOddsRatio, posterior_mean, posterior_variance, lower.tail = TRUE, log.p = FALSE)
+    data$posterior_Qual_quantile_0.05 = qnorm(0.05, posterior_mean, posterior_variance, lower.tail = TRUE, log.p = FALSE)
+    data$posterior_Qual_quantile_0.95 = qnorm(0.95,  posterior_mean, posterior_variance, lower.tail = TRUE, log.p = FALSE)
     
     data
   }
   
   
-  data_posterior_Qual = posterior_Qual_func(posterior_Qual_mean, posterior_Qual_variance)
+  data_posterior_Qual = posterior_func(posterior_mean = posterior_Qual_mean, posterior_variance = posterior_Qual_variance)
   
 
   
   plot_posterior_Qual_density = plotting(data=data_posterior_Qual,
-                                     aes(x=logOddsRatio, y=posterior_Qual_density, fill=posterior_Qual_density_CI), 
+                                     aes(x=logOddsRatio, y=posterior_density, fill=posterior_density_CI), 
                                      values_colour = c("#CC79A7", "#0072B2"), 
                                      title = paste("Expert Belief: Probability of physical activity given", print(Construct)))
   
@@ -316,18 +320,38 @@ BayesUpdateStepByStep = function(x, Construct, uncertainty, seed) {
   #run the frequentisit meta-analysis (REML) pooling the findings from quantitative studies, stratified by construct. The Overall Effect estimate is (log) Odds Ratio, a list of pooled Log ORs, one per construct). 
   #using function: PooledOddsRatio_metaanalysis.R, which runs metafor library 
   
-  meta_data_likelihoodResults = metaDataLikelihood(likelihood_data = likelihood_data, Construct = Construct)
-  LOGOdds_Ratio = meta_data_likelihoodResults$LOGOdds_Ratio
+  meta_data_likelihoodResults = metaDataLikelihood(likelihood_data = likelihood_data, Construct = Construct, N = N)
+  LOGOdds_Ratio_quant = meta_data_likelihoodResults$LOGOdds_Ratio
+  print("LOGOdds_Ratio_quant")
   
+  print(LOGOdds_Ratio_quant)
+  Standard_deviation_quant = meta_data_likelihoodResults$Standard_deviation_LogOR
+  variance_quant = Standard_deviation_quant^2
+    
+  #meta_data_likelihoodResults$Standard_error_LogOR
+  LowerCI_LogOddsRatio = meta_data_likelihoodResults$LowerCI_LogOddsRatio 
+  UpperCI_LogOddsRatio = meta_data_likelihoodResults$UpperCI_LogOddsRatio
   
   #the number of quantitative studies that evaluted each construct: 
   k =  meta_data_likelihoodResults$k
 
-  LowerCI_LogOddsRatio = meta_data_likelihoodResults$LowerCI_LogOddsRatio 
-  UpperCI_LogOddsRatio = meta_data_likelihoodResults$UpperCI_LogOddsRatio
+  #update the qualitative evidence with quantitative evidence
+  posterior_QualplusQuant_mean = (posterior_Qual_mean/posterior_Qual_variance + LOGOdds_Ratio_quant/variance_quant)/(1/posterior_Qual_variance+1/variance_quant)
+ print("posterior_QualplusQuant_mean")
+  print(posterior_QualplusQuant_mean)
+        
+  posterior_QualplusQuant_variance =1/(1/posterior_Qual_variance+1/variance_quant)
   
   
+  data_density_QualplusQuant = posterior_func(posterior_mean = posterior_QualplusQuant_mean, posterior_variance = posterior_QualplusQuant_variance)
+ 
+  plot_posterior_QualplusQuant_density = plotting(data=data_density_QualplusQuant,
+                                          aes(x=logOddsRatio, y=posterior_density, fill=posterior_density_CI), 
+                                          values_colour = c("#D55E00", "#0072B2"), 
+                                          title = paste("Posterior distribution:", print(Construct)))
   
+  
+  print(plot_posterior_QualplusQuant_density)
   
   return(params = (data.frame(Construct = Construct, 
                               #prior_alpha = HyperPrior_a, 
