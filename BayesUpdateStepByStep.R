@@ -103,106 +103,6 @@ BayesUpdateStepByStep = function(x, Construct, uncertainty, seed) {
   # It is important to note that we used the entire set of data, meaning that the total pool of HF patients would equal to 30 scenarios multiplied by six different expert judgements (30 x 6).  
   #From this, we estimated alpha and beta parameters for the likelihood distribution using the following formulas (from Spiegelhalter et al 2003 (3): α+N_(PA=1;X=1 ); ß + N – N_█(PA=1;X=1 @).
   #Using these parameters, we elicited likelihood distribution using dbeta function in R. 
-  
-
-  Age_N_PA_X =28
-  SelfEfficacy_N_PA_X = 41
-  SocialSupport_N_PA_X = 38
-  Comorbidity_N_PA_X = 23 
-  NegativeAttitute_N_PA_X = 4
-  Soma_N_PA_X = 3
-  Soma_N_PA_X = 3
-  Symptoms_N_PA_X = 7
-  Soma_N_PA_X = 3
-  PositiveAttitute_N_PA_X = 4
-  
-  PriorExpert_N_PA_X = c(Age_N_PA_X,
-                         SelfEfficacy_N_PA_X,
-                         SocialSupport_N_PA_X,
-                         Comorbidity_N_PA_X,
-                         NegativeAttitute_N_PA_X,
-                         Soma_N_PA_X,
-                         Soma_N_PA_X,
-                         Symptoms_N_PA_X,
-                         Soma_N_PA_X,
-                         PositiveAttitute_N_PA_X)
-  
-  
-  Age_N_PA_noX =30
-  SelfEfficacy_N_PA_noX = 17
-  SocialSupport_N_PA_noX = 20
-  Comorbidity_N_PA_noX = 35
-  NegativeAttitute_N_PA_noX = 4
-  Soma_N_PA_noX =10
-  Soma_N_PA_noX =10
-  Symptoms_N_PA_noX = 6
-  Soma_N_PA_noX =10
-  PositiveAttitute_N_PA_noX = 4
-  
-  
-  PriorExpert_N_PA_noX = c(Age_N_PA_noX,
-                           SelfEfficacy_N_PA_noX,
-                           SocialSupport_N_PA_noX,
-                           Comorbidity_N_PA_noX,
-                           NegativeAttitute_N_PA_noX,
-                           Soma_N_PA_noX,
-                           Soma_N_PA_noX,
-                           Symptoms_N_PA_noX,
-                           Soma_N_PA_noX,
-                           PositiveAttitute_N_PA_noX)
-  
-  
-  Age_N_noPA_X = 20
-  SelfEfficacy_N_noPA_X = 7
-  SocialSupport_N_noPA_X = 10
-  Comorbidity_N_noPA_X = 25 
-  NegativeAttitute_N_noPA_X = 4
-  Soma_N_noPA_X = 17 
-  Soma_N_noPA_X = 17
-  Symptoms_N_noPA_X = 13
-  Soma_N_noPA_X = 17
-  PositiveAttitute_N_noPA_X = 1
-  
-  PriorExpert_N_noPA_X = c(Age_N_noPA_X,
-                           SelfEfficacy_N_noPA_X,
-                           SocialSupport_N_noPA_X,
-                           Comorbidity_N_noPA_X,
-                           NegativeAttitute_N_noPA_X,
-                           Soma_N_noPA_X,
-                           Soma_N_noPA_X,
-                           Symptoms_N_noPA_X,
-                           Soma_N_noPA_X,
-                           PositiveAttitute_N_noPA_X)
-  
-  
-  Age_N_noPA_noX =18 
-  SelfEfficacy_N_noPA_noX = 31
-  SocialSupport_N_noPA_noX =28
-  Comorbidity_N_noPA_noX = 13
-  NegativeAttitute_N_noPA_noX = 1
-  Soma_N_noPA_noX = 10
-  Soma_N_noPA_noX = 10
-  Symptoms_N_noPA_noX = 14
-  Soma_N_noPA_noX = 10
-  PositiveAttitute_N_noPA_noX = 4
-  
-  PriorExpert_N_noPA_noX = c(Age_N_noPA_noX,
-                             SelfEfficacy_N_noPA_noX,
-                             SocialSupport_N_noPA_noX,
-                             Comorbidity_N_noPA_noX,
-                             NegativeAttitute_N_noPA_noX,
-                             Soma_N_noPA_noX,
-                             Soma_N_noPA_noX,
-                             Symptoms_N_noPA_noX,
-                             Soma_N_noPA_noX,
-                             PositiveAttitute_N_noPA_noX)
-  
-  Number_successes = cbind(PriorExpert_N_PA_X,
-                           PriorExpert_N_PA_noX,
-                           PriorExpert_N_noPA_X,
-                           PriorExpert_N_noPA_noX) 
- 
-  x = cbind(x, Number_successes)
 
   #On the basis of the results of the prior elicitation task we calculate the log OR for each construct
   
@@ -268,17 +168,14 @@ BayesUpdateStepByStep = function(x, Construct, uncertainty, seed) {
   #formulas for calculating posterior distribution parameters below are from Spieghelhalter et al. 2003, p63, equation 3.15: 
 
   
-  posterior_Qual_mean = (Mean_probability_hyperprior/Variance_hyperprior + logOR_expert_elicitation_task/variance_expert_elicitation_task)/(1/Variance_hyperprior+1/variance_expert_elicitation_task)
-
+  posterior_Qual_mean =  logOR_expert_elicitation_task
   print("posterior_Qual_mean")
   print(posterior_Qual_mean)
-  posterior_Qual_variance =1/(1/Variance_hyperprior+1/variance_expert_elicitation_task)
+  posterior_Qual_variance =  variance_expert_elicitation_task
   
   
   #below we elicit posterior_Qual which is distirbution for probability for physical activity given a construct accroding to the qualitative evidence
   posterior_func=function(posterior_mean, posterior_variance) {
-  
-      
     Probability = seq( 0 , 1 , length=1000)
     logOddsRatio = seq( -1 , 1 , length=1000)
     ProbabilityPrior_qual_func = seq( 0 , 1 , length=1000)
@@ -286,7 +183,6 @@ BayesUpdateStepByStep = function(x, Construct, uncertainty, seed) {
     #the density distribution for probability for phyical activity given a construct according to teh experts is centred around the logOR elicited from expert responses 
     posterior_density = dnorm(logOddsRatio, posterior_mean,  posterior_variance, log = FALSE)
     posterior_density = posterior_density/sum(posterior_density)
-    
     
     data=data.frame(logOddsRatio, posterior_density)
     data$posterior_density_cumsum=cumsum(data$posterior_density)
@@ -296,7 +192,6 @@ BayesUpdateStepByStep = function(x, Construct, uncertainty, seed) {
     data$p_posterior_Qual = pnorm(logOddsRatio, posterior_mean, posterior_variance, lower.tail = TRUE, log.p = FALSE)
     data$posterior_Qual_quantile_0.05 = qnorm(0.05, posterior_mean, posterior_variance, lower.tail = TRUE, log.p = FALSE)
     data$posterior_Qual_quantile_0.95 = qnorm(0.95,  posterior_mean, posterior_variance, lower.tail = TRUE, log.p = FALSE)
-    
     data
   }
   
@@ -306,7 +201,7 @@ BayesUpdateStepByStep = function(x, Construct, uncertainty, seed) {
 
   
   plot_posterior_Qual_density = plotting(data=data_posterior_Qual,
-                                     aes(x=logOddsRatio, y=posterior_density, fill=posterior_density_CI), 
+                                     aes(x=data_posterior_Qual$logOddsRatio, y=data_posterior_Qual$posterior_density, fill=data_posterior_Qual$posterior_density_CI), 
                                      values_colour = c("#CC79A7", "#0072B2"), 
                                      title = paste("Expert Belief: Probability of physical activity given", print(Construct)))
   
@@ -346,7 +241,7 @@ BayesUpdateStepByStep = function(x, Construct, uncertainty, seed) {
   data_density_QualplusQuant = posterior_func(posterior_mean = posterior_QualplusQuant_mean, posterior_variance = posterior_QualplusQuant_variance)
  
   plot_posterior_QualplusQuant_density = plotting(data=data_density_QualplusQuant,
-                                          aes(x=logOddsRatio, y=posterior_density, fill=posterior_density_CI), 
+                                          aes(x=data_density_QualplusQuant$logOddsRatio, y=data_density_QualplusQuant$posterior_density, fill=data_density_QualplusQuant$posterior_density_CI), 
                                           values_colour = c("#D55E00", "#0072B2"), 
                                           title = paste("Posterior distribution:", print(Construct)))
   
