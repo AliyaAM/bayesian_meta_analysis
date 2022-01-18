@@ -208,36 +208,40 @@ BayesUpdateStepByStep = function(x, Construct, uncertainty, seed) {
   PriorExpert_N_noPA_X = x[index,]$PriorExpert_N_noPA_X
   PriorExpert_N_PA_noX = x[index,]$PriorExpert_N_PA_noX
   
-  #OR_expert_elicitation_task = log((PriorExpert_N_PA_X*PriorExpert_N_noPA_noX)/(PriorExpert_N_noPA_X*PriorExpert_N_PA_noX))
-  OR_expert_elicitation_task = (PriorExpert_N_PA_X*PriorExpert_N_noPA_noX)/(PriorExpert_N_noPA_X*PriorExpert_N_PA_noX)
+  # Probabity of PA given Construct (i.e, Probability_PA_X, condiitonal probability) according to the expert elicitation task 
+  Probability_PA_X = PriorExpert_N_PA_X/(PriorExpert_N_PA_X+PriorExpert_N_noPA_noX+PriorExpert_N_noPA_X+PriorExpert_N_PA_noX)
   
-  
-  
+  #Uncertainty was elicited from teh variance in responses from different experts 
   variance_expert_elicitation_task = x[index,]$variance
+  
+  #for formulas below we will need to express it as standard deviation 
   variance_expert_elicitation_task = sqrt(variance_expert_elicitation_task)
   
   #the total n (scenarios*rater) is 150 (i.e., 150 scenario-rater pairs)
   Total_N_scenario_expert_pairs = 150
 
   #we elicit the probability distribution with these two parameters
-  Prior_qual = rnorm(Total_N_scenario_expert_pairs, OR_expert_elicitation_task, variance_expert_elicitation_task)
+  Prior_qual = rnorm(Total_N_scenario_expert_pairs, Probability_PA_X, variance_expert_elicitation_task)
   
   #Prior_qual Credible Interval are calculated below:
   Probability = seq( 0 , 1 , length=1000)
   
-  p_Prior_qual = pnorm(Probability, OR_expert_elicitation_task, variance_expert_elicitation_task, lower.tail = TRUE, log.p = FALSE)
-  Prior_qual_quantile_0.05 = qnorm(0.05, OR_expert_elicitation_task, variance_expert_elicitation_task, lower.tail = TRUE, log.p = FALSE)
-  Prior_qual_quantile_0.95 = qnorm(0.95,  OR_expert_elicitation_task, variance_expert_elicitation_task, lower.tail = TRUE, log.p = FALSE)
+  p_Prior_qual = pnorm(Probability, Probability_PA_X, variance_expert_elicitation_task, lower.tail = TRUE, log.p = FALSE)
+  Prior_qual_quantile_0.05 = qnorm(0.05, Probability_PA_X, variance_expert_elicitation_task, lower.tail = TRUE, log.p = FALSE)
+  Prior_qual_quantile_0.95 = qnorm(0.95,  Probability_PA_X, variance_expert_elicitation_task, lower.tail = TRUE, log.p = FALSE)
   
 ####
-  #function for plotting distribution elicited from the experts 
+  #function for distribution elicited from the experts 
   
-  Prior_qual_func = function(OR_expert_elicitation_task,  variance_expert_elicitation_task) {
+  Prior_qual_func = function(Probability_PA_X,  variance_expert_elicitation_task) {
  
-    print(OR_expert_elicitation_task)
+    print(Probability_PA_X)
     print(variance_expert_elicitation_task)
     ProbabilityPrior_qual_func = seq( 0 , 1 , length=1000)
-    Prior_qual_density = dnorm(ProbabilityPrior_qual_func, OR_expert_elicitation_task,  variance_expert_elicitation_task, log = TRUE)
+    
+    # The density distribution is centered on Probabity of PA given Construct (i.e, Probability_PA_X, condiitonal probability) according to the expert elicitation task 
+
+    Prior_qual_density = dnorm(ProbabilityPrior_qual_func, Probability_PA_X,  variance_expert_elicitation_task, log = TRUE)
     #normalise density distribution
     #Prior_qual_density = Prior_qual_density/sum(Prior_qual_density)
     
@@ -251,7 +255,7 @@ BayesUpdateStepByStep = function(x, Construct, uncertainty, seed) {
   
 
   #elicit density distribution from the expert elicitation task 
-  data_density_Prior_qual = Prior_qual_func(OR_expert_elicitation_task = OR_expert_elicitation_task,  
+  data_density_Prior_qual = Prior_qual_func(Probability_PA_X = Probability_PA_X,  
                                             variance_expert_elicitation_task = variance_expert_elicitation_task)
 
 
@@ -259,7 +263,7 @@ BayesUpdateStepByStep = function(x, Construct, uncertainty, seed) {
   #formulas for calculating posterior distribution parameters below are from Spieghelhalter et al. 2003, p63, equation 3.15: 
 
   
-  posterior_Qual_mean = (Mean_probability_hyperprior/Variance_hyperprior + OR_expert_elicitation_task/variance_expert_elicitation_task)/(1/Variance_hyperprior+1/variance_expert_elicitation_task)
+  posterior_Qual_mean = (Mean_probability_hyperprior/Variance_hyperprior + Probability_PA_X/variance_expert_elicitation_task)/(1/Variance_hyperprior+1/variance_expert_elicitation_task)
   posterior_Qual_variance =1/(1/Variance_hyperprior+1/variance_expert_elicitation_task)
   
   
@@ -268,7 +272,7 @@ BayesUpdateStepByStep = function(x, Construct, uncertainty, seed) {
     
     Probability = seq( 0 , 1 , length=1000)
     #the density distribution for probability for phyical activity given a construct according to teh experts is centred around the logOR elicited from expert responses 
-    posterior_Qual_density = dnorm(Probability, OR_expert_elicitation_task,  variance_expert_elicitation_task, log = FALSE)
+    posterior_Qual_density = dnorm(Probability, Probability_PA_X,  variance_expert_elicitation_task, log = FALSE)
     posterior_Qual_density = posterior_Qual_density/sum(posterior_Qual_density)
     
     
