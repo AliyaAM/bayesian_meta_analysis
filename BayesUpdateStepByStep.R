@@ -78,7 +78,7 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   )
 
  #plot HYPERPRIOR:
-  plotting=function(data, ... ,title ) {
+  plotting_hyperprior_density=function(data, ... ,title ) {
     library(ggplot2)
     ggplot(data, ...)+
       geom_bar(stat="identity", alpha=0.5)+
@@ -90,7 +90,7 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
       scale_fill_manual(values = c("#999999", "#0072B2"))
   }
   
-  plotting(data=data_density_Hyperprior, aes(x=Probability, y=Hyperprior_density_normalised, fill=Hyperprior_density_CI), mean = Mean_probability_hyperprior, title="Hyperprior")
+  plotting_hyperprior_density(data=data_density_Hyperprior, aes(x=Probability, y=Hyperprior_density_normalised, fill=Hyperprior_density_CI), title="Hyperprior")
   
 
   #Six experts completed the expert elicitation task. 
@@ -203,6 +203,7 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
 
   #On the basis of the results of the prior elicitation task we calculate the log OR for each construct 
   logOR_expert_elicitation_task =  log((x[index,]$PriorExpert_N_PA_X*x[index,]$PriorExpert_N_noPA_noX)/(x[index,]$PriorExpert_N_noPA_X*x[index,]PriorExpert_N_PA_noX))
+  
   variance_expert_elicitation_task = x[index,]$variance
   variance_expert_elicitation_task = sqrt(variance_expert_elicitation_task)
   #the total n (scenarios*rater) is 150 (i.e., 150 scenario-rater pairs)
@@ -211,7 +212,7 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   #we elicit the probability distribution with these two parameters
   Prior_qual = rnorm(Total_N_scenario_expert_pairs, logOR_expert_elicitation_task, variance_expert_elicitation_task)
   
-  #Prior_qualCredible Iinterval are calculated below:
+  #Prior_qual Credible Interval are calculated below:
   p_Prior_qual = pnorm(Probability, logOR_expert_elicitation_task, variance_expert_elicitation_task, lower.tail = TRUE, log.p = FALSE)
   Prior_qual_quantile_0.05 = qnorm(0.05, logOR_expert_elicitation_task, variance_expert_elicitation_task, lower.tail = TRUE, log.p = FALSE)
   Prior_qual_quantile_0.95 = qnorm(0.95,  logOR_expert_elicitation_task, variance_expert_elicitation_task, lower.tail = TRUE, log.p = FALSE)
@@ -230,8 +231,22 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
     "outside CI",  "inside CI"
   )
   
+  #plot Prior_qual_density:
+  
+  plotting_qual_density=function(data, Construct) {
+    library(ggplot2)
+    ggplot(data, ...)+
+      geom_bar(stat="identity", alpha=0.5)+
+      theme_classic()+
+      theme(axis.text.y = element_blank())+
+      ylab("Probability density")+
+      ggtitle(paste("Expert Belief: Probability for physical activity given", print(Construct)))+
+      labs(fill='95% confidence interval')+
+      scale_fill_manual(values = c("#CC79A7", "#0072B2"))
+  }
+  
 
-  plotting(data=data_density_Prior_qual, aes(x=Probability, y=Prior_qual_density_normalised, fill=Prior_qual_density_CI), mean = logOR_expert_elicitation_task, title="Prior elicited from the expert task informed by the qualitative evidence")
+  plotting_qual_density(data=data_density_Prior_qual, aes(x=Probability, y=Prior_qual_density_normalised, fill=Prior_qual_density_CI), Construct = Construct)
   
   
   
@@ -239,72 +254,61 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   --------------
     -----
   
-  #below we are updating Hyperprior  with Qualitative Results elicited from the expert elicitation task for each construct separately: 
-  #formulas for calculating posterior beta and alpha parameters for the updated distribution (i.e., hyperprior with qualitative prior) below are from Spieghelhalter et al. 2003, p60: 
-  
-  posterior_alpha_Qual = HyperPrior_a + x[index,]$PriorExpert_N_PA_X 
-  posterior_beta_Qual = HyperPrior_b + x[index,]$PriorExpert_N_noPA_X
-  mean_posterior_Qual = posterior_alpha_Qual/(posterior_alpha_Qual+posterior_beta_Qual)
-  mode_posterior_Qual =(posterior_alpha_Qual-1)/(posterior_alpha_Qual+posterior_beta_Qual-2)
-  variance_posterior_Qual = (posterior_alpha_Qual * posterior_beta_Qual) / ((posterior_alpha_Qual+posterior_beta_Qual)^2*(posterior_alpha_Qual+posterior_beta_Qual+1))
+  #below we are updating Hyperprior with Qualitative Results elicited from the expert elicitation task for each construct separately: 
+  #formulas for calculating posterior distribution parameters below are from Spieghelhalter et al. 2003, p63, equation 3.15: 
 
-  #Credible intervals: 
-  posterior_quantile_0.05_Qual = qbeta(0.05, posterior_alpha_Qual,posterior_beta_Qual)
-  posterior_quantile_0.95_Qual = qbeta(0.95, posterior_alpha_Qual,posterior_beta_Qual)
-  posterior_mode_Qual = qbeta(0.5, posterior_alpha_Qual,posterior_beta_Qual)
+  posterior_Qual_mean = (Mean_probability_hyperprior/Variance_hyperprior + logOR_expert_elicitation_task/variance_expert_elicitation_task)/(1/Variance_hyperprior+1/variance_expert_elicitation_task)
+  posterior_Qual_variance =1/(1/Variance_hyperprior+1/variance_expert_elicitation_task)
+  
+  
+  #below we elicit posterior_Qual which is distirbution for probability for physical activity given a construct accroding to the qualitative evidence
+  posterior_Qual_density = dnorm(Probability, posterior_Qual_mean, posterior_Qual_variance)
+  posterior_Qual_density_normalised = posterior_Qual_density/sum(posterior_Qual_density)
+  data_density_posterior_Qual = data.frame(Probability, posterior_Qual_density_normalised)
+  data_density_posterior_Qual$posterior_Qual_density_cumsum = cumsum(posterior_Qual_density_normalised)
+  #the CIs of the posterior_Qual are below:
+  data_density_posterior_Qual$posterior_Qual_density_CI = ifelse(
+    data_density_posterior_Qual$posterior_Qual_density_cumsum<0.025|data_density_posterior_Qual$posterior_Qual_density_cumsum>0.975,
+    "outside CI",  "inside CI"
+  )
+  #posterior_Qual Credible Interval are calculated below:
+  p_posterior_Qual = pnorm(Probability, posterior_Qual_mean, posterior_Qual_variance, lower.tail = TRUE, log.p = FALSE)
+  posterior_Qual_quantile_0.05 = qnorm(0.05, posterior_Qual_mean, posterior_Qual_variance, lower.tail = TRUE, log.p = FALSE)
+  posterior_Qual_quantile_0.95 = qnorm(0.95,  posterior_Qual_mean, posterior_Qual_variance, lower.tail = TRUE, log.p = FALSE)
+  
+  
+  plotting_posterior_Qual = function(Construct, 
+                                     Probability, 
+                                     posterior_Qual_density, 
+                                     posterior_Qual_mean,
+                                     posterior_Qual_quantile_0.05,
+                                     posterior_Qual_quantile_0.95){
+  
+  title = paste(print(sprintf("Joint probability density of physical activity and %s, qualitative evidence", Construct)))
+  
+  ggplot(density, aes(Probability, posterior_Qual_density)) + 
+    geom_area(fill="#CC79A7") + 
+    theme_classic()+
+    theme(axis.text.x = element_text(angle = 90, hjust = 1),
+          axis.text.y = element_blank())+
+    geom_vline(xintercept = posterior_Qual_mean, colour="red")+
+    geom_vline(xintercept = posterior_Qual_quantile_0.05, colour="darkblue")+
+    geom_vline(xintercept = posterior_Qual_quantile_0.95, colour="darkblue")+
+    xlab("Probability")+
+    ylab("Probability density")+
+    ggtitle(title)+
+  }
+  
+  plotting_posterior_Qual(Construct = Construct,  
+                          Probability = Probability, 
+                          posterior_Qual_density = posterior_Qual_density, 
+                          posterior_Qual_mean = posterior_Qual_mean,
+                          posterior_Qual_quantile_0.05 = posterior_Qual_quantile_0.05,
+                          posterior_Qual_quantile_0.95 = posterior_Qual_quantile_0.95)
+  
 
-  
-  #the posterior distribution that combined hyperprior with prior: 
-  posterior1_Qual = dbeta(Theta, posterior_alpha_Qual, posterior_beta_Qual)
-  posterior1_normalised_Qual = posterior1_Qual/sum(posterior1_Qual)
-  length(posterior1_Qual)
-  length(Theta)
-  plot(Theta, posterior1_Qual)
-  density_posterior_Qual = data.frame(Theta, posterior1_Qual, mode_posterior_Qual, mean_posterior_Qual, posterior_quantile_0.05_Qual, posterior_quantile_0.95_Qual)
-  
-  graph_Posterior_Qual = plotDensity(data = density_posterior_Qual,
-                                aes( x = density_posterior_Qual$Theta, 
-                                     y = density_posterior_Qual$posterior1_Qual,
-                                     fill = NULL),
-                                mode = density_posterior_Qual$mode_posterior_Qual,
-                                mean = density_posterior_Qual$mean_posterior_Qual, 
-                                quantile_0.05 = density_posterior_Qual$posterior_quantile_0.05_Qual,
-                                quantile_0.95 = density_posterior_Qual$posterior_quantile_0.95_Qual,
-                                MAPhyperprior = MAP_hyperPrior,
-                                CIUpperhyperprior = HDIUpper_hyperPrior, 
-                                CILowerhyperprior = HDILower_hyperPrior, 
-                                xlabTitle = paste("Probability of physical activity for", print(Construct)),  
-                                ylabTitle = "Probability density", 
-                                title = paste("Expert Belief: Probability of physical activity given", print(Construct)))
-  
-  print(graph_Posterior_Qual)
-  
-
-  
-  ProbabilityDistribution_Posterior_Qual = qbeta(Theta, posterior_alpha_Qual, posterior_beta_Qual)
-  PosteriorProbability_distribution_Qual = data.frame(Theta, 
-                                                 ProbabilityDistribution_Posterior_Qual,
-                                                 mode_posterior_Qual, 
-                                                 mean_posterior_Qual, 
-                                                 posterior_quantile_0.05_Qual,
-                                                 posterior_quantile_0.95_Qual)
-  
-  
-  
-  graph_PosteriorProbability_distribution_Qual = plotDensity(data = PosteriorProbability_distribution_Qual,
-                                                        aes( x = PosteriorProbability_distribution_Qual$Theta, 
-                                                             y = PosteriorProbability_distribution_Qual$ProbabilityDistribution_Posterior_Qual,
-                                                             fill = NULL),
-                                                        mode = PosteriorProbability_distribution_Qual$mode_posterior_Qual,
-                                                        mean = PosteriorProbability_distribution_Qual$mean_posterior_Qual, 
-                                                        quantile_0.05 = PosteriorProbability_distribution_Qual$posterior_quantile_0.05_Qual,
-                                                        quantile_0.95 = PosteriorProbability_distribution_Qual$posterior_quantile_0.95_Qual,
-                                                        xlabTitle = paste("Posterior probability of physical activity for", print(Construct)),  
-                                                        ylabTitle = "Probability distribution", 
-                                                        title = paste("Expert Belief: Probability of physical activity given", print(Construct)))
-  
- #calculate the TOTAL N across quant studies, stratified by construct: 
-  
+ 
+  #calculate the TOTAL N across quant studies, stratified by construct: 
   PooledN_output = PooledN(data = data, Construct = Construct)
   N = PooledN_output$N
 
