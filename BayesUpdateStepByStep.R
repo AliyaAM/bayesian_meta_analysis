@@ -68,8 +68,8 @@ BayesUpdateStepByStep = function(x, Construct, uncertainty, seed) {
     data
   }
   
-  #function for ploting densities
-  plotting=function(data, ... ,title ) {
+  #function for ploting densities, colour values: - grey: "#999999", lilac: "#CC79A7", blue: "#0072B2". This are suitable for colour blind people)
+  plotting=function(data, ... ,title, values_colour ) {
     library(ggplot2)
     ggplot(data, ...)+
       geom_bar(stat="identity", alpha=0.5)+
@@ -78,8 +78,8 @@ BayesUpdateStepByStep = function(x, Construct, uncertainty, seed) {
       ylab("Probability density")+
       ggtitle(title)+
       labs(fill='95% confidence interval')+
-      scale_fill_manual(values = c("#CC79A7", "#0072B2"))
-    
+      scale_fill_manual(values = values_colour)
+   
   }
   #elicit hyperprior  
   data_density_Hyperprior=Hyperprior_func(Total_N_hyperprior = Total_N_hyperprior, Mean_probability_hyperprior = Mean_probability_hyperprior, Variance_hyperprior = Variance_hyperprior)
@@ -87,6 +87,7 @@ BayesUpdateStepByStep = function(x, Construct, uncertainty, seed) {
   #plot hyperprior density distribution 
   plot_hyperprior_density = plotting(data=data_density_Hyperprior,
                                      aes(x=Probability, y=Hyperprior_density, fill=Hyperprior_density_CI), 
+                                     values_colour = c("#999999", "#0072B2"), 
                                      title="Hyperprior")
   
   
@@ -214,9 +215,6 @@ BayesUpdateStepByStep = function(x, Construct, uncertainty, seed) {
   #Uncertainty was elicited from teh variance in responses from different experts 
   variance_expert_elicitation_task = x[index,]$variance
   
-  #for formulas below we will need to express it as standard deviation 
-  variance_expert_elicitation_task = sqrt(variance_expert_elicitation_task)
-  
   #the total n (scenarios*rater) is 150 (i.e., 150 scenario-rater pairs)
   Total_N_scenario_expert_pairs = 150
 
@@ -243,7 +241,7 @@ BayesUpdateStepByStep = function(x, Construct, uncertainty, seed) {
 
     Prior_qual_density = dnorm(ProbabilityPrior_qual_func, Probability_PA_X,  variance_expert_elicitation_task, log = TRUE)
     #normalise density distribution
-    #Prior_qual_density = Prior_qual_density/sum(Prior_qual_density)
+    Prior_qual_density = Prior_qual_density/sum(Prior_qual_density)
     
     
     data=data.frame(ProbabilityPrior_qual_func, Prior_qual_density)
@@ -295,6 +293,7 @@ BayesUpdateStepByStep = function(x, Construct, uncertainty, seed) {
   
   plot_posterior_Qual_density = plotting(data=data_posterior_Qual,
                                      aes(x=Probability, y=posterior_Qual_density, fill=posterior_Qual_density_CI), 
+                                     values_colour = c("#CC79A7", "#0072B2"), 
                                      title = paste("Expert Belief: Probability of physical activity given", print(Construct)))
   
   
