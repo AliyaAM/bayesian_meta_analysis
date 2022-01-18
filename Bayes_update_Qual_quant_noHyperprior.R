@@ -41,7 +41,7 @@ BayesUpdateStepByStep = function(x, Construct) {
   
   #below we index the data by the name of construct
   index = x$Construct == Construct
-
+  
   #data for the HYPERPRIOR: 
   JaarsmaInternationalStudy = JaarsmaInternationalStudy
   #Total N, variance and mean estimate for the probability of physical activity in general HF populationfrom Jaarsma study (empirical hyperprior):    
@@ -49,7 +49,7 @@ BayesUpdateStepByStep = function(x, Construct) {
   Variance_hyperprior = JaarsmaInternationalStudy$Variance[20]
   Mean_probability_hyperprior = JaarsmaInternationalStudy$Proportion_highPA[20]
   
- 
+  
   #data for PRIOR 
   #Six experts completed the expert elicitation task. 
   #The reviewers made a judgement on whether the hypothetical HF patient met the recommended levels of physical activity or not. 
@@ -97,7 +97,7 @@ BayesUpdateStepByStep = function(x, Construct) {
     data=data.frame(Probability,logOddsRatio,  Hyperprior_density)
     data$Hyperprior_density_cumsum=cumsum(data$Hyperprior_density)
     data$Hyperprior_density_CI=ifelse(data$Hyperprior_density_cumsum<0.025|data$Hyperprior_density_cumsum>0.975, "outside CI", "inside CI")
-
+    
     #elicit PRIOR 
     #On the basis of the results of the prior elicitation task we calculate the log OR for each construct
     data$logOR_expert_elicitation_task = log(PriorExpert_N_PA_X*PriorExpert_N_noPA_noX)/(PriorExpert_N_noPA_X*PriorExpert_N_PA_noX)
@@ -126,7 +126,7 @@ BayesUpdateStepByStep = function(x, Construct) {
     data$Likelihood_qual_quantile_0.05 = qnorm(0.05, data$LOGOdds_Ratio_quant, data$variance_quant, lower.tail = TRUE, log.p = FALSE)
     data$Likelihood_qual_quantile_0.95 = qnorm(0.95,  data$LOGOdds_Ratio_quant, data$variance_quant, lower.tail = TRUE, log.p = FALSE)
     
-  
+    
     
     #POSTERIOR
     data$posterior_QualplusQuant_mean = (data$logOR_expert_elicitation_task/data$variance_expert_elicitation_task + data$LOGOdds_Ratio_quant/data$variance_quant)/(1/data$variance_expert_elicitation_task+1/data$variance_quant)
@@ -142,7 +142,7 @@ BayesUpdateStepByStep = function(x, Construct) {
     data$Posterior_QualplusQuant_quantile_0.05 = qnorm(0.05, data$posterior_QualplusQuant_mean, data$posterior_QualplusQuant_variance, lower.tail = TRUE, log.p = FALSE)
     data$Posterior_QualplusQuant_quantile_0.95 = qnorm(0.95,  data$posterior_QualplusQuant_mean, data$posterior_QualplusQuant_variance, lower.tail = TRUE, log.p = FALSE)
     
-      
+    
     data
   }
   
@@ -158,7 +158,7 @@ BayesUpdateStepByStep = function(x, Construct) {
                         variance_quant = variance_quant)
   
   
-    
+  
   #function for ploting densities, colour values: - grey: "#999999", lilac: "#CC79A7", blue: "#0072B2". This are suitable for colour blind people)
   plotting=function(data, ... ,title, values_colour ) {
     library(ggplot2)
@@ -182,7 +182,7 @@ BayesUpdateStepByStep = function(x, Construct) {
   
   #print plot, so we it can be saved into the local repository 
   print(plot_hyperprior_density)
-
+  
   
   plot_Prior_Qual_density = plotting(data=data,
                                      aes(x=logOddsRatio, y=Prior_qual_density, fill= Prior_qual_density_CI), 
@@ -202,13 +202,13 @@ BayesUpdateStepByStep = function(x, Construct) {
   print(plot_Likelihood_density)
   
   
-
+  
   #update the qualitative evidence with quantitative evidence
   
   plot_posterior_QualplusQuant_density = plotting(data=data,
-                                          aes(x=logOddsRatio, y= Posterior_QualplusQuant, fill= Posterior_QualplusQuant_CI), 
-                                          values_colour = c("#D55E00", "#0072B2"), 
-                                          title = paste("Posterior distribution:", print(Construct)))
+                                                  aes(x=logOddsRatio, y= Posterior_QualplusQuant, fill= Posterior_QualplusQuant_CI), 
+                                                  values_colour = c("#D55E00", "#0072B2"), 
+                                                  title = paste("Posterior distribution:", print(Construct)))
   
   
   print(plot_posterior_QualplusQuant_density)
@@ -221,7 +221,7 @@ BayesUpdateStepByStep = function(x, Construct) {
   
   return(params = (data.frame(Construct = Construct, 
                               data)))
-                             
+  
 }
 
 

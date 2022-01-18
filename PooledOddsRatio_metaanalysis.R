@@ -8,12 +8,6 @@ x = read.csv(paste(SOURCE_ROOT, "input.csv", sep=""))  # requires this data for 
 source(paste(SOURCE_ROOT, "ConvertEffectsizes.R", sep=""))
 source(paste(SOURCE_ROOT, "PooledN.R", sep=""))
 
-#source('/Users/aliya/my_docs/THESIS/BayesianMetaAnalysis/N_success.R')
-
-#ai = N_success(N = data$N, likelihood_data$OR)
-
-
-#data = read.csv('/Users/aliya/my_docs/THESIS/BayesianMetaAnalysis/Likelihood_data_clean.csv')
 
 metaDataLikelihood = function(likelihood_data, Construct, N) {
   index = likelihood_data$Construct == Construct
@@ -23,11 +17,13 @@ metaDataLikelihood = function(likelihood_data, Construct, N) {
          yi = likelihood_data_grouped$lOR, 
          vi = likelihood_data_grouped$varLOR)
   
-  Pooled_lOR_RandomEffect_from_ConverEffectSizes_Subset = rma(measure = "OR", 
+  Pooled_lOR_RandomEffect_from_ConverEffectSizes_Subset = rma(measure = "OR",  # "OR" for the log odds ratio in the metafor function 
                                                                yi = yi, 
                                                                vi = vi,
                                                                method = "REML", 
                                                                data=dat)
+  
+  variance_across_studies = mean(dat$vi)
   
   summary(Pooled_lOR_RandomEffect_from_ConverEffectSizes_Subset)
   
@@ -56,6 +52,7 @@ metaDataLikelihood = function(likelihood_data, Construct, N) {
   return(params = list(Construct = Construct, 
                        LOGOdds_Ratio = LOGOdds_Ratio, 
                        k = k, 
+                       variance_across_studies = variance_across_studies, 
                        Standard_error_LogOR = Standard_error_LogOR, 
                        Standard_deviation_LogOR = Standard_deviation_LogOR, 
                        LowerCI_LogOddsRatio = LowerCI_LogOddsRatio, 

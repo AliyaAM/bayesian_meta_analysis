@@ -11,36 +11,36 @@ source(paste(SOURCE_ROOT, "BayesUpdateStepByStep.R", sep=""), local = TRUE) # th
 
 seed = as.integer(Sys.time())
 
-Results_Age = BayesUpdateStepByStep(x =x, Construct = "Age", uncertainty = 10, seed = seed)
+Results_Age = BayesUpdateStepByStep(x =x, Construct = "Age")
 Results_BayesianMeta_Analysis = rbind(Results_Age)
 
 
-Results_sixMWT = BayesUpdateStepByStep(x =x, Construct = "6MWT", uncertainty = 10, seed = seed)
+Results_sixMWT = BayesUpdateStepByStep(x =x, Construct = "6MWT")
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_sixMWT)
 
-Results_Symptoms = BayesUpdateStepByStep(x =x, Construct = "Symptoms", uncertainty = 10, seed = seed)
+Results_Symptoms = BayesUpdateStepByStep(x =x, Construct = "Symptoms"  )
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_Symptoms)
 
 
-Results_LVEF = BayesUpdateStepByStep(x =x, Construct = "LVEF", uncertainty = 10, seed = seed)
+Results_LVEF = BayesUpdateStepByStep(x =x, Construct = "LVEF"  )
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_LVEF)
 
-Results_SelfEfficacy = BayesUpdateStepByStep(x =x, Construct = "SelfEfficacy", uncertainty = 10, seed = seed)
+Results_SelfEfficacy = BayesUpdateStepByStep(x =x, Construct = "SelfEfficacy"  )
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_SelfEfficacy)
 
-Results_SocialSupport = BayesUpdateStepByStep(x =x, Construct = "SocialSupport", uncertainty = 10, seed = seed)
+Results_SocialSupport = BayesUpdateStepByStep(x =x, Construct = "SocialSupport"  )
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_SocialSupport)
 
-Results_Comorbidity = BayesUpdateStepByStep(x =x, Construct = "Comorbidity", uncertainty = 10, seed = seed)
+Results_Comorbidity = BayesUpdateStepByStep(x =x, Construct = "Comorbidity"  )
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_Comorbidity) 
 
-Results_NegativeAttitute = BayesUpdateStepByStep(x =x, Construct = "NegativeAttitute", uncertainty = 10, seed = seed)
+Results_NegativeAttitute = BayesUpdateStepByStep(x =x, Construct = "NegativeAttitute"  )
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_NegativeAttitute)
 
-Results_Functioning = BayesUpdateStepByStep(x =x, Construct = "Functioning", uncertainty = 10, seed = seed)
+Results_Functioning = BayesUpdateStepByStep(x =x, Construct = "Functioning"  )
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_Functioning)
 
-Results_PositiveAttitute = BayesUpdateStepByStep(x =x, Construct = "PositiveAttitute", uncertainty = 10, seed = seed)
+Results_PositiveAttitute = BayesUpdateStepByStep(x =x, Construct = "PositiveAttitute"  )
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_PositiveAttitute)
 
 
