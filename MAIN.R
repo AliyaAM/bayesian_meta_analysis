@@ -16,7 +16,7 @@ library(bayestestR)
 library(HDInterval)
 library(assertthat)
 
-
+print("")
 #paste(SOURCE_ROOT, "HyperPriorData.csv", sep="")
 #paste(OUTPUT_ROOT, "seeds_MAPQualQuant.csv", sep="")
 #paste(OUTPUT_ROOT, logName, "/Results_ResultsBayesianUpdateQuant.csv", sep="")
@@ -38,6 +38,8 @@ JaarsmaInternationalStudy = read.csv(paste(SOURCE_ROOT, "HyperPriorData.csv", se
 #run Bayesian meta-analysis sourcing from 10 different seeds separately for two procedures: 
 
 #1) combining qualitative and quantitative evidence: 
+Bayes_update_Qual_quant_noHyperprior.R
+
 source(paste(SOURCE_ROOT, "QualANDQuant_sourcing_AllSeeds.R", sep=""))
 
 #2) updating hyperprior with quantitative evidence only 

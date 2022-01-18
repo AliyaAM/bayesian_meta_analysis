@@ -7,40 +7,42 @@ SOURCE_ROOT = "/Users/aliya/my_docs/proj/bayesian_meta_analysis/"
 ## Set the root location on the user's local machine to save output files.
 OUTPUT_ROOT = "/Users/aliya/my_docs/proj/bayesian_meta_analysis/"
 
-source(paste(SOURCE_ROOT, "BayesUpdateStepByStep.R", sep=""), local = TRUE) # this function (BayesUpdateStepByStep) runs the Bayesian meta-analysis that combines qualitative and quantitative evidence 
+#source(paste(SOURCE_ROOT, "BayesUpdateStepByStep.R", sep=""), local = TRUE) # this function (BayesUpdateStepByStep) runs the Bayesian meta-analysis that combines qualitative and quantitative evidence 
 
-seed = as.integer(Sys.time())
+source(paste(SOURCE_ROOT, "Bayes_update_Qual_quant_noHyperprior.R", sep=""), local = TRUE)
 
-Results_Age = BayesUpdateStepByStep(x =x, Construct = "Age")
+#seed = as.integer(Sys.time())
+
+Results_Age = Bayes_update_Qual_quant_noHyperprior(x =x, Construct = "Age")
 Results_BayesianMeta_Analysis = rbind(Results_Age)
 
 
-Results_sixMWT = BayesUpdateStepByStep(x =x, Construct = "6MWT")
+Results_sixMWT = Bayes_update_Qual_quant_noHyperprior(x =x, Construct = "6MWT")
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_sixMWT)
 
-Results_Symptoms = BayesUpdateStepByStep(x =x, Construct = "Symptoms"  )
+Results_Symptoms = Bayes_update_Qual_quant_noHyperprior(x =x, Construct = "Symptoms"  )
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_Symptoms)
 
 
-Results_LVEF = BayesUpdateStepByStep(x =x, Construct = "LVEF"  )
+Results_LVEF = Bayes_update_Qual_quant_noHyperprior(x =x, Construct = "LVEF"  )
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_LVEF)
 
-Results_SelfEfficacy = BayesUpdateStepByStep(x =x, Construct = "SelfEfficacy"  )
+Results_SelfEfficacy = Bayes_update_Qual_quant_noHyperprior(x =x, Construct = "SelfEfficacy"  )
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_SelfEfficacy)
 
-Results_SocialSupport = BayesUpdateStepByStep(x =x, Construct = "SocialSupport"  )
+Results_SocialSupport = Bayes_update_Qual_quant_noHyperprior(x =x, Construct = "SocialSupport"  )
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_SocialSupport)
 
-Results_Comorbidity = BayesUpdateStepByStep(x =x, Construct = "Comorbidity"  )
+Results_Comorbidity = Bayes_update_Qual_quant_noHyperprior(x =x, Construct = "Comorbidity"  )
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_Comorbidity) 
 
-Results_NegativeAttitute = BayesUpdateStepByStep(x =x, Construct = "NegativeAttitute"  )
+Results_NegativeAttitute = Bayes_update_Qual_quant_noHyperprior(x =x, Construct = "NegativeAttitute"  )
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_NegativeAttitute)
 
-Results_Functioning = BayesUpdateStepByStep(x =x, Construct = "Functioning"  )
+Results_Functioning = Bayes_update_Qual_quant_noHyperprior(x =x, Construct = "Functioning"  )
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_Functioning)
 
-Results_PositiveAttitute = BayesUpdateStepByStep(x =x, Construct = "PositiveAttitute"  )
+Results_PositiveAttitute = Bayes_update_Qual_quant_noHyperprior(x =x, Construct = "PositiveAttitute"  )
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_PositiveAttitute)
 
 

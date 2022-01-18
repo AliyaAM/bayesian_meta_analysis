@@ -37,18 +37,11 @@ source(paste(SOURCE_ROOT, "N_success.R", sep=""))  #calculate the proportion of 
 #reference: Spiegelhalter DJ, Abrams KR, Myles JP. Bayesian Approaches to Clinical Trials and Health-Care Evaluation. Chichester, UK: John Wiley & Sons, Ltd; 2003
 
 
-BayesUpdateStepByStep = function(x, Construct) {
+Bayes_update_Qual_quant_noHyperprior = function(x, Construct) {
   
   #below we index the data by the name of construct
   index = x$Construct == Construct
-  
-  #data for the HYPERPRIOR: 
-  JaarsmaInternationalStudy = JaarsmaInternationalStudy
-  #Total N, variance and mean estimate for the probability of physical activity in general HF populationfrom Jaarsma study (empirical hyperprior):    
-  Total_N_hyperprior = JaarsmaInternationalStudy$TotalN[20]
-  Variance_hyperprior = JaarsmaInternationalStudy$Variance[20]
-  Mean_probability_hyperprior = JaarsmaInternationalStudy$Proportion_highPA[20]
-  
+
   
   #data for PRIOR 
   #Six experts completed the expert elicitation task. 
@@ -82,28 +75,20 @@ BayesUpdateStepByStep = function(x, Construct) {
   #the number of quantitative studies that evaluted each construct: 
   k =  meta_data_likelihoodResults$k
   
-  BayesUpdate_func = function(Total_N_hyperprior, Mean_probability_hyperprior, Variance_hyperprior,
-                              PriorExpert_N_PA_X, PriorExpert_N_noPA_noX, PriorExpert_N_noPA_X, PriorExpert_N_PA_noX, variance_expert_elicitation_task,
+  BayesUpdate_func = function(PriorExpert_N_PA_X, PriorExpert_N_noPA_noX, PriorExpert_N_noPA_X, PriorExpert_N_PA_noX, variance_expert_elicitation_task,
                               LOGOdds_Ratio_quant, variance_quant) {
     
     Probability = seq( 0 , 1 , length=1000)
     logOddsRatio = seq( -2 , 2 , length=1000)
     
-    #elicit HYPERPRIOR distribution as a Gaussian (aka normal) distribution with mean value = mean from Jaarsma, and variance from Jaarsma
-    #elicits hyperprior from arguments Total_N_hyperprior, Mean_probability_hyperprior, Variance_hyperprior, Probability
-    Hyperprior_density = dnorm(Probability, Mean_probability_hyperprior,  Variance_hyperprior, log = FALSE)
-    #normalised hyperprior distribution 
-    Hyperprior_density = Hyperprior_density/sum(Hyperprior_density)
-    data=data.frame(Probability,logOddsRatio,  Hyperprior_density)
-    data$Hyperprior_density_cumsum=cumsum(data$Hyperprior_density)
-    data$Hyperprior_density_CI=ifelse(data$Hyperprior_density_cumsum<0.025|data$Hyperprior_density_cumsum>0.975, "outside CI", "inside CI")
-    
-    #elicit PRIOR 
     #On the basis of the results of the prior elicitation task we calculate the log OR for each construct
-    data$logOR_expert_elicitation_task = log(PriorExpert_N_PA_X*PriorExpert_N_noPA_noX)/(PriorExpert_N_noPA_X*PriorExpert_N_PA_noX)
+    logOR_expert_elicitation_task = log(PriorExpert_N_PA_X*PriorExpert_N_noPA_noX)/(PriorExpert_N_noPA_X*PriorExpert_N_PA_noX)
     #the density distribution for probability for phyical activity given a construct according to the experts is centred around the logOR elicited from expert responses 
-    data$variance_expert_elicitation_task = variance_expert_elicitation_task
-    data$Prior_qual_density = dnorm(logOddsRatio, data$logOR_expert_elicitation_task,  data$variance_expert_elicitation_task, log = FALSE)
+    variance_expert_elicitation_task = variance_expert_elicitation_task
+    
+    #elicit PRIOR
+    Prior_qual_density = dnorm(logOddsRatio, logOR_expert_elicitation_task,  variance_expert_elicitation_task, log = FALSE)
+    data=data.frame(Probability,logOddsRatio,logOR_expert_elicitation_task, variance_expert_elicitation_task, Prior_qual_density)
     #normalise prior density distribution
     data$Prior_qual_density = data$Prior_qual_density/sum(data$Prior_qual_density)
     data$Prior_qual_density_cumsum=cumsum(data$Prior_qual_density)
@@ -146,10 +131,7 @@ BayesUpdateStepByStep = function(x, Construct) {
     data
   }
   
-  data=BayesUpdate_func(Total_N_hyperprior = Total_N_hyperprior, 
-                        Mean_probability_hyperprior = Mean_probability_hyperprior, 
-                        Variance_hyperprior = Variance_hyperprior,
-                        PriorExpert_N_PA_X = PriorExpert_N_PA_X, 
+  data=BayesUpdate_func(PriorExpert_N_PA_X = PriorExpert_N_PA_X, 
                         PriorExpert_N_noPA_noX = PriorExpert_N_noPA_noX, 
                         PriorExpert_N_noPA_X = PriorExpert_N_noPA_X,
                         PriorExpert_N_PA_noX = PriorExpert_N_PA_noX, 
@@ -173,16 +155,7 @@ BayesUpdateStepByStep = function(x, Construct) {
     
   }
   
-  #plot hyperprior density distribution 
-  plot_hyperprior_density = plotting(data=data,
-                                     aes(x=Probability, y=Hyperprior_density, fill=Hyperprior_density_CI), 
-                                     values_colour = c("#999999", "#0072B2"), 
-                                     title="Hyperprior")
-  
-  
-  #print plot, so we it can be saved into the local repository 
-  print(plot_hyperprior_density)
-  
+  #plot prior density distribution 
   
   plot_Prior_Qual_density = plotting(data=data,
                                      aes(x=logOddsRatio, y=Prior_qual_density, fill= Prior_qual_density_CI), 
