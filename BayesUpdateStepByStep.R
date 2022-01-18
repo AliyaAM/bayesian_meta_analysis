@@ -2,7 +2,8 @@
 #this function (BayesUpdateStepByStep) runs the Bayesian meta-analysis that combines qualitative and quantitative evidence 
 
 library(ggplot2)
-library(reshape2)  
+library(reshape2) 
+library(dplyr)
 library(tibble)
 
 
@@ -36,7 +37,7 @@ source(paste(SOURCE_ROOT, "N_success.R", sep=""))  #calculate the proportion of 
 #reference: Spiegelhalter DJ, Abrams KR, Myles JP. Bayesian Approaches to Clinical Trials and Health-Care Evaluation. Chichester, UK: John Wiley & Sons, Ltd; 2003
 
 
-BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
+BayesUpdateStepByStep = function(x, Construct, uncertainty, seed) {
   
   #below we index the data by the name of construct
   index = x$Construct == Construct
@@ -47,51 +48,44 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   #Total N, variance and mean estimate for the probability of physical activity in general HF populationfrom Jaarsma study (empirical hyperprior):    
   Total_N_hyperprior = JaarsmaInternationalStudy$TotalN[20]
   Variance_hyperprior = JaarsmaInternationalStudy$Variance[20]
-  
   Mean_probability_hyperprior = JaarsmaInternationalStudy$Proportion_highPA[20]
   
-
   #elicit HYPERPRIOR distribution as a Gaussian (aka normal) distribution with mean value = mean from Jaarsma, and variance from Jaarsma 
+  Probability = seq( 0 , 1 , length=1000)
   
-
-  Probability = seq(0.01, 0.99, 0.01)
-  hyperprior = rnorm(Total_N_hyperprior,  Mean_probability_hyperprior,  Variance_hyperprior)
-  plot(hyperprior)
- 
- #HYPERPRIOR Credible Iinterval are calculated below:
-  p_hyperprior = pnorm(Probability, Mean_probability_hyperprior,  Variance_hyperprior, lower.tail = TRUE, log.p = FALSE)
-  hyperprior_quantile_0.05 = qnorm(0.05, Mean_probability_hyperprior,  Variance_hyperprior, lower.tail = TRUE, log.p = FALSE)
-  hyperprior_quantile_0.95 = qnorm(0.95,  Mean_probability_hyperprior,  Variance_hyperprior, lower.tail = TRUE, log.p = FALSE)
-
-
-  #the HYPERPRIOR_cumsum is below:
-  Hyperprior_density = dnorm(Probability, Mean_probability_hyperprior,  Variance_hyperprior, log = FALSE)
-  Hyperprior_density_normalised = Hyperprior_density/sum(Hyperprior_density)
-  data_density_Hyperprior = data.frame(Probability, Hyperprior_density_normalised)
-  data_density_Hyperprior$Hyperprior_density_cumsum = cumsum(Hyperprior_density_normalised)
-
-
-  #the CIs of the HYPERPRIOR are below:
-  data_density_Hyperprior$Hyperprior_density_CI = ifelse(
-    data_density_Hyperprior$Hyperprior_density_cumsum<0.025|data_density_Hyperprior$Hyperprior_density_cumsum>0.975,
-    "outside CI",  "inside CI"
-  )
-
- #plot HYPERPRIOR:
-  plotting_hyperprior_density=function(data, ... ,title ) {
+    ### Hyperprior_func elicits hyperprior from arguments Total_N_hyperprior, Mean_probability_hyperprior, Variance_hyperprior, Probability
+  Hyperprior_func=function(Total_N_hyperprior, Mean_probability_hyperprior, Variance_hyperprior) {
+    
+    Probability = seq( 0 , 1 , length=1000)
+    Hyperprior_density = dnorm(Probability, Mean_probability_hyperprior,  Variance_hyperprior, log = FALSE)
+    Hyperprior_density = Hyperprior_density/sum(Hyperprior_density)
+    
+    
+    data=data.frame(Probability, Hyperprior_density)
+    data$Hyperprior_density_cumsum=cumsum(data$Hyperprior_density)
+    data$Hyperprior_density_CI=ifelse(data$Hyperprior_density_cumsum<0.025|data$Hyperprior_density_cumsum>0.975, "outside CI", "inside CI")
+    
+    data
+  }
+  
+  #function for ploting densities
+  plotting=function(data, ... ,title ) {
     library(ggplot2)
     ggplot(data, ...)+
       geom_bar(stat="identity", alpha=0.5)+
-      theme_classic()+
+      theme_minimal()+
       theme(axis.text.y = element_blank())+
       ylab("Probability density")+
       ggtitle(title)+
-      labs(fill='95% confidence interval')+
-      scale_fill_manual(values = c("#999999", "#0072B2"))
+      labs(fill='95% confidence interval')
   }
+  #compute prior, likelihood and posterior
+  data_density_Hyperprior=Hyperprior_func(Total_N_hyperprior = Total_N_hyperprior, Mean_probability_hyperprior = Mean_probability_hyperprior, Variance_hyperprior = Variance_hyperprior)
+  plot_hyperprior_density = plotting(data=data_density_Hyperprior, aes(x=Probability, y=Hyperprior_density, fill=Hyperprior_density_CI), title="Hyperprior")
   
-  plotting_hyperprior_density(data=data_density_Hyperprior, aes(x=Probability, y=Hyperprior_density_normalised, fill=Hyperprior_density_CI), title="Hyperprior")
   
+  #print plot, so we it can be saved into the local repository 
+  print(plot_hyperprior_density)
 
   #Six experts completed the expert elicitation task. 
   #The reviewers made a judgement on whether the hypothetical HF patient met the recommended levels of physical activity or not. 
@@ -206,7 +200,7 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   PriorExpert_N_PA_X = x[index,]$PriorExpert_N_PA_X
   PriorExpert_N_noPA_noX = x[index,]$PriorExpert_N_noPA_noX
   PriorExpert_N_noPA_X = x[index,]$PriorExpert_N_noPA_X
-  PriorExpert_N_PA_noX = x[index,]PriorExpert_N_PA_noX
+  PriorExpert_N_PA_noX = x[index,]$PriorExpert_N_PA_noX
   
   logOR_expert_elicitation_task = log((PriorExpert_N_PA_X*PriorExpert_N_noPA_noX)/(PriorExpert_N_noPA_X*PriorExpert_N_PA_noX))
   
@@ -239,30 +233,32 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   
   #plot Prior_qual_density:
   
-  plotting_qual_density=function(data, Construct) {
-    library(ggplot2)
+  plotting_qual_density = function(data, ... , title){
+    
     ggplot(data, ...)+
+      
       geom_bar(stat="identity", alpha=0.5)+
       theme_classic()+
       theme(axis.text.y = element_blank())+
       ylab("Probability density")+
-      ggtitle(paste("Expert Belief: Probability for physical activity given", print(Construct)))+
+      ggtitle(title)+
       labs(fill='95% confidence interval')+
       scale_fill_manual(values = c("#CC79A7", "#0072B2"))
   }
   
 
-  plotting_qual_density(data=data_density_Prior_qual, aes(x=Probability, y=Prior_qual_density_normalised, fill=Prior_qual_density_CI), Construct = Construct)
+  plot_qual_density = plotting_qual_density(data=data_density_Prior_qual, 
+                        aes(x = data_density_Prior_qual$Probability, 
+                            y = data_density_Prior_qual$Prior_qual_density_normalised, 
+                            fill = data_density_Prior_qual$Prior_qual_density_CI),
+                        title = paste("Expert Belief: Probability for physical activity given", print(Construct)))
   
   
-  
-  
-  --------------
-    -----
   
   #below we are updating Hyperprior with Qualitative Results elicited from the expert elicitation task for each construct separately: 
   #formulas for calculating posterior distribution parameters below are from Spieghelhalter et al. 2003, p63, equation 3.15: 
 
+  
   posterior_Qual_mean = (Mean_probability_hyperprior/Variance_hyperprior + logOR_expert_elicitation_task/variance_expert_elicitation_task)/(1/Variance_hyperprior+1/variance_expert_elicitation_task)
   posterior_Qual_variance =1/(1/Variance_hyperprior+1/variance_expert_elicitation_task)
   
@@ -283,14 +279,16 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
   posterior_Qual_quantile_0.95 = qnorm(0.95,  posterior_Qual_mean, posterior_Qual_variance, lower.tail = TRUE, log.p = FALSE)
   
   
-  plotting_posterior_Qual = function(Construct, 
+  plotting_posterior_Qual = function(data,
+                                     Construct, 
+                                     title,
                                      Probability, 
+                                     ... ,
                                      posterior_Qual_density, 
                                      posterior_Qual_mean,
                                      posterior_Qual_quantile_0.05,
                                      posterior_Qual_quantile_0.95){
-  
-  title = paste(print(sprintf("Joint probability density of physical activity and %s, qualitative evidence", Construct)))
+
   
   ggplot(density, aes(Probability, posterior_Qual_density)) + 
     geom_area(fill="#CC79A7") + 
@@ -302,10 +300,12 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
     geom_vline(xintercept = posterior_Qual_quantile_0.95, colour="darkblue")+
     xlab("Probability")+
     ylab("Probability density")+
-    ggtitle(title)+
+    ggtitle(title)
   }
   
   plotting_posterior_Qual(Construct = Construct,  
+                          data = data_density_posterior_Qual,
+                          title = paste(print(sprintf("Joint probability density of physical activity and %s, qualitative evidence"))),
                           Probability = Probability, 
                           posterior_Qual_density = posterior_Qual_density, 
                           posterior_Qual_mean = posterior_Qual_mean,

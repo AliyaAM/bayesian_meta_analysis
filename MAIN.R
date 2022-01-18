@@ -20,6 +20,9 @@ library(assertthat)
 #paste(SOURCE_ROOT, "HyperPriorData.csv", sep="")
 #paste(OUTPUT_ROOT, "seeds_MAPQualQuant.csv", sep="")
 #paste(OUTPUT_ROOT, logName, "/Results_ResultsBayesianUpdateQuant.csv", sep="")
+x = read.csv(paste(SOURCE_ROOT, "input.csv", sep="")) #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately. 
+data = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep=""))  #data extracted from from the quantitative studies 
+JaarsmaInternationalStudy = read.csv(paste(SOURCE_ROOT, "HyperPriorData.csv", sep="")) #data used for eliciting the hyperprior (general physical activity levels in HF estimated from a large internaitonal study (Jaarsma et al., 2013)
 
 
 ## Set the root directory to look for source code.
