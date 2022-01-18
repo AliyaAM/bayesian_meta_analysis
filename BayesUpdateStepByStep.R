@@ -201,8 +201,14 @@ BayesUpdateStepByStep <- function(x, Construct, uncertainty, seed) {
  
   x = cbind(x, Number_successes)
 
-  #On the basis of the results of the prior elicitation task we calculate the log OR for each construct 
-  logOR_expert_elicitation_task =  log((x[index,]$PriorExpert_N_PA_X*x[index,]$PriorExpert_N_noPA_noX)/(x[index,]$PriorExpert_N_noPA_X*x[index,]PriorExpert_N_PA_noX))
+  #On the basis of the results of the prior elicitation task we calculate the log OR for each construct
+  
+  PriorExpert_N_PA_X = x[index,]$PriorExpert_N_PA_X
+  PriorExpert_N_noPA_noX = x[index,]$PriorExpert_N_noPA_noX
+  PriorExpert_N_noPA_X = x[index,]$PriorExpert_N_noPA_X
+  PriorExpert_N_PA_noX = x[index,]PriorExpert_N_PA_noX
+  
+  logOR_expert_elicitation_task = log((PriorExpert_N_PA_X*PriorExpert_N_noPA_noX)/(PriorExpert_N_noPA_X*PriorExpert_N_PA_noX))
   
   variance_expert_elicitation_task = x[index,]$variance
   variance_expert_elicitation_task = sqrt(variance_expert_elicitation_task)
