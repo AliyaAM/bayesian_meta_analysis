@@ -22,17 +22,9 @@ JaarsmaInternationalStudy = read.csv(paste(SOURCE_ROOT, "HyperPriorData.csv", se
 
 source(paste(SOURCE_ROOT, "ConvertEffectsizes.R", sep="")) #### convert effect sizes from individual studies  (F-value, Binary (Absolute numbers and proportions), r coeffcient and SMD) into log odds ratios. All quantitative results are converted to log OR in order to be comptable with qualitative evidence, we treated all results as binary. 
 
-source(paste(SOURCE_ROOT, "plbeta_function.R", sep="")) 
-
 source(paste(SOURCE_ROOT, "PooledN.R", sep=""))  # calculate the total number of participants (N) across studies that evaluated each construct, read from the csv file QuantData
 
 source(paste(SOURCE_ROOT, "PooledOddsRatio_metaanalysis.R", sep="")) #run the frequentisit meta-analysis (REML) pooling the findings from quantitative studies, stratified by construct. The Overall Effect estimate is (log) Odds Ratio, a list of pooled Log ORs, one per construct). 
-
-source(paste(SOURCE_ROOT, "ContingenciesTable_MCMC.R", sep="")) #estimate the contingencies table for each study using Monte Carlo Markov Chain rejection sampling (the total N and Log odds ratio formulas are used as the rejection criteria)
-
-source(paste(SOURCE_ROOT, "Density_ggplot.R", sep="")) #produce illustrations: plot density and distribution of probabality of physical activity happening given the construct. 
-
-source(paste(SOURCE_ROOT, "N_success.R", sep=""))  #calculate the proportion of total sample engaging in physical activity when construct is present
 
 
 # this function below produces  density, distribution and all summary statistic for: 
