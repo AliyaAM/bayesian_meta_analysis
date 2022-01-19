@@ -49,7 +49,7 @@ Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_Pos
 
 density_by_construct = function(data, Construct){
   index = data$Construct == Construct
-  logOddsRatio = seq( -2 , 2 , length=1000)
+  logOddsRatio = seq( -0.5 , 0.5 , length=1000)
   filtered_data = filter(data, Construct == data[index,]$Construct)
   posterior_by_constructs = dnorm(logOddsRatio, filtered_data$posterior_All_mean,
                                   filtered_data$posterior_All_variance)
@@ -154,7 +154,7 @@ print(plot5)
 
 plot4 = ggplot(density_ALL_cosntruct, aes(x = logOddsRatio, y = construct, height=posterior, group = construct)) +
   geom_density_ridges(stat = "identity", scale = 5) +
-  xlim(-2, 2)
+  xlim(-0.5 , 0.5 )
 # +
 
 # ylim(c("Age",
