@@ -45,11 +45,11 @@ Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_Fun
 Results_PositiveAttitute =   BayesUpdateStepByStep(x =x, Construct = "PositiveAttitute"  )
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_PositiveAttitute)
 
-
+head(Results_BayesianMeta_Analysis)
 
 density_by_construct = function(data, Construct){
   index = data$Construct == Construct
-  logOddsRatio = seq( -0.5 , 0.5 , length=1000)
+  logOddsRatio = seq( -0.5 , 0.25 , length=1000)
   filtered_data = filter(data, Construct == data[index,]$Construct)
   posterior_by_constructs = dnorm(logOddsRatio, filtered_data$posterior_All_mean,
                                   filtered_data$posterior_All_variance)
@@ -58,7 +58,6 @@ density_by_construct = function(data, Construct){
   colnames(df) = c("logOddsRatio", "construct", "posterior")
   return(df)
 }
-
 
 Age_density_by_construct = density_by_construct(data = Results_BayesianMeta_Analysis, Construct = "Age")
 Comorbidity_density_by_construct = density_by_construct(data = Results_BayesianMeta_Analysis, Construct = "Comorbidity")
@@ -72,21 +71,19 @@ LVEF_density_by_construct = density_by_construct(data = Results_BayesianMeta_Ana
 SelfEfficacy_density_by_construct = density_by_construct(data = Results_BayesianMeta_Analysis, Construct = "SelfEfficacy")
 
 
-
-
-height = c(rep(1, 0.99),
-           rep(2, 0.99), 
-           rep(3, 0.99), 
-           rep(4, 0.99), 
-           rep(5, 0.99), 
-           rep(6, 0.99), 
-           rep(7, 0.99), 
-           rep(8, 0.99), 
-           rep(9, 0.99),
-           rep(9, 0.99))
+height = c(rep(1, 1000),
+           rep(2, 1000), 
+           rep(3, 1000), 
+           rep(4, 1000), 
+           rep(5, 1000), 
+           rep(6, 1000), 
+           rep(7, 1000), 
+           rep(8, 1000), 
+           rep(9, 1000),
+           rep(9, 1000))
 
 length(height)
-density_ALL_cosntruct = rbind(Age_density_by_construct,
+density_ALL_construct = rbind(Age_density_by_construct,
                               Comorbidity_density_by_construct,
                               SocialSupport_density_by_construct,
                               NegativeAttitute_density_by_construct,
@@ -97,9 +94,9 @@ density_ALL_cosntruct = rbind(Age_density_by_construct,
                               LVEF_density_by_construct, 
                               SelfEfficacy_density_by_construct)
 
-density_ALL_cosntruct = cbind(density_ALL_cosntruct, height)
-nrow(density_ALL_cosntruct)
-#density_ALL_cosntruct = rbind(density_ALL_cosntruct, Construct)
+density_ALL_construct = cbind(density_ALL_construct, height)
+nrow(density_ALL_construct)
+#density_ALL_construct = rbind(density_ALL_construct, Construct)
 
 #graph_Posterior = plotDensity(data = Age_density_by_construct,
 #                            aes( x = Age_density_by_construct$logOddsRatio, 
@@ -108,33 +105,32 @@ nrow(density_ALL_cosntruct)
 
 
 
-#plot2 = ggplot(density_ALL_cosntruct, aes(y = posterior, x = logOddsRatio))+
+#plot2 = ggplot(density_ALL_construct, aes(y = posterior, x = logOddsRatio))+
 #  geom_path(colour = "#00AFBB")+
 # xlim(0.05, 0.505)+
 # facet_wrap(~construct, ncol = 3)
 #  facet_grid(rows = vars(construct))
 
-Age_density_by_construct$posterior
-
 # geom_density_ridges(scale = 1) + facet_wrap(~construct)
 #print(plot2)
 
-#plot = ggplot(density_ALL_cosntruct, aes(x = logOddsRatio, y = posterior, group = construct)) + 
+#plot = ggplot(density_ALL_construct, aes(x = logOddsRatio, y = posterior, group = construct)) + 
 # geom_density_ridges(fill = "#00AFBB")
 
 #plot
 
-#plot3 = ggplot(density_ALL_cosntruct, aes(x = posterior, y = construct)) + 
+#plot3 = ggplot(density_ALL_construct, aes(x = posterior, y = construct)) + 
 #  geom_density_ridges(rel_min_height = 0.01)
 
-mean(density_ALL_cosntruct$posterior)
+mean(density_ALL_construct$posterior)
 
-max(density_ALL_cosntruct$posterior)
+max(density_ALL_construct$posterior)
 
-min(density_ALL_cosntruct$posterior)
+min(density_ALL_construct$posterior)
 
+head(d)
 d <- data.frame(
-  x = density_ALL_cosntruct$logOddsRatio, 
+  x = density_ALL_construct$logOddsRatio, 
   y = c(Age_density_by_construct$posterior,
         Comorbidity_density_by_construct$posterior,
         SocialSupport_density_by_construct$posterior,
@@ -152,9 +148,9 @@ plot5 = ggplot(d, aes(x, y, height = height, group = y)) +
 
 print(plot5)
 
-plot4 = ggplot(density_ALL_cosntruct, aes(x = logOddsRatio, y = construct, height=posterior, group = construct)) +
+plot4 = ggplot(density_ALL_construct, aes(x = logOddsRatio, y = construct, height=posterior, group = construct)) +
   geom_density_ridges(stat = "identity", scale = 5) +
-  xlim(-0.5 , 0.5 )
+  xlim(-0.5 , 0.25 )
 # +
 
 # ylim(c("Age",
