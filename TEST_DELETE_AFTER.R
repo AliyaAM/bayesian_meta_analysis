@@ -47,148 +47,134 @@ Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_Pos
 
 head(Results_BayesianMeta_Analysis)
 
-density_by_construct = function(data, Construct){
+density_by_Construct = function(data, Construct){
   index = data$Construct == Construct
-  logOddsRatio = seq( -0.5 , 0.25 , length=1000)
+  logOddsRatio = seq( -2, 2.5 , length=1000)
   filtered_data = filter(data, Construct == data[index,]$Construct)
-  posterior_by_constructs = dnorm(logOddsRatio, filtered_data$posterior_All_mean,
-                                  filtered_data$posterior_All_variance)
-  #posterior_by_constructs = exp(posterior_by_constructs)
-  df = data.frame(logOddsRatio, Construct, posterior_by_constructs)
-  colnames(df) = c("logOddsRatio", "construct", "posterior")
+  
+  # the results of the expert elicitation task 
+  Prior_qual_density = dnorm(logOddsRatio,
+                             filtered_data$logOR_expert_elicitation_task, 
+                             filtered_data$variance_expert_elicitation_task)
+  
+  # posterior resulted from updating hyperprior with the results of the expert elicitaiton task 
+   Posterior_qual_only = dnorm(logOddsRatio, 
+                               filtered_data$Posterior_qual_only_mean,  
+                               filtered_data$Posterior_qual_only_variance)
+   
+  # likelihood (quantitative evidence only)
+   Likelihood = dnorm(logOddsRatio, 
+                      filtered_data$LOGOdds_Ratio_quant, 
+                      filtered_data$variance_quant)
+   
+   # the posterior resulted from updating prior with likelihood 
+   posterior_QualplusQuant = dnorm(logOddsRatio, 
+                                   filtered_data$posterior_QualplusQuant_mean,
+                                   filtered_data$posterior_QualplusQuant_variance)
+  
+   # the posterior resulted from updating hyperprior with prior and then with likelihood 
+   posterior_All = dnorm(logOddsRatio, 
+                         filtered_data$posterior_All_mean,
+                         filtered_data$posterior_All_variance)
+   
+    df = data.frame(logOddsRatio, Construct, Prior_qual_density, Posterior_qual_only, Likelihood, posterior_QualplusQuant, posterior_All)
+  colnames(df) = c("logOddsRatio", "Construct", "Prior_qual_density", "Posterior_qual_only", "Likelihood", "posterior_QualplusQuant", "posterior_All")
   return(df)
 }
 
-Age_density_by_construct = density_by_construct(data = Results_BayesianMeta_Analysis, Construct = "Age")
-Comorbidity_density_by_construct = density_by_construct(data = Results_BayesianMeta_Analysis, Construct = "Comorbidity")
-SocialSupport_density_by_construct = density_by_construct(data = Results_BayesianMeta_Analysis, Construct = "SocialSupport")
-NegativeAttitute_density_by_construct = density_by_construct(data = Results_BayesianMeta_Analysis, Construct = "NegativeAttitute")
-PositiveAttitute_density_by_construct = density_by_construct(data = Results_BayesianMeta_Analysis, Construct = "PositiveAttitute")
-SixMWT_density_by_construct = density_by_construct(data = Results_BayesianMeta_Analysis, Construct = "6MWT")
-Functioning_density_by_construct = density_by_construct(data = Results_BayesianMeta_Analysis, Construct = "Functioning")
-Symptoms_density_by_construct = density_by_construct(data = Results_BayesianMeta_Analysis, Construct = "Symptoms")
-LVEF_density_by_construct = density_by_construct(data = Results_BayesianMeta_Analysis, Construct = "LVEF")
-SelfEfficacy_density_by_construct = density_by_construct(data = Results_BayesianMeta_Analysis, Construct = "SelfEfficacy")
+Age_density_by_Construct = density_by_Construct(data = Results_BayesianMeta_Analysis, Construct = "Age")
+Comorbidity_density_by_Construct = density_by_Construct(data = Results_BayesianMeta_Analysis, Construct = "Comorbidity")
+SocialSupport_density_by_Construct = density_by_Construct(data = Results_BayesianMeta_Analysis, Construct = "SocialSupport")
+NegativeAttitute_density_by_Construct = density_by_Construct(data = Results_BayesianMeta_Analysis, Construct = "NegativeAttitute")
+PositiveAttitute_density_by_Construct = density_by_Construct(data = Results_BayesianMeta_Analysis, Construct = "PositiveAttitute")
+SixMWT_density_by_Construct = density_by_Construct(data = Results_BayesianMeta_Analysis, Construct = "6MWT")
+Functioning_density_by_Construct = density_by_Construct(data = Results_BayesianMeta_Analysis, Construct = "Functioning")
+Symptoms_density_by_Construct = density_by_Construct(data = Results_BayesianMeta_Analysis, Construct = "Symptoms")
+LVEF_density_by_Construct = density_by_Construct(data = Results_BayesianMeta_Analysis, Construct = "LVEF")
+SelfEfficacy_density_by_Construct = density_by_Construct(data = Results_BayesianMeta_Analysis, Construct = "SelfEfficacy")
 
 
-height = c(rep(1, 1000),
-           rep(2, 1000), 
-           rep(3, 1000), 
-           rep(4, 1000), 
-           rep(5, 1000), 
-           rep(6, 1000), 
-           rep(7, 1000), 
-           rep(8, 1000), 
-           rep(9, 1000),
-           rep(9, 1000))
+height = c(rep(10, 1000),
+           rep(20, 1000), 
+           rep(30, 1000), 
+           rep(40, 1000), 
+           rep(50, 1000), 
+           rep(60, 1000), 
+           rep(70, 1000), 
+           rep(80, 1000), 
+           rep(90, 1000),
+           rep(100, 1000))
 
 length(height)
-density_ALL_construct = rbind(Age_density_by_construct,
-                              Comorbidity_density_by_construct,
-                              SocialSupport_density_by_construct,
-                              NegativeAttitute_density_by_construct,
-                              PositiveAttitute_density_by_construct,
-                              SixMWT_density_by_construct, 
-                              Functioning_density_by_construct,
-                              Symptoms_density_by_construct,
-                              LVEF_density_by_construct, 
-                              SelfEfficacy_density_by_construct)
+density_ALL_Construct = rbind(Age_density_by_Construct,
+                              Comorbidity_density_by_Construct,
+                              SocialSupport_density_by_Construct,
+                              NegativeAttitute_density_by_Construct,
+                              PositiveAttitute_density_by_Construct,
+                              SixMWT_density_by_Construct, 
+                              Functioning_density_by_Construct,
+                              Symptoms_density_by_Construct,
+                              LVEF_density_by_Construct, 
+                              SelfEfficacy_density_by_Construct)
 
-density_ALL_construct = cbind(density_ALL_construct, height)
-nrow(density_ALL_construct)
-#density_ALL_construct = rbind(density_ALL_construct, Construct)
-
-#graph_Posterior = plotDensity(data = Age_density_by_construct,
-#                            aes( x = Age_density_by_construct$logOddsRatio, 
-#                                  y = Age_density_by_construct$posterior_by_constructs,
-#                                fill = "#00AFBB"))
+density_ALL_Construct = cbind(density_ALL_Construct, height)
+nrow(density_ALL_Construct)
 
 
+#d <- data.frame(
+#  x = density_ALL_Construct$logOddsRatio, 
+#  y = c(Age_density_by_Construct$posterior_All,
+#        Comorbidity_density_by_Construct$posterior_All,
+#        SocialSupport_density_by_Construct$posterior_All,
+#        NegativeAttitute_density_by_Construct$posterior_All,
+#        PositiveAttitute_density_by_Construct$posterior_All,
+#        SixMWT_density_by_Construct$posterior_All, 
+#        Functioning_density_by_Construct$posterior_All,
+#        Symptoms_density_by_Construct$posterior_All,
+#        LVEF_density_by_Construct$posterior_All, 
+#        SelfEfficacy_density_by_Construct$posterior_All),
+#  height = height)
 
-#plot2 = ggplot(density_ALL_construct, aes(y = posterior, x = logOddsRatio))+
-#  geom_path(colour = "#00AFBB")+
-# xlim(0.05, 0.505)+
-# facet_wrap(~construct, ncol = 3)
-#  facet_grid(rows = vars(construct))
+#plot5 = ggplot(d, aes(x, y, height = height, group = y)) + 
+#  geom_ridgeline(fill = "lightblue")
 
-# geom_density_ridges(scale = 1) + facet_wrap(~construct)
-#print(plot2)
-
-#plot = ggplot(density_ALL_construct, aes(x = logOddsRatio, y = posterior, group = construct)) + 
-# geom_density_ridges(fill = "#00AFBB")
-
-#plot
-
-#plot3 = ggplot(density_ALL_construct, aes(x = posterior, y = construct)) + 
-#  geom_density_ridges(rel_min_height = 0.01)
-
-mean(density_ALL_construct$posterior)
-
-max(density_ALL_construct$posterior)
-
-min(density_ALL_construct$posterior)
-
-head(d)
-d <- data.frame(
-  x = density_ALL_construct$logOddsRatio, 
-  y = c(Age_density_by_construct$posterior,
-        Comorbidity_density_by_construct$posterior,
-        SocialSupport_density_by_construct$posterior,
-        NegativeAttitute_density_by_construct$posterior,
-        PositiveAttitute_density_by_construct$posterior,
-        SixMWT_density_by_construct$posterior, 
-        Functioning_density_by_construct$posterior,
-        Symptoms_density_by_construct$posterior,
-        LVEF_density_by_construct$posterior, 
-        SelfEfficacy_density_by_construct$posterior),
-  height = height)
-
-plot5 = ggplot(d, aes(x, y, height = height, group = y)) + 
-  geom_ridgeline(fill = "lightblue")
-
-print(plot5)
-
-plot4 = ggplot(density_ALL_construct, aes(x = logOddsRatio, y = construct, height=posterior, group = construct)) +
-  geom_density_ridges(stat = "identity", scale = 5) +
-  xlim(-0.5 , 0.25 )
-# +
-
-# ylim(c("Age",
-#"Comorbidity",
-#"SocialSupport",
-#"NegativeAttitute",
-#"PositiveAttitute",
-#"6MWT",
-#"Functioning",
-#"Symptoms",
-#"LVEF",
-#"SelfEfficacy",
-#"BloodPressure",
-#B"BMI",
-#"CRT",
-#"Depression",
-#"Digoxin",
-#"Doppler",
-#"Dysphoria",
-# "Education",
-#"Employment",
-#"Ethnicity",
-# "Functioning",
-# "HFDuration",
-# "HFrEF_Yes",
-# "highproBNP",
-#"Hostility",
-# "Income",
-#"LAV",
-# "LVAD",
-# "LVR",
-#"Partner",
-# "PeakVO2",
-# "PercievedExersion",
-#"QoL",
-#"RenalFunction",
-#"Smoking",
-# "Symptoms distress"))
+#print(plot5)
 
 
-print(plot4)
+#plotting the results of the expert elicitation task 
+Plot_Prior_qual_density = ggplot(density_ALL_Construct, aes(x = logOddsRatio, y = Construct, height=Prior_qual_density, group = Construct)) +
+  geom_density_ridges(stat = "identity", scale = 1) +
+  xlim(-2, 2.5 )
+
+print(Plot_Prior_qual_density)
+
+#plotting posterior resulted from updating hyperprior with the results of the expert elicitaiton task 
+#Plot_Posterior_qual_only = ggplot(density_ALL_Construct, aes(x = logOddsRatio, y = Construct, height=Posterior_qual_only, group = Construct)) +
+#  geom_density_ridges(stat = "identity", scale = 1) +
+ # xlim(-2, 2.5  )
+
+#print(Plot_Posterior_qual_only)
+
+#plotting likelihood (quantitative evidence only)
+Plot_Likelihood = ggplot(density_ALL_Construct, aes(x = logOddsRatio, y = Construct, height=Likelihood, group = Construct)) +
+  geom_density_ridges(stat = "identity", scale = 1) +
+  xlim(-2, 2.5  )
+
+print(Plot_Likelihood)
+
+#plotting the posterior resulted from updating prior with likelihood 
+Plot_posterior_QualplusQuant = ggplot(density_ALL_Construct, aes(x = logOddsRatio, y = Construct, height=posterior_QualplusQuant, group = Construct)) +
+  geom_density_ridges(stat = "identity", scale = 1) +
+  xlim(-2, 2.5  )
+
+print(Plot_posterior_QualplusQuant)
+
+#plotting the posterior resulted from updating hyperprior with prior and then with likelihood 
+#Plot_posterior_All = ggplot(density_ALL_Construct, aes(x = logOddsRatio, y = Construct, height=posterior_All, group = Construct)) +
+#  geom_density_ridges(stat = "identity", scale = 1) +
+#  xlim(-2, 2.5 )
+
+#print(Plot_posterior_All)
+
+
+
