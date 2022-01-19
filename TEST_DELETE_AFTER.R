@@ -49,7 +49,7 @@ Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_Pos
 
 density_by_construct = function(data, Construct){
   index = data$Construct == Construct
-  logOddsRatio = seq( -1 , 2 , length=4)
+  logOddsRatio = seq( -2 , 2 , length=1000)
   filtered_data = filter(data, Construct == data[index,]$Construct)
   posterior_by_constructs = dnorm(logOddsRatio, filtered_data$posterior_All_mean,
                                   filtered_data$posterior_All_variance)
@@ -74,16 +74,16 @@ SelfEfficacy_density_by_construct = density_by_construct(data = Results_Bayesian
 
 
 
-height = c(rep(1, 4),
-           rep(2, 4), 
-           rep(3, 4), 
-           rep(4, 4), 
-           rep(5, 4), 
-           rep(6, 4), 
-           rep(7, 4), 
-           rep(8, 4), 
-           rep(9, 4),
-           rep(9, 4))
+height = c(rep(1, 1000),
+           rep(2, 1000), 
+           rep(3, 1000), 
+           rep(4, 1000), 
+           rep(5, 1000), 
+           rep(6, 1000), 
+           rep(7, 1000), 
+           rep(8, 1000), 
+           rep(9, 1000),
+           rep(9, 1000))
 
 length(height)
 density_ALL_cosntruct = rbind(Age_density_by_construct,

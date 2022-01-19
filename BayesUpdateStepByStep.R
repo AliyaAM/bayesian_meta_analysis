@@ -92,8 +92,8 @@ BayesUpdateStepByStep = function(x, Construct) {
                               PriorExpert_N_PA_X, PriorExpert_N_noPA_noX, PriorExpert_N_noPA_X, PriorExpert_N_PA_noX, variance_expert_elicitation_task,
                               LOGOdds_Ratio_quant, variance_quant) {
     
-    Probability = seq( 0 , 1 , length=1)
-    logOddsRatio = seq( -1 , 2 , length=4)
+    Probability = seq( 0 , 1 , length=1000)
+    logOddsRatio = seq( -1 , 2 , length=1000)
     
     #elicit HYPERPRIOR distribution as a Gaussian (aka normal) distribution with mean value = mean from Jaarsma, and variance from Jaarsma
     
