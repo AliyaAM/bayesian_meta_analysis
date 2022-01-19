@@ -93,7 +93,7 @@ BayesUpdateStepByStep = function(x, Construct) {
                               LOGOdds_Ratio_quant, variance_quant) {
     
     Probability = seq( 0 , 1 , length=1000)
-    logOddsRatio = seq( -2 , 2 , length=1000)
+    logOddsRatio = seq( -1 , 2 , length=1000)
     
     #elicit HYPERPRIOR distribution as a Gaussian (aka normal) distribution with mean value = mean from Jaarsma, and variance from Jaarsma
     
@@ -221,23 +221,22 @@ BayesUpdateStepByStep = function(x, Construct) {
                                      values_colour = c("#999999", "#0072B2"), 
                                      title="Hyperprior: Probability")
   
-
-  plot_hyperprior_density = plotting(data=data,
-                                     aes(x=Probability, y=Hyperprior_logOdds, fill=Hyperprior_logOdds_CI), 
-                                     values_colour = c("#999999", "#0072B2"), 
-                                     title="Hyperprior: log Odds Ratio")
-  
-  
   #print plot, so we it can be saved into the local repository 
   print(plot_hyperprior_density)
 
+  plot_hyperprior_density_Log_OR = plotting(data=data,
+                                     aes(x=logOddsRatio, y=Hyperprior_logOdds, fill=Hyperprior_logOdds_CI), 
+                                     values_colour = c("#999999", "#0072B2"), 
+                                     title="Hyperprior: log Odds Ratio")
   
+  print(plot_hyperprior_density_Log_OR)
+
+
   # plot prior 
   plot_Prior_Qual_density = plotting(data=data,
                                      aes(x=logOddsRatio, y=Prior_qual_density, fill= Prior_qual_density_CI), 
                                      values_colour = c("#CC79A7", "#0072B2"), 
                                      title = paste("Expert Belief: Probability for physical activity given", print(Construct)))
-  
   
   print(plot_Prior_Qual_density)
   
@@ -246,7 +245,6 @@ BayesUpdateStepByStep = function(x, Construct) {
                                         aes(x=logOddsRatio, y= Posterior_qual_only, fill= Posterior_qual_only_CI), 
                                         values_colour = c("#CC79A7", "#0072B2"), 
                                         title = paste("Posterior distribution for physical activity according to qualitative evidence (with hyperprior):", print(Construct)))
-  
   
   print(plot_Posterior_qual_only)
   
@@ -257,9 +255,7 @@ BayesUpdateStepByStep = function(x, Construct) {
                                      values_colour = c("#009E73", "#0072B2"), 
                                      title = paste("Likelihood: Probability for physical activity given", print(Construct)))
   
-  
   print(plot_Likelihood_density)
-  
   
 
   #update the qualitative evidence with quantitative evidence
@@ -278,9 +274,7 @@ BayesUpdateStepByStep = function(x, Construct) {
                                                   values_colour = c("#D55E00", "#0072B2"), 
                                                   title = paste("Posterior distribution for physical activity according to qualitative and quantative evidence (with hyperprior):", print(Construct)))
   
-  
   print(plot_posterior_All_density)
-  
   
   
   write.table(data, file = '/Users/aliya/my_docs/proj//bayesian_meta_analysis/data_qual_quant_with_hyperprior_test.csv', append = FALSE, quote = TRUE, sep = ", ",
