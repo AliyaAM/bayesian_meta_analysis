@@ -16,7 +16,7 @@ library(bayestestR)
 library(HDInterval)
 library(assertthat)
 
-print("")
+print("check spelling fix attitude spelling")
 #paste(SOURCE_ROOT, "HyperPriorData.csv", sep="")
 #paste(OUTPUT_ROOT, "seeds_MAPQualQuant.csv", sep="")
 #paste(OUTPUT_ROOT, logName, "/Results_ResultsBayesianUpdateQuant.csv", sep="")

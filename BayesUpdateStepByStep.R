@@ -49,6 +49,12 @@ BayesUpdateStepByStep = function(x, Construct) {
   Variance_hyperprior = JaarsmaInternationalStudy$Variance[20]
   Mean_probability_hyperprior = JaarsmaInternationalStudy$Proportion_highPA[20]
   
+
+
+  Log_Odds_hyperprior = log(JaarsmaInternationalStudy$N_highPA[20]/JaarsmaInternationalStudy$N_lowPA[20])
+  
+  
+
  
   #data for PRIOR 
   #Six experts completed the expert elicitation task. 
@@ -82,7 +88,7 @@ BayesUpdateStepByStep = function(x, Construct) {
   #the number of quantitative studies that evaluted each construct: 
   k =  meta_data_likelihoodResults$k
   
-  BayesUpdate_func = function(Total_N_hyperprior, Mean_probability_hyperprior, Variance_hyperprior,
+  BayesUpdate_func = function(Total_N_hyperprior, Mean_probability_hyperprior, Variance_hyperprior, Log_Odds_hyperprior, 
                               PriorExpert_N_PA_X, PriorExpert_N_noPA_noX, PriorExpert_N_noPA_X, PriorExpert_N_PA_noX, variance_expert_elicitation_task,
                               LOGOdds_Ratio_quant, variance_quant) {
     
@@ -90,65 +96,101 @@ BayesUpdateStepByStep = function(x, Construct) {
     logOddsRatio = seq( -2 , 2 , length=1000)
     
     #elicit HYPERPRIOR distribution as a Gaussian (aka normal) distribution with mean value = mean from Jaarsma, and variance from Jaarsma
+    
+    
     #elicits hyperprior from arguments Total_N_hyperprior, Mean_probability_hyperprior, Variance_hyperprior, Probability
     Hyperprior_density = dnorm(Probability, Mean_probability_hyperprior,  Variance_hyperprior, log = FALSE)
     #normalised hyperprior distribution 
     Hyperprior_density = Hyperprior_density/sum(Hyperprior_density)
-    data=data.frame(Probability,logOddsRatio,  Hyperprior_density)
+    data=data.frame(Probability,logOddsRatio,  Hyperprior_density, Mean_probability_hyperprior, Variance_hyperprior)
     data$Hyperprior_density_cumsum=cumsum(data$Hyperprior_density)
     data$Hyperprior_density_CI=ifelse(data$Hyperprior_density_cumsum<0.025|data$Hyperprior_density_cumsum>0.975, "outside CI", "inside CI")
 
+    
+    data$Log_Odds_hyperprior = Log_Odds_hyperprior
+    data$Hyperprior_logOdds = dnorm(logOddsRatio, data$Log_Odds_hyperprior,  data$Variance_hyperprior, log = FALSE)
+    data$Hyperprior_logOdds = data$Hyperprior_logOdds/sum(data$Hyperprior_logOdds)
+    data$Hyperprior_logOdds_cumsum = cumsum(data$Hyperprior_logOdds)
+    data$Hyperprior_logOdds_CI = ifelse(data$Hyperprior_logOdds_cumsum<0.025|data$Hyperprior_logOdds_cumsum>0.975, "outside CI", "inside CI")
+    
+    
     #elicit PRIOR 
     #On the basis of the results of the prior elicitation task we calculate the log OR for each construct
     data$logOR_expert_elicitation_task = log(PriorExpert_N_PA_X*PriorExpert_N_noPA_noX)/(PriorExpert_N_noPA_X*PriorExpert_N_PA_noX)
     #the density distribution for probability for phyical activity given a construct according to the experts is centred around the logOR elicited from expert responses 
     data$variance_expert_elicitation_task = variance_expert_elicitation_task
+    #prior distribution 
     data$Prior_qual_density = dnorm(logOddsRatio, data$logOR_expert_elicitation_task,  data$variance_expert_elicitation_task, log = FALSE)
     #normalise prior density distribution
     data$Prior_qual_density = data$Prior_qual_density/sum(data$Prior_qual_density)
     data$Prior_qual_density_cumsum=cumsum(data$Prior_qual_density)
     data$Prior_qual_density_CI=ifelse(data$Prior_qual_density_cumsum<0.025|data$Prior_qual_density_cumsum>0.975, "outside CI", "inside CI")
     data$p_Prior_qual = pnorm(logOddsRatio, data$logOR_expert_elicitation_task, data$variance_expert_elicitation_task, lower.tail = TRUE, log.p = FALSE)
+    #Credible Intervals: prior distribution 
     data$Prior_qual_quantile_0.05 = qnorm(0.05, data$logOR_expert_elicitation_task, data$variance_expert_elicitation_task, lower.tail = TRUE, log.p = FALSE)
     data$Prior_qual_quantile_0.95 = qnorm(0.95,  data$logOR_expert_elicitation_task, data$variance_expert_elicitation_task, lower.tail = TRUE, log.p = FALSE)
+    
+    
+    #to update the hyperprior with the qualitative results we use formula from Spieghelhalter p 63: 
+    data$Posterior_qual_only_mean = (data$Log_Odds_hyperprior/data$Variance_hyperprior + data$logOR_expert_elicitation_task/data$variance_expert_elicitation_task)/(1/data$Variance_hyperprior + 1/data$variance_expert_elicitation_task)
+    data$Posterior_qual_only_variance = 1/(1/data$Variance_hyperprior +1/data$variance_expert_elicitation_task)
+    #posterior distribution for updating hyperprior with prior 
+    data$Posterior_qual_only = dnorm(logOddsRatio, data$Posterior_qual_only_mean, data$Posterior_qual_only_variance, log = FALSE)
+    data$Posterior_qual_only = data$Posterior_qual_only/sum(data$Posterior_qual_only)
+    data$Posterior_qual_only_cumsum = cumsum(data$Posterior_qual_only)
+    data$Posterior_qual_only_CI=ifelse(data$Posterior_qual_only_cumsum<0.025|data$Posterior_qual_only_cumsum>0.975, "outside CI", "inside CI")
+    #Credible Intervals: posterior for updating hyperprior with prior 
+    data$Posterior_qual_only_quantile_0.05 = qnorm(0.05, data$Posterior_qual_only_mean, data$Posterior_qual_only_variance, lower.tail = TRUE, log.p = FALSE)
+    data$Posterior_qual_only_quantile_0.95 = qnorm(0.95,  data$Posterior_qual_only_mean, data$Posterior_qual_only_variance, lower.tail = TRUE, log.p = FALSE)
+    
     
     #Likelihood 
     data$LOGOdds_Ratio_quant = LOGOdds_Ratio_quant
     data$variance_quant = variance_quant
-    
+    # Likelihood distribution 
     data$Likelihood = dnorm(logOddsRatio, data$LOGOdds_Ratio_quant,  data$variance_quant, log = FALSE)
-    
     data$Likelihood = data$Likelihood/sum(data$Likelihood)
     data$Likelihood_cumsum=cumsum(data$Likelihood)
     data$Likelihood_CI=ifelse(data$Likelihood_cumsum<0.025|data$Likelihood_cumsum>0.975, "outside CI", "inside CI")
-    
     data$p_Likelihood = pnorm(logOddsRatio, data$LOGOdds_Ratio_quant, data$variance_quant, lower.tail = TRUE, log.p = FALSE)
+    #Credible Intervals: Likelihood
     data$Likelihood_qual_quantile_0.05 = qnorm(0.05, data$LOGOdds_Ratio_quant, data$variance_quant, lower.tail = TRUE, log.p = FALSE)
     data$Likelihood_qual_quantile_0.95 = qnorm(0.95,  data$LOGOdds_Ratio_quant, data$variance_quant, lower.tail = TRUE, log.p = FALSE)
     
   
-    
+  
     #POSTERIOR
+    #Formula from Spieghelhalter p 63: updating prior with likelihood using the following mean nd variance for the distribution: 
     data$posterior_QualplusQuant_mean = (data$logOR_expert_elicitation_task/data$variance_expert_elicitation_task + data$LOGOdds_Ratio_quant/data$variance_quant)/(1/data$variance_expert_elicitation_task+1/data$variance_quant)
     data$posterior_QualplusQuant_variance =1/(1/data$variance_expert_elicitation_task+1/data$variance_quant)
-    
+    #posterior distribution for updating prior with likelihood  
     data$Posterior_QualplusQuant = dnorm(logOddsRatio, data$posterior_QualplusQuant_mean,  data$posterior_QualplusQuant_variance, log = FALSE)
     #normalise posterior density distribution
     data$Posterior_QualplusQuant = data$Posterior_QualplusQuant/sum(data$Posterior_QualplusQuant)
     data$Posterior_QualplusQuant_cumsum=cumsum(data$Posterior_QualplusQuant)
     data$Posterior_QualplusQuant_CI=ifelse(data$Posterior_QualplusQuant_cumsum<0.025|data$Posterior_QualplusQuant_cumsum>0.975, "outside CI", "inside CI")
-    
     data$p_Posterior_QualplusQuant = pnorm(logOddsRatio, data$posterior_QualplusQuant_mean, data$posterior_QualplusQuant_variance, lower.tail = TRUE, log.p = FALSE)
+    #Credible Intervals: posterior (update without hyperprior)
     data$Posterior_QualplusQuant_quantile_0.05 = qnorm(0.05, data$posterior_QualplusQuant_mean, data$posterior_QualplusQuant_variance, lower.tail = TRUE, log.p = FALSE)
     data$Posterior_QualplusQuant_quantile_0.95 = qnorm(0.95,  data$posterior_QualplusQuant_mean, data$posterior_QualplusQuant_variance, lower.tail = TRUE, log.p = FALSE)
     
-      
+    #Posterior full analysis (including the hyperprior)
+    data$posterior_All_mean = (data$Posterior_qual_only_mean/data$Posterior_qual_only_variance + data$LOGOdds_Ratio_quant/data$variance_quant)/(1/data$Posterior_qual_only_variance+1/data$variance_quant)
+    data$posterior_All_variance =1/(1/data$Posterior_qual_only_variance+1/data$variance_quant)
+    data$posterior_All = dnorm(logOddsRatio, data$posterior_All_mean, data$posterior_All_variance, log = FALSE)
+    data$posterior_All = data$posterior_All/sum(data$posterior_All)
+    data$posterior_All_cumsum = cumsum(data$posterior_All)
+    data$posterior_All_CI = ifelse(data$posterior_All_cumsum<0.025|data$posterior_All_cumsum>0.975, "outside CI", "inside CI")
+    data$posterior_All_quantile_0.05 = qnorm(0.05, data$posterior_All_mean, data$posterior_All_variance, lower.tail = TRUE, log.p = FALSE)
+    data$posterior_All_quantile_0.95 = qnorm(0.95,  data$posterior_All_mean, data$posterior_All_variance, lower.tail = TRUE, log.p = FALSE)
+    
     data
   }
   
   data=BayesUpdate_func(Total_N_hyperprior = Total_N_hyperprior, 
                         Mean_probability_hyperprior = Mean_probability_hyperprior, 
                         Variance_hyperprior = Variance_hyperprior,
+                        Log_Odds_hyperprior = Log_Odds_hyperprior, 
                         PriorExpert_N_PA_X = PriorExpert_N_PA_X, 
                         PriorExpert_N_noPA_noX = PriorExpert_N_noPA_noX, 
                         PriorExpert_N_noPA_X = PriorExpert_N_noPA_X,
@@ -177,26 +219,43 @@ BayesUpdateStepByStep = function(x, Construct) {
   plot_hyperprior_density = plotting(data=data,
                                      aes(x=Probability, y=Hyperprior_density, fill=Hyperprior_density_CI), 
                                      values_colour = c("#999999", "#0072B2"), 
-                                     title="Hyperprior")
+                                     title="Hyperprior: Probability")
+  
+
+  plot_hyperprior_density = plotting(data=data,
+                                     aes(x=Probability, y=Hyperprior_logOdds, fill=Hyperprior_logOdds_CI), 
+                                     values_colour = c("#999999", "#0072B2"), 
+                                     title="Hyperprior: log Odds Ratio")
   
   
   #print plot, so we it can be saved into the local repository 
   print(plot_hyperprior_density)
 
   
+  # plot prior 
   plot_Prior_Qual_density = plotting(data=data,
                                      aes(x=logOddsRatio, y=Prior_qual_density, fill= Prior_qual_density_CI), 
                                      values_colour = c("#CC79A7", "#0072B2"), 
-                                     title = paste("Expert Belief: Probability of physical activity given", print(Construct)))
+                                     title = paste("Expert Belief: Probability for physical activity given", print(Construct)))
   
   
   print(plot_Prior_Qual_density)
+  
+  #plot posterior_qual only 
+  plot_Posterior_qual_only = plotting(data=data,
+                                        aes(x=logOddsRatio, y= Posterior_qual_only, fill= Posterior_qual_only_CI), 
+                                        values_colour = c("#CC79A7", "#0072B2"), 
+                                        title = paste("Posterior distribution for physical activity according to qualitative evidence (with hyperprior):", print(Construct)))
+  
+  
+  print(plot_Posterior_qual_only)
+  
   
   #plot likelihood 
   plot_Likelihood_density = plotting(data=data,
                                      aes(x=logOddsRatio, y=Likelihood, fill= Likelihood_CI), 
                                      values_colour = c("#009E73", "#0072B2"), 
-                                     title = paste("Likelihood: Probability of physical activity given", print(Construct)))
+                                     title = paste("Likelihood: Probability for physical activity given", print(Construct)))
   
   
   print(plot_Likelihood_density)
@@ -208,12 +267,23 @@ BayesUpdateStepByStep = function(x, Construct) {
   plot_posterior_QualplusQuant_density = plotting(data=data,
                                           aes(x=logOddsRatio, y= Posterior_QualplusQuant, fill= Posterior_QualplusQuant_CI), 
                                           values_colour = c("#D55E00", "#0072B2"), 
-                                          title = paste("Posterior distribution:", print(Construct)))
+                                          title = paste("Posterior distribution for physical activity according to qualitative and quantative evidence:", print(Construct)))
   
   
   print(plot_posterior_QualplusQuant_density)
   
-  write.table(data, file = '/Users/aliya/my_docs/proj//bayesian_meta_analysis/data_qual_quant_test.csv', append = FALSE, quote = TRUE, sep = ", ",
+  
+  plot_posterior_All_density = plotting(data=data,
+                                                  aes(x=logOddsRatio, y= posterior_All, fill= posterior_All_CI), 
+                                                  values_colour = c("#D55E00", "#0072B2"), 
+                                                  title = paste("Posterior distribution for physical activity according to qualitative and quantative evidence (with hyperprior):", print(Construct)))
+  
+  
+  print(plot_posterior_All_density)
+  
+  
+  
+  write.table(data, file = '/Users/aliya/my_docs/proj//bayesian_meta_analysis/data_qual_quant_with_hyperprior_test.csv', append = FALSE, quote = TRUE, sep = ", ",
               eol = "\r", na = "NA", dec = ".", row.names = FALSE,
               col.names = TRUE, qmethod = c("escape", "double"),
               fileEncoding = "" )
