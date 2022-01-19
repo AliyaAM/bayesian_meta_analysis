@@ -74,16 +74,16 @@ SelfEfficacy_density_by_construct = density_by_construct(data = Results_Bayesian
 
 
 
-height = c(rep(1, 1000),
-           rep(2, 1000), 
-           rep(3, 1000), 
-           rep(4, 1000), 
-           rep(5, 1000), 
-           rep(6, 1000), 
-           rep(7, 1000), 
-           rep(8, 1000), 
-           rep(9, 1000),
-           rep(9, 1000))
+height = c(rep(1, 0.99),
+           rep(2, 0.99), 
+           rep(3, 0.99), 
+           rep(4, 0.99), 
+           rep(5, 0.99), 
+           rep(6, 0.99), 
+           rep(7, 0.99), 
+           rep(8, 0.99), 
+           rep(9, 0.99),
+           rep(9, 0.99))
 
 length(height)
 density_ALL_cosntruct = rbind(Age_density_by_construct,
