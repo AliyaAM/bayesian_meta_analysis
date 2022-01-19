@@ -1,17 +1,6 @@
-#TESTING NEW BAYEs update fUNCTION 
-
-
-
-## Set the root directory to look for source code.
-SOURCE_ROOT = "/Users/aliya/my_docs/proj/bayesian_meta_analysis/"
-## Set the root location on the user's local machine to save output files.
-OUTPUT_ROOT = "/Users/aliya/my_docs/proj/bayesian_meta_analysis/"
 
 source(paste(SOURCE_ROOT, "BayesUpdateStepByStep.R", sep=""), local = TRUE) # this function (BayesUpdateStepByStep) runs the Bayesian meta-analysis that combines qualitative and quantitative evidence 
 
-#source(paste(SOURCE_ROOT, "  BayesUpdateStepByStep.R", sep=""), local = TRUE)
-
-#seed = as.integer(Sys.time())
 
 Results_Age =   BayesUpdateStepByStep(x =x, Construct = "Age")
 Results_BayesianMeta_Analysis = rbind(Results_Age)
@@ -47,7 +36,7 @@ Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_Pos
 
 head(Results_BayesianMeta_Analysis)
 
-write.table(Results_BayesianMeta_Analysis, file = '/Users/aliya/my_docs/proj//bayesian_meta_analysis/Results_BayesianMeta_Analysis_data_qual_quant_with_hyperprior_test.csv', append = FALSE, quote = TRUE, sep = ", ",
+write.table(Results_BayesianMeta_Analysis, file = paste(OUTPUT_ROOT, "Results_BayesianMeta_Analysis_data_qual_quant_with_hyperprior_test.csv", sep=""), 
             eol = "\r", na = "NA", dec = ".", row.names = FALSE,
             col.names = TRUE, qmethod = c("escape", "double"),
             fileEncoding = "" )
@@ -182,5 +171,13 @@ print(Plot_posterior_QualplusQuant)
 
 #print(Plot_posterior_All)
 
+
+plots.dir.path <- list.files(tempdir(), pattern="rs-graphics", full.names = TRUE); 
+plots.png.paths <- list.files(plots.dir.path, pattern=".png", full.names = TRUE)
+
+
+x_directory_quant <- file.path(paste(OUTPUT_ROOT, "/PLOTS_QUANT_and_qual", sep=""))
+dir.create(x_directory_quant)
+file.copy(from=plots.png.paths, to=x_directory_quant)
 
 

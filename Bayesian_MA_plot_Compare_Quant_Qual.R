@@ -9,30 +9,52 @@ library(dplyr)
 
 theme_set(theme_minimal())
 
-data_qual = read.csv(paste(OUTPUT_ROOT, "Mean_results_over_SEEDS_Qual_and_Quant_FINAL_RESULT.csv", sep=""))
+data_qual = read.csv(paste(OUTPUT_ROOT, "Results_BayesianMeta_Analysis_data_qual_quant.csv", sep=""))
 
-data_QUANT = read.csv(paste(OUTPUT_ROOT, "Quant_Mean_results_over_SEEDS_QUANTonly_FINAL_RESULTS.csv", sep=""))
+data_QUANT = read.csv(paste(OUTPUT_ROOT, "Results_quant_only.csv", sep=""))
 
-density_by_cosntruct = function(data, Construct_name, type_evidence){
-  index = data$Construct_name == Construct_name
-  Theta = seq(0.01, 0.99, 0.01)
-  filtered_data = filter(data, Construct_name == data[index,]$Construct_name)
-  posterior_by_constructs = dbeta(Theta, filtered_data$posterior_alpha_mean_uncertaintyLevels_MAP,
-                                  filtered_data$posterior_beta_mean_uncertaintyLevels_MAP)
-  #posterior_by_constructs = exp(posterior_by_constructs)
-  df = data.frame(Theta, Construct_name, type_evidence, posterior_by_constructs)
-  colnames(df) = c("Theta", "construct", "type_evidence", "posterior")
+density_by_Construct = function(data, Construct){
+  index = data$Construct == Construct
+  logOddsRatio = seq( -2, 3 , length=1000)
+  filtered_data = filter(data, Construct == data[index,]$Construct)
+  
+  # the results of the expert elicitation task 
+  Prior_qual_density = dnorm(logOddsRatio,
+                             filtered_data$logOR_expert_elicitation_task, 
+                             filtered_data$variance_expert_elicitation_task)
+  
+  # posterior resulted from updating hyperprior with the results of the expert elicitaiton task 
+  Posterior_qual_only = dnorm(logOddsRatio, 
+                              filtered_data$Posterior_qual_only_mean,  
+                              filtered_data$Posterior_qual_only_variance)
+  
+  # likelihood (quantitative evidence only)
+  Likelihood = dnorm(logOddsRatio, 
+                     filtered_data$LOGOdds_Ratio_quant, 
+                     filtered_data$variance_quant)
+  
+  # the posterior resulted from updating prior with likelihood 
+  posterior_QualplusQuant = dnorm(logOddsRatio, 
+                                  filtered_data$posterior_QualplusQuant_mean,
+                                  filtered_data$posterior_QualplusQuant_variance)
+  
+  # the posterior resulted from updating hyperprior with prior and then with likelihood 
+  posterior_All = dnorm(logOddsRatio, 
+                        filtered_data$posterior_All_mean,
+                        filtered_data$posterior_All_variance)
+  
+  df = data.frame(logOddsRatio, Construct, Prior_qual_density, Posterior_qual_only, Likelihood, posterior_QualplusQuant, posterior_All)
+  colnames(df) = c("logOddsRatio", "Construct", "Prior_qual_density", "Posterior_qual_only", "Likelihood", "posterior_QualplusQuant", "posterior_All")
   return(df)
 }
 
 
 
 
+data_qual = subset(data_qual, select = -c(Construct) )
 
-data_qual = subset(data_qual, select = -c(Construct_name) )
 
-
-Construct_name = c("Age_qual_QUANT", 
+Construct = c("Age_qual_QUANT", 
                    "Comorbidity_qual_QUANT", 
                    "SocialSupport_qual_QUANT",
                    "NegativeAttitute_qual_QUANT", 
@@ -43,89 +65,89 @@ Construct_name = c("Age_qual_QUANT",
                    "LVEF_qual_QUANT",
                    "SelfEfficacy_qual_QUANT")
   
-data_qual = cbind(data_qual, Construct_name)
+data_qual = cbind(data_qual, Construct)
 
 
 Age_density_by_cosntruct_qual = density_by_cosntruct(data = data_qual,
                                                      type_evidence ="qual + QUANT", 
-                                                     Construct_name = "Age_qual_QUANT")
+                                                     Construct = "Age_qual_QUANT")
 
 Comorbidity_density_by_cosntruct_qual = density_by_cosntruct(data = data_qual, 
                                                              type_evidence ="qual + QUANT",                                                              
-                                                             Construct_name = "Comorbidity_qual_QUANT")
+                                                             Construct = "Comorbidity_qual_QUANT")
 
 SocialSupport_density_by_cosntruct_qual = density_by_cosntruct(data = data_qual,
                                                                type_evidence ="qual + QUANT", 
-                                                               Construct_name = "SocialSupport_qual_QUANT")
+                                                               Construct = "SocialSupport_qual_QUANT")
 
 NegativeAttitute_density_by_cosntruct_qual = density_by_cosntruct(data = data_qual,
                                                                   type_evidence ="qual + QUANT", 
-                                                                  Construct_name = "NegativeAttitute_qual_QUANT")
+                                                                  Construct = "NegativeAttitute_qual_QUANT")
 
 PositiveAttitute_density_by_cosntruct_qual = density_by_cosntruct(data = data_qual,
                                                                   type_evidence ="qual + QUANT", 
-                                                                  Construct_name = "PositiveAttitute_qual_QUANT")
+                                                                  Construct = "PositiveAttitute_qual_QUANT")
 
 SixMWT_density_by_cosntruct_qual = density_by_cosntruct(data = data_qual,
                                                         type_evidence ="qual + QUANT", 
-                                                        Construct_name = "6MWT_qual_QUANT")
+                                                        Construct = "6MWT_qual_QUANT")
 
 Functioning_density_by_cosntruct_qual = density_by_cosntruct(data = data_qual, 
                                                              type_evidence ="qual + QUANT", 
-                                                             Construct_name = "Functioning_qual_QUANT")
+                                                             Construct = "Functioning_qual_QUANT")
 
 Symptoms_density_by_cosntruct_qual = density_by_cosntruct(data = data_qual, 
                                                           type_evidence ="qual + QUANT", 
-                                                          Construct_name = "Symptoms_qual_QUANT")
+                                                          Construct = "Symptoms_qual_QUANT")
 
 LVEF_density_by_cosntruct_qual = density_by_cosntruct(data = data_qual, 
                                                       type_evidence ="qual + QUANT", 
-                                                      Construct_name = "LVEF_qual_QUANT")
+                                                      Construct = "LVEF_qual_QUANT")
 
 SelfEfficacy_density_by_cosntruct_qual = density_by_cosntruct(data = data_qual, 
                                                               type_evidence ="qual + QUANT", 
-                                                              Construct_name = "SelfEfficacy_qual_QUANT")
+                                                              Construct = "SelfEfficacy_qual_QUANT")
 
 #######################################################################################################
 Age_density_by_cosntruct = density_by_cosntruct(data = data_QUANT, 
                                                 type_evidence ="QUANT only",
-                                                Construct_name = "Age")
+                                                Construct = "Age")
 
 Comorbidity_density_by_cosntruct = density_by_cosntruct(data = data_QUANT, 
                                                         type_evidence ="QUANT only",
-                                                        Construct_name = "Comorbidity")
+                                                        Construct = "Comorbidity")
 
 SocialSupport_density_by_cosntruct = density_by_cosntruct(data = data_QUANT,
                                                           type_evidence ="QUANT only",
-                                                          Construct_name = "SocialSupport")
+                                                          Construct = "SocialSupport")
 
 NegativeAttitute_density_by_cosntruct = density_by_cosntruct(data = data_QUANT, 
                                                              type_evidence ="QUANT only",
-                                                             Construct_name = "NegativeAttitute")
+                                                             Construct = "NegativeAttitute")
 
 PositiveAttitute_density_by_cosntruct = density_by_cosntruct(data = data_QUANT, 
                                                              type_evidence ="QUANT only",
-                                                             Construct_name = "PositiveAttitute")
+                                                             Construct = "PositiveAttitute")
 
 SixMWT_density_by_cosntruct = density_by_cosntruct(data = data_QUANT,
                                                    type_evidence ="QUANT only",
-                                                   Construct_name = "6MWT")
+                                                   Construct = "6MWT")
 
 Functioning_density_by_cosntruct = density_by_cosntruct(data = data_QUANT, 
                                                         type_evidence ="QUANT only",
-                                                        Construct_name = "Functioning")
+                                                        Construct = "Functioning")
 
 Symptoms_density_by_cosntruct = density_by_cosntruct(data = data_QUANT, 
                                                      type_evidence ="QUANT only",
-                                                     Construct_name = "Symptoms")
+                                                     Construct = "Symptoms")
 
 LVEF_density_by_cosntruct = density_by_cosntruct(data = data_QUANT,
                                                  type_evidence ="QUANT only",
-                                                 Construct_name = "LVEF")
+                                                 Construct = "LVEF")
 
 SelfEfficacy_density_by_cosntruct = density_by_cosntruct(data = data_QUANT,
                                                          type_evidence ="QUANT only",
-                                                         Construct_name = "SelfEfficacy")
+                                                         Construct = "SelfEfficacy")
 
 
 
@@ -175,11 +197,11 @@ density_ALL_cosntruct = rbind(Age_density_by_cosntruct_qual,
 
 density_ALL_cosntruct = cbind(density_ALL_cosntruct, height)
 nrow(density_ALL_cosntruct)
-#density_ALL_cosntruct = rbind(density_ALL_cosntruct, Construct_name)
+#density_ALL_cosntruct = rbind(density_ALL_cosntruct, Construct)
 
 #graph_Posterior = plotDensity(data = Age_density_by_cosntruct_qual,
 #                            aes( x = Age_density_by_cosntruct_qual$Theta, 
-#                                  y = Age_density_by_cosntruct_qual$posterior_by_constructs,
+#                                  y = Age_density_by_cosntruct_qual$posterior_by_s,
 #                                fill = "#00AFBB"))
 
 
@@ -187,20 +209,20 @@ nrow(density_ALL_cosntruct)
 #plot2 = ggplot(density_ALL_cosntruct, aes(y = posterior, x = Theta))+
 #  geom_path(colour = "#00AFBB")+
 # xlim(0.05, 0.505)+
-# facet_wrap(~construct, ncol = 3)
-#  facet_grid(rows = vars(construct))
+# facet_wrap(~, ncol = 3)
+#  facet_grid(rows = vars())
 
 Age_density_by_cosntruct_qual$posterior
 
-# geom_density_ridges(scale = 1) + facet_wrap(~construct)
+# geom_density_ridges(scale = 1) + facet_wrap(~)
 #print(plot2)
 
-#plot = ggplot(density_ALL_cosntruct, aes(x = Theta, y = posterior, group = construct)) + 
+#plot = ggplot(density_ALL_cosntruct, aes(x = Theta, y = posterior, group = )) + 
 # geom_density_ridges(fill = "#00AFBB")
 
 #plot
 
-#plot3 = ggplot(density_ALL_cosntruct, aes(x = posterior, y = construct)) + 
+#plot3 = ggplot(density_ALL_cosntruct, aes(x = posterior, y = )) + 
 #  geom_density_ridges(rel_min_height = 0.01)
 
 mean(density_ALL_cosntruct$posterior)
@@ -249,9 +271,9 @@ d <- data.frame(
 #print(plot5)
 
 plot4 = ggplot(density_ALL_cosntruct, aes(x = Theta, 
-                                          y = construct,
+                                          y = ,
                                           height=posterior, 
-                                          group = construct, 
+                                          group = , 
                                           color = type_evidence,
                                           fill = type_evidence)) +
   

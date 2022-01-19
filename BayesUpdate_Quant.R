@@ -37,193 +37,162 @@ source(paste(SOURCE_ROOT, "PooledOddsRatio_metaanalysis.R", sep="")) #run the fr
 BayesUpdate_Quant <- function(data, Construct, uncertainty, seed) {
   
   index = x$Construct == Construct
-  
- #elicit hyperprior distribution from Jaarsm et al (2003) evidence: 
-  
-JaarsmaInternationalStudy = JaarsmaInternationalStudy
-variance = 0.018
-mean = 0.43
-
-  HyperPrior_a = ((1 - mean) / variance - 1 / mean) * mean ^ 2
-  HyperPrior_b = (HyperPrior_a * (1 /mean - 1))
-
-  
-  mean_prior = HyperPrior_a/(HyperPrior_a+HyperPrior_b)
-  mode_prior = (HyperPrior_a-1) / (HyperPrior_a+HyperPrior_b-2)
-  variance_prior = (HyperPrior_a * HyperPrior_b) / ((HyperPrior_a+HyperPrior_b)^2*(HyperPrior_a+HyperPrior_b+1))
- 
-  
-  Theta = seq(0.01, 0.99, 0.01)
-  prior_nonnormalised = dbeta(Theta,  HyperPrior_a,  HyperPrior_b, ncp = 0,  log = FALSE)
-  PriorMean = mean(prior_nonnormalised)
-  
-  prior = prior_nonnormalised/sum(prior_nonnormalised)
-  Mean_normalised = mean(prior)
-
-  #HYPERPRIOR Credible Iinterval start below: 
-  p = rbeta(Theta, shape1 = HyperPrior_a, shape2 = HyperPrior_b, ncp = 0)
-  MAP_hyperPrior = 0.422856163424018
-  HDILower_hyperPrior =  0.220057520487314
-  HDIUpper_hyperPrior =  0.640617186187267
+  #data for the HYPERPRIOR: 
+  JaarsmaInternationalStudy = JaarsmaInternationalStudy
+  #Total N, variance and mean estimate for the probability of physical activity in general HF populationfrom Jaarsma study (empirical hyperprior):    
+  Total_N_hyperprior = JaarsmaInternationalStudy$TotalN[20]
+  Variance_hyperprior = JaarsmaInternationalStudy$Variance[20]
+  Mean_probability_hyperprior = JaarsmaInternationalStudy$Proportion_highPA[20]
+  Log_Odds_hyperprior = log(JaarsmaInternationalStudy$N_highPA[20]/JaarsmaInternationalStudy$N_lowPA[20])
   
   
-  q =  qbeta(p = p, shape1 = HyperPrior_a, shape2 = HyperPrior_b, ncp = 0,  log = FALSE)
-  
-  prior_quantile_0.05 = qbeta(0.05,  HyperPrior_a, HyperPrior_b)
-  prior_quantile_0.95 = qbeta(0.95,  HyperPrior_a, HyperPrior_b,ncp = 0, log = FALSE)
-  PriorMode = qbeta(0.5,  HyperPrior_a, HyperPrior_b,ncp = 0)
-
-  
-  density = data.frame(Theta, prior, prior_nonnormalised)
-  prior_cumsum = cumsum(density$prior_nonnormalised)
-
-  density = cbind(density, prior_cumsum)
-  
-  prior_CI = ifelse(
-    prior_cumsum<0.03|prior_cumsum>0.97,
-    "outside CI",  "inside CI"
-  )
-
-  density = cbind(density, prior_CI)
-  
-
-
-  
-  #HYPERPRIOR Log Odds:
-  
-  Variance_Prob_PA_JaarsmaInternationalStudy = 0.0189523150981809
-  ProbPA_JaarsmaInternationalStudy = 0.433382295
-  Prob_NoPA_JaarsmaInternationalStudy = 0.566617705
-  
-  
-  Odds_prior = ((1- ProbPA_JaarsmaInternationalStudy)/ProbPA_JaarsmaInternationalStudy)/((1-Prob_NoPA_JaarsmaInternationalStudy)/Prob_NoPA_JaarsmaInternationalStudy)
-  
-  LogOdds_priorEstimate = log(ProbPA_JaarsmaInternationalStudy) + log(1-Prob_NoPA_JaarsmaInternationalStudy) - log(Prob_NoPA_JaarsmaInternationalStudy) - log(1-ProbPA_JaarsmaInternationalStudy)
-
-  
- ProbabilityDistribution_Prior = pbeta(Theta, HyperPrior_a, HyperPrior_b, ncp = 0)
-  ProbabilityDistribution_Prior = ProbabilityDistribution_Prior/sum(ProbabilityDistribution_Prior)
- 
-  
-  
-#TOTAL N across quantitative studies evaluating each construct:
-
+  #data for the LIKELIHOOD 
+  #calculate the total N across quant studies, stratified by construct: 
   PooledN_output = PooledN(data = data, Construct = Construct)
   N = PooledN_output$N
-
+  #run the frequentisit meta-analysis (REML) pooling the findings from quantitative studies, stratified by construct. The Overall Effect estimate is (log) Odds Ratio, a list of pooled Log ORs, one per construct). 
+  #using function: PooledOddsRatio_metaanalysis.R, which runs metafor library 
+  meta_data_likelihoodResults = metaDataLikelihood(likelihood_data = likelihood_data, Construct = Construct, N = N)
+  LOGOdds_Ratio_quant = meta_data_likelihoodResults$LOGOdds_Ratio
+  Standard_deviation_quant = meta_data_likelihoodResults$Standard_deviation_LogOR
   
- #Odds Ratio Pooled OR across Quant Studies (method: metafor library): 
+  #variance_quant = Standard_deviation_quant^2
   
-  meta_data_likelihoodResults = metaDataLikelihood(likelihood_data = likelihood_data, Construct = Construct)
-  LOGOdds_Ratio = meta_data_likelihoodResults$LOGOdds_Ratio
+  variance_quant = meta_data_likelihoodResults$variance_Pooled_lOR 
+  
   LowerCI_LogOddsRatio = meta_data_likelihoodResults$LowerCI_LogOddsRatio 
   UpperCI_LogOddsRatio = meta_data_likelihoodResults$UpperCI_LogOddsRatio
+  #the number of quantitative studies that evaluted each construct: 
   k =  meta_data_likelihoodResults$k
   
+  BayesUpdate_func = function(Construct, Total_N_hyperprior, Mean_probability_hyperprior, Variance_hyperprior, Log_Odds_hyperprior, 
+                              LOGOdds_Ratio_quant, variance_quant) {
+    
+    Probability = seq( 0 , 1 , length=1000)
+    logOddsRatio = seq( -1 , 2 , length=1000)
+    
+    #elicit HYPERPRIOR distribution as a Gaussian (aka normal) distribution with mean value = mean from Jaarsma, and variance from Jaarsma
+    
+    
+    #elicits hyperprior from arguments Total_N_hyperprior, Mean_probability_hyperprior, Variance_hyperprior, Probability
+    Hyperprior_density = dnorm(Probability, Mean_probability_hyperprior,  Variance_hyperprior, log = FALSE)
+    #normalised hyperprior distribution 
+    Hyperprior_density = Hyperprior_density/sum(Hyperprior_density)
+    data=data.frame(Probability,logOddsRatio,  Hyperprior_density, Mean_probability_hyperprior, Variance_hyperprior)
+    data$Hyperprior_density_cumsum=cumsum(data$Hyperprior_density)
+    data$Hyperprior_density_CI=ifelse(data$Hyperprior_density_cumsum<0.025|data$Hyperprior_density_cumsum>0.975, "outside CI", "inside CI")
+    
+    
+    data$Log_Odds_hyperprior = Log_Odds_hyperprior
+    data$Hyperprior_logOdds = dnorm(logOddsRatio, data$Log_Odds_hyperprior,  data$Variance_hyperprior, log = FALSE)
+    data$Hyperprior_logOdds = data$Hyperprior_logOdds/sum(data$Hyperprior_logOdds)
+    data$Hyperprior_logOdds_cumsum = cumsum(data$Hyperprior_logOdds)
+    data$Hyperprior_logOdds_CI = ifelse(data$Hyperprior_logOdds_cumsum<0.025|data$Hyperprior_logOdds_cumsum>0.975, "outside CI", "inside CI")
+    
+    
+    #Likelihood 
+    data$LOGOdds_Ratio_quant = LOGOdds_Ratio_quant
+    data$variance_quant = variance_quant
+    # Likelihood distribution 
+    data$Likelihood = dnorm(logOddsRatio, data$LOGOdds_Ratio_quant,  data$variance_quant, log = FALSE)
+    data$Likelihood = data$Likelihood/sum(data$Likelihood)
+    data$Likelihood_cumsum=cumsum(data$Likelihood)
+    data$Likelihood_CI=ifelse(data$Likelihood_cumsum<0.025|data$Likelihood_cumsum>0.975, "outside CI", "inside CI")
+    data$p_Likelihood = pnorm(logOddsRatio, data$LOGOdds_Ratio_quant, data$variance_quant, lower.tail = TRUE, log.p = FALSE)
+    #Credible Intervals: Likelihood
+    data$Likelihood_qual_quantile_0.05 = qnorm(0.05, data$LOGOdds_Ratio_quant, data$variance_quant, lower.tail = TRUE, log.p = FALSE)
+    data$Likelihood_qual_quantile_0.95 = qnorm(0.95,  data$LOGOdds_Ratio_quant, data$variance_quant, lower.tail = TRUE, log.p = FALSE)
+    
+    
+    
+    #Formula from Spieghelhalter p 63: updating prior with likelihood using the following mean nd variance for the distribution: 
+    data$posterior_Quant_mean = (data$Log_Odds_hyperprior/data$Variance_hyperprior + data$LOGOdds_Ratio_quant/data$variance_quant)/(1/data$Variance_hyperprior+1/data$variance_quant)
+    data$posterior_Quant_variance =1/(1/data$Variance_hyperprior+1/data$variance_quant)
+    #posterior distribution for updating prior with likelihood  
+    data$Posterior_Quant = dnorm(logOddsRatio, data$posterior_Quant_mean,  data$posterior_Quant_variance, log = FALSE)
+    #normalise posterior density distribution
+    data$Posterior_Quant = data$Posterior_Quant/sum(data$Posterior_Quant)
+    data$Posterior_Quant_cumsum=cumsum(data$Posterior_Quant)
+    data$Posterior_Quant_CI=ifelse(data$Posterior_Quant_cumsum<0.025|data$Posterior_Quant_cumsum>0.975, "outside CI", "inside CI")
+    data$p_Posterior_Quant = pnorm(logOddsRatio, data$posterior_Quant_mean, data$posterior_Quant_variance, lower.tail = TRUE, log.p = FALSE)
+    #Credible Intervals: posterior (update without hyperprior)
+    data$Posterior_Quant_quantile_0.05 = qnorm(0.05, data$posterior_Quant_mean, data$posterior_Quant_variance, lower.tail = TRUE, log.p = FALSE)
+    data$Posterior_Quant_quantile_0.95 = qnorm(0.95,  data$posterior_Quant_mean, data$posterior_Quant_variance, lower.tail = TRUE, log.p = FALSE)
+    
+   
+    data
+  }
   
- #LIKELIIHOOD: 
+  data=BayesUpdate_func(Construct = Construct, 
+                        Total_N_hyperprior = Total_N_hyperprior, 
+                        Mean_probability_hyperprior = Mean_probability_hyperprior, 
+                        Variance_hyperprior = Variance_hyperprior,
+                        Log_Odds_hyperprior = Log_Odds_hyperprior, 
+                        LOGOdds_Ratio_quant = LOGOdds_Ratio_quant, 
+                        variance_quant = variance_quant)
   
-  #https://mc-stan.org/bayesplot/articles/plotting-mcmc-draws.html  plotting mcmc 
-
-  
-  expit<-function(x){exp(x)/(1+exp(x))}
   
   
-  ContingenciesTable = ContingenciesTable_MCMC(N = N, LOGOdds_Ratio = LOGOdds_Ratio)
-  N_noPA_noX = ContingenciesTable$N_noPA_noX
-  N_PA_X = ContingenciesTable$N_PA_X
-  N_noPA_X = ContingenciesTable$N_noPA_X
-  N_PA_noX =  ContingenciesTable$N_PA_noX
-  N_PA = ContingenciesTable$N_PA_X + ContingenciesTable$N_PA_noX 
-  N_X =  ContingenciesTable$N_noPA_X + ContingenciesTable$N_PA_X
+  #function for ploting densities, colour values: - grey: "#999999", lilac: "#CC79A7", blue: "#0072B2". This are suitable for colour blind people)
+  plotting=function(data, ... ,title, values_colour ) {
+    library(ggplot2)
+    ggplot(data, ...)+
+      geom_bar(stat="identity", alpha=0.5)+
+      theme_minimal()+
+      theme(axis.text.y = element_blank())+
+      ylab("Probability density")+
+      ggtitle(title)+
+      labs(fill='95% confidence interval')+
+      scale_fill_manual(values = values_colour)
+    
+  }
   
-
+  #plot hyperprior density distribution 
+  plot_hyperprior_density = plotting(data=data,
+                                     aes(x=Probability, y=Hyperprior_density, fill=Hyperprior_density_CI), 
+                                     values_colour = c("#999999", "#0072B2"), 
+                                     title="Hyperprior: Probability")
   
-  #POSTERIOR: 
-  posterior_alpha = HyperPrior_a + N_PA_X
-  posterior_beta = HyperPrior_b + N - N_PA_X
-
-  Posterior_dis = dbeta(Theta, HyperPrior_a, HyperPrior_b)
-  MAP_posterior = map_estimate(Posterior_dis)
-  HDI_Posterior= hdi(Posterior_dis, credMass = 0.90)
-  HDILower_Posterior = HDI_Posterior[[1]]
-  HDIUpper_Posterior = HDI_Posterior[[2]]
-  mean_posterior = posterior_alpha/(posterior_alpha+posterior_beta)
-  mode_posterior =(posterior_alpha-1)/(posterior_alpha+posterior_beta-2)
-  variance_posterior = (posterior_alpha * posterior_beta) / ((posterior_alpha+posterior_beta)^2*(posterior_alpha+posterior_beta+1))
+  #print plot, so we it can be saved into the local repository 
+  print(plot_hyperprior_density)
   
-  #POSTERIOR Credible Interval start below: 
-  posterior_quantile_0.05 = qbeta(0.05, posterior_alpha,posterior_beta)
-  posterior_quantile_0.95 = qbeta(0.95, posterior_alpha,posterior_beta)
-
+  plot_hyperprior_density_Log_OR = plotting(data=data,
+                                            aes(x=logOddsRatio, y=Hyperprior_logOdds, fill=Hyperprior_logOdds_CI), 
+                                            values_colour = c("#999999", "#0072B2"), 
+                                            title="Hyperprior: log Odds Ratio")
   
-  #POSTERIOR distribution: 
-  posterior_mode = qbeta(0.5, posterior_alpha,posterior_beta)
-  posterior1 = dbeta(Theta, posterior_alpha, posterior_beta)
-  posterior1_normalised = posterior1/sum(posterior1)
+  print(plot_hyperprior_density_Log_OR)
   
-  PosteriorMean = mean(posterior1)
-  PosteriorMean_normalised = mean(posterior1_normalised)
-  posterior3 = dbeta(Theta, HyperPrior_a * LOGOdds_Ratio, HyperPrior_b * (1/LOGOdds_Ratio))
-  posterior3_normalised = posterior3/sum(posterior3)
-  length(posterior1)
-  length(Theta)
-  plot(Theta, posterior1)
-
-  #plot posterior distribution using ggplot: 
   
-  density_posterior = data.frame(Theta, posterior1)
-  graph_Posterior = plotDensity(data = density_posterior,
-                                aes( x = density_posterior$Theta, 
-                                     y = density_posterior$posterior1,
-                                     fill = NULL),
-                                mode = mode_posterior,
-                                mean = mean_posterior, 
-                                quantile_0.05 = posterior_quantile_0.05,
-                                quantile_0.95 = posterior_quantile_0.95,
-                                MAPhyperprior = MAP_hyperPrior, 
-                                CIUpperhyperprior = HDIUpper_hyperPrior, 
-                                CILowerhyperprior = HDILower_hyperPrior, 
-                                xlabTitle = paste("Posterior probability of physical activity for", print(Construct)),  
-                                ylabTitle = "Probability density", 
-                                title = Construct)
   
-
-  print(graph_Posterior)
+  #plot likelihood 
+  plot_Likelihood_density = plotting(data=data,
+                                     aes(x=logOddsRatio, y=Likelihood, fill= Likelihood_CI), 
+                                     values_colour = c("#009E73", "#0072B2"), 
+                                     title = paste("Likelihood: Probability for physical activity given", print(Construct)))
   
-
-
-  return(params = (list(Construct = Construct, 
-                        prior_alpha = HyperPrior_a, 
-                        prior_beta = HyperPrior_b, 
-                        mean_prior = mean_prior,
-                        PriorMean = PriorMean,
-                        Mean_normalised = Mean_normalised,
-                        PriorMode = PriorMode,
-                        Odds_prior = Odds_prior, 
-                        LogOdds_priorEstimate = LogOdds_priorEstimate, 
-                        prior_CredibleInterval_0.05 = prior_quantile_0.05, 
-                        prior_CredibleInterval_0.95 = prior_quantile_0.95, 
-                        MAP_hyperPrior = MAP_hyperPrior,
-                        HDILower_hyperPrior = HDILower_hyperPrior,
-                        HDIUpper_hyperPrior = HDIUpper_hyperPrior,
-                        Total_N_Construct = N, 
-                        Number_ofStudies_assessing_Construct = k, 
-                        Pooled_LOGOdds_Ratio = LOGOdds_Ratio,
-                        LowerCI_LogOddsRatio = LowerCI_LogOddsRatio, 
-                        UpperCI_LogOddsRatio = UpperCI_LogOddsRatio,
-                        posterior_alpha = posterior_alpha,
-                        posterior_beta = posterior_beta,  
-                        MAP_posterior = MAP_posterior,
-                        HDILower_Posterior = HDILower_Posterior,
-                        HDIUpper_Posterior = HDIUpper_Posterior,
-                        mode_posterior =  mode_posterior,
-                        mean_posterior = mean_posterior, 
-                        PosteriorMean = PosteriorMean, 
-                        PosteriorMean_normalised = PosteriorMean_normalised, 
-                        posterior_CredibleInterval_0.05 = posterior_quantile_0.05, 
-                        posterior_CredibleInterval_0.95 = posterior_quantile_0.95)))
+  print(plot_Likelihood_density)
+  
+  #plot posterior (hyperprior updated with likelihood) 
+  plot_Posterior_Quant = plotting(data=data,
+                                     aes(x=logOddsRatio, y=Posterior_Quant, fill= Posterior_Quant_CI), 
+                                     values_colour = c("#009E73", "#0072B2"), 
+                                     title = paste("Posterior: Probability for physical activity given", print(Construct)))
+  
+  print(plot_Posterior_Quant)
+  
+  
+  write.table(data, file = '/Users/aliya/my_docs/proj//bayesian_meta_analysis/data_quant_with_hyperprior_test.csv', append = FALSE, quote = TRUE, sep = ", ",
+              eol = "\r", na = "NA", dec = ".", row.names = FALSE,
+              col.names = TRUE, qmethod = c("escape", "double"),
+              fileEncoding = "" )
+  
+  
+  return(params = (data.frame(Construct = Construct, 
+                              data)))
   
 }
+
+
 
 

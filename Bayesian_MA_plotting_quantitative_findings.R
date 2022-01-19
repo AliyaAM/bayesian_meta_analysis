@@ -8,7 +8,7 @@ library(dplyr)
 theme_set(theme_minimal())
 
 data = read.csv(paste(OUTPUT_ROOT, "Quant_Mean_results_over_SEEDS_QUANTonly_FINAL_RESULTS.csv", sep=""))
-data$Construct_name
+
 density_by_cosntruct = function(data, Construct_name){
   index = data$Construct_name == Construct_name
   Theta = seq(0.01, 0.99, 0.01)
