@@ -81,14 +81,14 @@ BayesUpdateStepByStep = function(x, Construct) {
   
   #variance_quant = Standard_deviation_quant^2
   
-  variance_quant = meta_data_likelihoodResults$variance_across_studies 
+  variance_quant = meta_data_likelihoodResults$variance_Pooled_lOR 
   
   LowerCI_LogOddsRatio = meta_data_likelihoodResults$LowerCI_LogOddsRatio 
   UpperCI_LogOddsRatio = meta_data_likelihoodResults$UpperCI_LogOddsRatio
   #the number of quantitative studies that evaluted each construct: 
   k =  meta_data_likelihoodResults$k
   
-  BayesUpdate_func = function(Total_N_hyperprior, Mean_probability_hyperprior, Variance_hyperprior, Log_Odds_hyperprior, 
+  BayesUpdate_func = function(Construct, Total_N_hyperprior, Mean_probability_hyperprior, Variance_hyperprior, Log_Odds_hyperprior, 
                               PriorExpert_N_PA_X, PriorExpert_N_noPA_noX, PriorExpert_N_noPA_X, PriorExpert_N_PA_noX, variance_expert_elicitation_task,
                               LOGOdds_Ratio_quant, variance_quant) {
     
@@ -157,6 +157,7 @@ BayesUpdateStepByStep = function(x, Construct) {
     data$Likelihood_qual_quantile_0.05 = qnorm(0.05, data$LOGOdds_Ratio_quant, data$variance_quant, lower.tail = TRUE, log.p = FALSE)
     data$Likelihood_qual_quantile_0.95 = qnorm(0.95,  data$LOGOdds_Ratio_quant, data$variance_quant, lower.tail = TRUE, log.p = FALSE)
     
+
   
   
     #POSTERIOR
@@ -187,7 +188,8 @@ BayesUpdateStepByStep = function(x, Construct) {
     data
   }
   
-  data=BayesUpdate_func(Total_N_hyperprior = Total_N_hyperprior, 
+  data=BayesUpdate_func(Construct = Construct, 
+                        Total_N_hyperprior = Total_N_hyperprior, 
                         Mean_probability_hyperprior = Mean_probability_hyperprior, 
                         Variance_hyperprior = Variance_hyperprior,
                         Log_Odds_hyperprior = Log_Odds_hyperprior, 

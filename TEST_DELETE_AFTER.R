@@ -47,9 +47,15 @@ Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_Pos
 
 head(Results_BayesianMeta_Analysis)
 
+write.table(Results_BayesianMeta_Analysis, file = '/Users/aliya/my_docs/proj//bayesian_meta_analysis/Results_BayesianMeta_Analysis_data_qual_quant_with_hyperprior_test.csv', append = FALSE, quote = TRUE, sep = ", ",
+            eol = "\r", na = "NA", dec = ".", row.names = FALSE,
+            col.names = TRUE, qmethod = c("escape", "double"),
+            fileEncoding = "" )
+
+
 density_by_Construct = function(data, Construct){
   index = data$Construct == Construct
-  logOddsRatio = seq( -2, 2.5 , length=1000)
+  logOddsRatio = seq( -2, 3 , length=1000)
   filtered_data = filter(data, Construct == data[index,]$Construct)
   
   # the results of the expert elicitation task 
@@ -144,7 +150,7 @@ nrow(density_ALL_Construct)
 #plotting the results of the expert elicitation task 
 Plot_Prior_qual_density = ggplot(density_ALL_Construct, aes(x = logOddsRatio, y = Construct, height=Prior_qual_density, group = Construct)) +
   geom_density_ridges(stat = "identity", scale = 1) +
-  xlim(-2, 2.5 )
+  xlim(-2, 3 )
 
 print(Plot_Prior_qual_density)
 
@@ -158,14 +164,14 @@ print(Plot_Prior_qual_density)
 #plotting likelihood (quantitative evidence only)
 Plot_Likelihood = ggplot(density_ALL_Construct, aes(x = logOddsRatio, y = Construct, height=Likelihood, group = Construct)) +
   geom_density_ridges(stat = "identity", scale = 1) +
-  xlim(-2, 2.5  )
+  xlim(-2, 3  )
 
 print(Plot_Likelihood)
 
 #plotting the posterior resulted from updating prior with likelihood 
 Plot_posterior_QualplusQuant = ggplot(density_ALL_Construct, aes(x = logOddsRatio, y = Construct, height=posterior_QualplusQuant, group = Construct)) +
   geom_density_ridges(stat = "identity", scale = 1) +
-  xlim(-2, 2.5  )
+  xlim(-2, 3  )
 
 print(Plot_posterior_QualplusQuant)
 

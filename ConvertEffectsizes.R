@@ -9,7 +9,7 @@ library(dplyr)
 
 
 data = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep="")) 
-
+head(data)
 results_estimated_from_F = data.frame()
 results_estimated_from_r = data.frame()
 results_estimated_from_mean = data.frame()
@@ -28,7 +28,9 @@ for (estimate_type in data$estimate_type) {
                            verbose = FALSE)
     
     estimated_from_F$Author = data$Author[row_id]
+    estimated_from_F$Year = data$Year[row_id]
     estimated_from_F$Construct = data$Construct[row_id]
+     
     
     estimated_from_F$varLOR =  (pi^2*estimated_from_F$var.d)/(3)
     estimated_from_F = cbind(estimated_from_F$varLOR, estimated_from_F) 
@@ -47,6 +49,7 @@ for (estimate_type in data$estimate_type) {
     
     
     estimated_from_r$Author = data$Author[row_id]
+    estimated_from_r$Year = data$Year[row_id]
     estimated_from_r$Construct = data$Construct[row_id]
     
     
@@ -68,6 +71,7 @@ for (estimate_type in data$estimate_type) {
                               verbose = FALSE) 
     
     estimated_from_mean$Author = data$Author[row_id]
+    estimated_from_mean$Year = data$Year[row_id]
     estimated_from_mean$Construct = data$Construct[row_id]
     estimated_from_mean$varLOR =  (pi^2*estimated_from_mean$var.d)/(3)
     estimated_from_mean = cbind(estimated_from_mean$varLOR, estimated_from_mean) 
@@ -88,6 +92,7 @@ for (estimate_type in data$estimate_type) {
                                    verbose = FALSE)
     
     estimated_from_Binary$Author = data$Author[row_id]
+    estimated_from_Binary$Year = data$Year[row_id]
     estimated_from_Binary$Construct = data$Construct[row_id]
     estimated_from_Binary$varLOR =  (pi^2*estimated_from_mean$var.d)/(3)
     estimated_from_Binary = cbind(estimated_from_Binary$varLOR, estimated_from_Binary) 
@@ -142,6 +147,11 @@ for (estimate_type in data$estimate_type) {
             results_estimated_from_F$Author,
             results_estimated_Binary$Author)
  
+ Year = c(results_estimated_from_mean$Year, 
+          results_estimated_from_r$Year, 
+          results_estimated_from_F$Year,
+          results_estimated_Binary$Year)
+ 
 
  Construct = c(results_estimated_from_mean$Construct, 
                results_estimated_from_r$Construct, 
@@ -178,6 +188,7 @@ for (estimate_type in data$estimate_type) {
 
 
  likelihood_data  = cbind.data.frame(Author, 
+                                     Year, 
                                      Construct, 
                                      EffectSize_conversion_lOR, 
                                      EffectSize_conversion_lOR_lCI, 
@@ -192,6 +203,7 @@ for (estimate_type in data$estimate_type) {
                                      Total_N) 
  
  colnames (likelihood_data) = c('Author', 
+                                "Year", 
                                 'Construct',
                                 'lOR',
                                 'l.lor', 
