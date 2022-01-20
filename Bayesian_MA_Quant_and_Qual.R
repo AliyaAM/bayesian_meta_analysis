@@ -36,10 +36,12 @@ Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_Pos
 
 head(Results_BayesianMeta_Analysis)
 
-write.table(Results_BayesianMeta_Analysis, file = paste(OUTPUT_ROOT, "Results_BayesianMeta_Analysis_data_qual_quant_with_hyperprior_test.csv", sep=""), 
+write.table(Results_BayesianMeta_Analysis, file = paste(OUTPUT_ROOT, "Results_BayesianMeta_Analysis_data_qual_quant.csv", sep=""), append = FALSE, quote = TRUE, sep = ", ",
             eol = "\r", na = "NA", dec = ".", row.names = FALSE,
             col.names = TRUE, qmethod = c("escape", "double"),
             fileEncoding = "" )
+
+
 
 
 density_by_Construct = function(data, Construct){
@@ -62,6 +64,7 @@ density_by_Construct = function(data, Construct){
                       filtered_data$LOGOdds_Ratio_quant, 
                       filtered_data$variance_quant)
    
+   
    # the posterior resulted from updating prior with likelihood 
    posterior_QualplusQuant = dnorm(logOddsRatio, 
                                    filtered_data$posterior_QualplusQuant_mean,
@@ -73,7 +76,7 @@ density_by_Construct = function(data, Construct){
                          filtered_data$posterior_All_variance)
    
     df = data.frame(logOddsRatio, Construct, Prior_qual_density, Posterior_qual_only, Likelihood, posterior_QualplusQuant, posterior_All)
-  colnames(df) = c("logOddsRatio", "Construct", "Prior_qual_density", "Posterior_qual_only", "Likelihood", "posterior_QualplusQuant", "posterior_All")
+  colnames(df) = c("logOddsRatio", "Construct", "Prior_qual_density", "Posterior_qual_only", "Likelihood",  "posterior_QualplusQuant", "posterior_All")
   return(df)
 }
 
