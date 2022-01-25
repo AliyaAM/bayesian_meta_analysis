@@ -28,21 +28,13 @@ data = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv
 JaarsmaInternationalStudy = read.csv(paste(SOURCE_ROOT, "HyperPriorData.csv", sep="")) #data used for eliciting the hyperprior (general physical activity levels in HF estimated from a large internaitonal study (Jaarsma et al., 2013)
 
 #run Bayesian meta-analysis for two procedures separately: 
-#on the constructs that were present in both qualitative and quantitative studies: 
+#on the constructs that were present in both qualitative and quantitative studies (the main plot is outputed from the function below): 
 source(paste(SOURCE_ROOT, "Bayesian_MA_Quant_and_Qual.R", sep=""))
 
-#and constructs that were present in quantitative studies only: 
+#and constructs that were present in quantitative studies only (the main plot is outputed from the function below): 
 source(paste(SOURCE_ROOT, "BayesianMA_Quant_only.R", sep=""))
 
-#plot the findings of the anlaysis of quantitative evidence (i.e., hyperprior was updated with quantitative evidence)
-source(paste(SOURCE_ROOT, "Bayesian_MA_plotting_quantitative_findings.R", sep=""))
-
-#plot the findings of the analysis combining qualitative and quantitative evidence (i.e., hyperprior was updated with prior elicited from the experts, then the resultant distribution was updated with the quantitative evidence)
-#note: fewer constructs were evaluated in both qualitative and quantitative evidence 
-source(paste(SOURCE_ROOT, "Bayesian_MA_plotting_Qual_plus_QUANT_findings.R", sep=""))
-
 #plot the fidings with and without qualitative evidence next to each other for comparison
-source(paste(SOURCE_ROOT, "Bayesian_MA_plot_Compare_Quant_Qual", sep=""))
-
+source(paste(SOURCE_ROOT, "Bayesian_MA_plot_Compare_Quant_Qual.R", sep=""))
 
 
