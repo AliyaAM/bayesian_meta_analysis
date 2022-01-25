@@ -38,7 +38,6 @@ JaarsmaInternationalStudy = read.csv(paste(SOURCE_ROOT, "HyperPriorData.csv", se
 #run Bayesian meta-analysis sourcing from 10 different seeds separately for two procedures: 
 
 #1) combining qualitative and quantitative evidence: 
-Bayes_update_Qual_quant_noHyperprior.R
 
 source(paste(SOURCE_ROOT, "QualANDQuant_sourcing_AllSeeds.R", sep=""))
 
