@@ -63,7 +63,7 @@ density_by_Construct = function(data, Construct){
                              filtered_data$logOR_expert_elicitation_task, 
                              filtered_data$variance_expert_elicitation_task)
   
-  # posterior resulted from updating hyperprior with the results of the expert elicitaiton task 
+  # posterior resulted from updating hyperprior with the results of the expert elicitation task 
    Posterior_qual_only = dnorm(logOddsRatio, 
                                filtered_data$Posterior_qual_only_mean,  
                                filtered_data$Posterior_qual_only_variance)
@@ -154,7 +154,7 @@ Plot_Prior_qual_density = ggplot(density_ALL_Construct, aes(x = logOddsRatio, y 
 
 print(Plot_Prior_qual_density)
 
-#plotting posterior resulted from updating hyperprior with the results of the expert elicitaiton task 
+#plotting posterior resulted from updating hyperprior with the results of the expert elicitation task 
 #Plot_Posterior_qual_only = ggplot(density_ALL_Construct, aes(x = logOddsRatio, y = Construct, height=Posterior_qual_only, group = Construct)) +
 #  geom_density_ridges(stat = "identity", scale = 1) +
  # xlim(-2, 2.5  )

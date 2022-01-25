@@ -35,12 +35,12 @@ QuantUpdate_SocialSupport = BayesUpdate_Quant(data = data, Construct = "SocialSu
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_SocialSupport)
 
 
-QuantUpdate_NegativeAttitute = BayesUpdate_Quant(data = data, Construct = "NegativeAttitute")
-ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_NegativeAttitute)
+QuantUpdate_NegativeAttitude = BayesUpdate_Quant(data = data, Construct = "NegativeAttitude")
+ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_NegativeAttitude)
 
 
-QuantUpdate_PositiveAttitute = BayesUpdate_Quant(data = data, Construct = "PositiveAttitute")
-ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_PositiveAttitute)
+QuantUpdate_PositiveAttitude = BayesUpdate_Quant(data = data, Construct = "PositiveAttitude")
+ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_PositiveAttitude)
 
 
 QuantUpdate_6MWT= BayesUpdate_Quant(data = data, Construct = "6MWT")
@@ -191,8 +191,8 @@ data = ResultsBayesianUpdateQuant
 Age_density_by_Construct = density_by_Construct(data = data, Construct = "Age")
 Comorbidity_density_by_Construct = density_by_Construct(data = data, Construct = "Comorbidity")
 SocialSupport_density_by_Construct = density_by_Construct(data = data, Construct = "SocialSupport")
-NegativeAttitute_density_by_Construct = density_by_Construct(data = data, Construct = "NegativeAttitute")
-PositiveAttitute_density_by_Construct = density_by_Construct(data = data, Construct = "PositiveAttitute")
+NegativeAttitude_density_by_Construct = density_by_Construct(data = data, Construct = "NegativeAttitude")
+PositiveAttitude_density_by_Construct = density_by_Construct(data = data, Construct = "PositiveAttitude")
 SixMWT_density_by_Construct = density_by_Construct(data = data, Construct = "6MWT")
 Functioning_density_by_Construct = density_by_Construct(data = data, Construct = "Functioning")
 Symptoms_density_by_Construct = density_by_Construct(data = data, Construct = "Symptoms")
@@ -261,8 +261,8 @@ length(height)
 density_ALL_Construct = rbind(Age_density_by_Construct,
                               Comorbidity_density_by_Construct,
                               SocialSupport_density_by_Construct,
-                              NegativeAttitute_density_by_Construct,
-                              PositiveAttitute_density_by_Construct,
+                              NegativeAttitude_density_by_Construct,
+                              PositiveAttitude_density_by_Construct,
                               SixMWT_density_by_Construct, 
                               Functioning_density_by_Construct,
                               Symptoms_density_by_Construct,
@@ -299,8 +299,8 @@ d <- data.frame(
   y = c(Age_density_by_Construct$posterior,
         Comorbidity_density_by_Construct$posterior,
         SocialSupport_density_by_Construct$posterior,
-        NegativeAttitute_density_by_Construct$posterior,
-        PositiveAttitute_density_by_Construct$posterior,
+        NegativeAttitude_density_by_Construct$posterior,
+        PositiveAttitude_density_by_Construct$posterior,
         SixMWT_density_by_Construct$posterior, 
         Functioning_density_by_Construct$posterior,
         Symptoms_density_by_Construct$posterior,

@@ -62,8 +62,8 @@ data_qual = subset(data_qual, select = -c(Construct) )
 Construct = c("Age_qual_QUANT", 
                    "Comorbidity_qual_QUANT", 
                    "SocialSupport_qual_QUANT",
-                   "NegativeAttitute_qual_QUANT", 
-                   "PositiveAttitute_qual_QUANT",
+                   "NegativeAttitude_qual_QUANT", 
+                   "PositiveAttitude_qual_QUANT",
                    "6MWT_qual_QUANT",
                    "Functioning_qual_QUANT",
                    "Symptoms_qual_QUANT",
@@ -85,13 +85,13 @@ SocialSupport_density_by_Construct_qual = density_by_Construct(data = data_qual,
                                                                type_evidence ="qual + QUANT", 
                                                                Construct = "SocialSupport_qual_QUANT")
 
-NegativeAttitute_density_by_Construct_qual = density_by_Construct(data = data_qual,
+NegativeAttitude_density_by_Construct_qual = density_by_Construct(data = data_qual,
                                                                   type_evidence ="qual + QUANT", 
-                                                                  Construct = "NegativeAttitute_qual_QUANT")
+                                                                  Construct = "NegativeAttitude_qual_QUANT")
 
-PositiveAttitute_density_by_Construct_qual = density_by_Construct(data = data_qual,
+PositiveAttitude_density_by_Construct_qual = density_by_Construct(data = data_qual,
                                                                   type_evidence ="qual + QUANT", 
-                                                                  Construct = "PositiveAttitute_qual_QUANT")
+                                                                  Construct = "PositiveAttitude_qual_QUANT")
 
 SixMWT_density_by_Construct_qual = density_by_Construct(data = data_qual,
                                                         type_evidence ="qual + QUANT", 
@@ -126,13 +126,13 @@ SocialSupport_density_by_Construct = density_by_Construct(data = data_QUANT,
                                                           type_evidence ="QUANT only",
                                                           Construct = "SocialSupport")
 
-NegativeAttitute_density_by_Construct = density_by_Construct(data = data_QUANT, 
+NegativeAttitude_density_by_Construct = density_by_Construct(data = data_QUANT, 
                                                              type_evidence ="QUANT only",
-                                                             Construct = "NegativeAttitute")
+                                                             Construct = "NegativeAttitude")
 
-PositiveAttitute_density_by_Construct = density_by_Construct(data = data_QUANT, 
+PositiveAttitude_density_by_Construct = density_by_Construct(data = data_QUANT, 
                                                              type_evidence ="QUANT only",
-                                                             Construct = "PositiveAttitute")
+                                                             Construct = "PositiveAttitude")
 
 SixMWT_density_by_Construct = density_by_Construct(data = data_QUANT,
                                                    type_evidence ="QUANT only",
@@ -185,10 +185,10 @@ density_ALL_Construct = rbind(Age_density_by_Construct_qual,
                               Comorbidity_density_by_Construct,
                               SocialSupport_density_by_Construct_qual,
                               SocialSupport_density_by_Construct,
-                              NegativeAttitute_density_by_Construct_qual,
-                              NegativeAttitute_density_by_Construct,
-                              PositiveAttitute_density_by_Construct_qual,
-                              PositiveAttitute_density_by_Construct,
+                              NegativeAttitude_density_by_Construct_qual,
+                              NegativeAttitude_density_by_Construct,
+                              PositiveAttitude_density_by_Construct_qual,
+                              PositiveAttitude_density_by_Construct,
                               SixMWT_density_by_Construct_qual, 
                               SixMWT_density_by_Construct,
                               Functioning_density_by_Construct_qual,
@@ -248,11 +248,11 @@ d <- data.frame(
         SocialSupport_density_by_Construct_qual$posterior,
         SocialSupport_density_by_Construct$posterior,
  
-        NegativeAttitute_density_by_Construct_qual$posterior,
-        NegativeAttitute_density_by_Construct$posterior,
+        NegativeAttitude_density_by_Construct_qual$posterior,
+        NegativeAttitude_density_by_Construct$posterior,
 
-        PositiveAttitute_density_by_Construct_qual$posterior,
-        PositiveAttitute_density_by_Construct$posterior,
+        PositiveAttitude_density_by_Construct_qual$posterior,
+        PositiveAttitude_density_by_Construct$posterior,
 
         SixMWT_density_by_Construct_qual$posterior, 
         SixMWT_density_by_Construct$posterior, 
@@ -294,8 +294,8 @@ plot4 = ggplot(density_ALL_Construct, aes(x = Theta,
 #scale_fill_cyclical(labels = c("Age" = "Age_qual_QUANT", 
 #                               "Comorbidity"="Comorbidity_qual_QUANT", 
 #                               "SocialSupport"="SocialSupport_qual_QUANT",
-#                               "NegativeAttitute" ="NegativeAttitute_qual_QUANT", 
-#                               "PositiveAttitute" = "PositiveAttitute_qual_QUANT",
+#                               "NegativeAttitude" ="NegativeAttitude_qual_QUANT", 
+#                               "PositiveAttitude" = "PositiveAttitude_qual_QUANT",
 #                               "6MWT"="6MWT_qual_QUANT",
 #                               "Functioning"="Functioning_qual_QUANT",
 #                               "Symptoms"= "Symptoms_qual_QUANT",
@@ -309,8 +309,8 @@ plot4 = ggplot(density_ALL_Construct, aes(x = Theta,
 # ylim(c("Age",
 #"Comorbidity",
 #"SocialSupport",
-#"NegativeAttitute",
-#"PositiveAttitute",
+#"NegativeAttitude",
+#"PositiveAttitude",
 #"6MWT",
 #"Functioning",
 #"Symptoms",
