@@ -16,25 +16,22 @@ library(bayestestR)
 library(HDInterval)
 library(assertthat)
 
-print("check spelling fix attitude spelling")
-#paste(SOURCE_ROOT, "HyperPriorData.csv", sep="")
-#paste(OUTPUT_ROOT, "seeds_MAPQualQuant.csv", sep="")
-#paste(OUTPUT_ROOT, logName, "/Results_ResultsBayesianUpdateQuant.csv", sep="")
-x = read.csv(paste(SOURCE_ROOT, "input.csv", sep="")) #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately. 
-data = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep=""))  #data extracted from from the quantitative studies 
-JaarsmaInternationalStudy = read.csv(paste(SOURCE_ROOT, "HyperPriorData.csv", sep="")) #data used for eliciting the hyperprior (general physical activity levels in HF estimated from a large internaitonal study (Jaarsma et al., 2013)
-
-
 ## Set the root directory to look for source code.
 SOURCE_ROOT = "/Users/aliya/my_docs/proj/bayesian_meta_analysis/"
 ## Set the root location on the user's local machine to save output files.
 OUTPUT_ROOT = "/Users/aliya/my_docs/proj/bayesian_meta_analysis/"
 
-#data 
-x = read.csv(paste(SOURCE_ROOT, "input.csv", sep=""))  #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately. 
-data = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep=""))  #data extracted from from the quantitative studies 
-JaarsmaInternationalStudy = read.csv(paste(SOURCE_ROOT, "HyperPriorData.csv", sep="")) #empirical hyperprior 
 
+x = read.csv(paste(SOURCE_ROOT, "input.csv", sep="")) #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately. 
+data = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep=""))  #data extracted from from the quantitative studies 
+JaarsmaInternationalStudy = read.csv(paste(SOURCE_ROOT, "HyperPriorData.csv", sep="")) #data used for eliciting the hyperprior (general physical activity levels in HF estimated from a large internaitonal study (Jaarsma et al., 2013)
+
+#run Bayesian meta-analysis for two procedures separately: 
+#on the constructs that were present in both qualitative and quantitative studies: 
+source(paste(SOURCE_ROOT, "Bayesian_MA_Quant_and_Qual.R", sep=""))
+
+#and constructs that were present in quantitative studies only: 
+source(paste(SOURCE_ROOT, "BayesianMA_Quant_only.R", sep=""))
 
 #plot the findings of the anlaysis of quantitative evidence (i.e., hyperprior was updated with quantitative evidence)
 source(paste(SOURCE_ROOT, "Bayesian_MA_plotting_quantitative_findings.R", sep=""))
