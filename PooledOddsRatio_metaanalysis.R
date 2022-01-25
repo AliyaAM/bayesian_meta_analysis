@@ -19,26 +19,14 @@ metaDataLikelihood = function(likelihood_data, Construct, N) {
          yi = likelihood_data_grouped$lOR, 
          vi = likelihood_data_grouped$varLOR)
   
-  #variance as the median variance in the effects across studies 
+
   
-  
-  Pooled_lOR_RandomEffect_from_ConverEffectSizes_Subset = rma(measure = "OR",  # "OR" for the log odds ratio in the metafor function 
+  Pooled_lOR_RandomEffect_from_ConverEffectSizes_Subset = rma(measure = "OR",  
                                                                yi = yi, 
                                                                vi = vi,
                                                                method = "REML", 
                                                                data=dat)
-  
-  #variance expressed as the hetoregeniety in teh effect (tau2)
-  #summary_result = summary(Pooled_lOR_RandomEffect_from_ConverEffectSizes_Subset)
-  #variance_Pooled_lOR = summary_result$tau2
- 
-  #variance as hetoregeneity in tau2 estimated from teh full model 
-  #variance_Pooled_lOR = Pooled_lOR_RandomEffect_from_ConverEffectSizes_Subset$tau2.f
 
-  
-  #variance as tau2 from cumulative model 
-  #cumul_MA_results = cumul(Pooled_lOR_RandomEffect_from_ConverEffectSizes_Subset, order=dat$Year)
-  #variance_Pooled_lOR = cumul_MA_results$tau2
   
   LOGOdds_Ratio_result = predict(Pooled_lOR_RandomEffect_from_ConverEffectSizes_Subset)
 
@@ -49,19 +37,15 @@ metaDataLikelihood = function(likelihood_data, Construct, N) {
  
   k = Pooled_lOR_RandomEffect_from_ConverEffectSizes_Subset$k 
   
-  #the mean samoling variance is set as teh variance for the likelihood distribution
+  #the mean sampling variance is set as the variance for the likelihood distribution
   variance_Pooled_lOR = mean(dat$vi)
   
-  # the mean samoling variance weighted by the number of studies 
-  #variance_Pooled_lOR = mean(dat$vi)/k
 
   for (k in k){
     if(k == 1){LOGOdds_Ratio = likelihood_data_grouped$lOR
     }
     
   }
-  
-  # average Log Odds Ratio  
   
 
 

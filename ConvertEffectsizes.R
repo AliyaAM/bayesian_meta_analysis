@@ -1,18 +1,26 @@
 
 
-#https://www.rdocumentation.org/packages/ExtDist/versions/0.6-3/topics/Beta
 
 library(compute.es)
 library(dplyr)
 
 
+#This function computes effect sizes as OR from the reported summary statistic across the included studies 
 
+#read data extracted from the individual included papers: 
 
 data = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep="")) 
 head(data)
+
+#compute from the F-value 
 results_estimated_from_F = data.frame()
+#compute from the r coefficient 
 results_estimated_from_r = data.frame()
+#compute from teh reported mean and SD
 results_estimated_from_mean = data.frame()
+
+#cmpute OR from N/frequencies 
+
 results_estimated_Binary = data.frame()
 
 row_id = 1
@@ -202,6 +210,8 @@ for (estimate_type in data$estimate_type) {
                                      raw_correlation_coefficient,
                                      Total_N) 
  
+ #Bind the results for individual studies below: 
+ 
  colnames (likelihood_data) = c('Author', 
                                 "Year", 
                                 'Construct',
@@ -217,8 +227,7 @@ for (estimate_type in data$estimate_type) {
                                 "raw_correlation_coefficient", 
                                 "Total_N")
  
- #write.table(likelihood_data, file = '/Users/aliya/my_docs/proj/bayesian_meta_analysis/likelihood_data.csv', 
- 
+
  
  filename_likelihood_data <- file.path(paste(OUTPUT_ROOT, "likelihood_data.csv", sep=""))
  fn_filename_likelihood_data <- as.filename(filename_likelihood_data)

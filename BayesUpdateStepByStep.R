@@ -7,27 +7,25 @@ library(dplyr)
 library(tibble)
 
 
-x = read.csv(paste(SOURCE_ROOT, "input.csv", sep="")) #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately. 
+x = read.csv(paste(SOURCE_ROOT, "input.csv", sep="")) #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsed out for each construct separately. 
 data = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep=""))  #data extracted from from the quantitative studies 
-JaarsmaInternationalStudy = read.csv(paste(SOURCE_ROOT, "HyperPriorData.csv", sep="")) #data used for eliciting the hyperprior (general physical activity levels in HF estimated from a large internaitonal study (Jaarsma et al., 2013)
+JaarsmaInternationalStudy = read.csv(paste(SOURCE_ROOT, "HyperPriorData.csv", sep="")) #data used for eliciting the hyperprior (general physical activity levels in HF estimated from a large international study (Jaarsma et al., 2013)
 
-source(paste(SOURCE_ROOT, "ConvertEffectsizes.R", sep=""))   #### convert effect sizes from individual studies  (F-value, Binary (Absolute numbers and proportions), r coeffcient and SMD) into log odds ratios. All quantitative results are converted to log OR in order to be comptable with qualitative evidence, we treated all results as binary. 
+source(paste(SOURCE_ROOT, "ConvertEffectsizes.R", sep=""))   #### convert effect sizes from individual studies  (F-value, Binary (Absolute numbers and proportions), r coeffcient and SMD) into log odds ratios. All quantitative results are converted to log OR in order to be compatible with qualitative evidence, we treated all results as binary. 
 
 source(paste(SOURCE_ROOT, "PooledN.R", sep="")) # calculate the total number of participants (N) across studies that evaluated each construct, read from the csv file QuantData
 
-source(paste(SOURCE_ROOT, "PooledOddsRatio_metaanalysis.R", sep=""))  #run the frequentisit meta-analysis (REML) pooling the findings from quantitative studies, stratified by construct. The Overall Effect estimate is (log) Odds Ratio, a list of pooled Log ORs, one per construct). 
+source(paste(SOURCE_ROOT, "PooledOddsRatio_metaanalysis.R", sep=""))  #run the frequentist meta-analysis (REML) pooling the findings from quantitative studies, stratified by construct. The Overall Effect estimate is (log) Odds Ratio, a list of pooled Log ORs, one per construct). 
 
 
 
-#function for computin prior, likelihood and posterior density. reference: https://rpubs.com/RRisto/betadist
-#function for metropolis-hestings sampling, reference: https://theoreticalecology.wordpress.com/2010/09/17/metropolis-hastings-mcmc-in-r/
-
+#function for computing prior, likelihood and posterior density. reference: https://rpubs.com/RRisto/betadist
 
 #  below we will  produce distribution density for the: 
-###### (a) HYPERPRIOR: the levels of physical activity in HF worldwide, general physical activity levels in HF estimated from a large internaitonal study (Jaarsma et al., 2013),
+###### (a) HYPERPRIOR: the levels of physical activity in HF worldwide, general physical activity levels in HF estimated from a large international study (Jaarsma et al., 2013),
 ###### (b) the Prior elicited from the expert elicitation task which was based on the qualitative evidence; 
 ###### (c) Likelihood (pooled log OR estimates from the quantitative studies); 
-###### (d) and Posterior (the posterior distribution obtained by means of Bayes update (first update Hyperprior with Prior, the update that with the Likelihood). Bayes Update is implimmmented per Spighelhalter et al., 2013 reccomendations) 
+###### (d) and Posterior (the posterior distribution obtained by means of Bayes update (first update Hyperprior with Prior, the update that with the Likelihood). Bayes Update is implemented per Spiegelhalter et al., 2013 recommendations) 
 #reference: Spiegelhalter DJ, Abrams KR, Myles JP. Bayesian Approaches to Clinical Trials and Health-Care Evaluation. Chichester, UK: John Wiley & Sons, Ltd; 2003
 
 
@@ -38,7 +36,7 @@ BayesUpdateStepByStep = function(x, Construct) {
 
   #data for the HYPERPRIOR: 
   JaarsmaInternationalStudy = JaarsmaInternationalStudy
-  #Total N, variance and mean estimate for the probability of physical activity in general HF populationfrom Jaarsma study (empirical hyperprior):    
+  #Total N, variance and mean estimate for the probability of physical activity in general HF population from Jaarsma study (empirical hyperprior):    
   Total_N_hyperprior = JaarsmaInternationalStudy$TotalN[20]
   Variance_hyperprior = JaarsmaInternationalStudy$Variance[20]
   Mean_probability_hyperprior = JaarsmaInternationalStudy$Proportion_highPA[20]
@@ -67,7 +65,7 @@ BayesUpdateStepByStep = function(x, Construct) {
   #calculate the total N across quant studies, stratified by construct: 
   PooledN_output = PooledN(data = data, Construct = Construct)
   N = PooledN_output$N
-  #run the frequentisit meta-analysis (REML) pooling the findings from quantitative studies, stratified by construct. The Overall Effect estimate is (log) Odds Ratio, a list of pooled Log ORs, one per construct). 
+  #run the frequentist  meta-analysis (REML) pooling the findings from quantitative studies, stratified by construct. The Overall Effect estimate is (log) Odds Ratio, a list of pooled Log ORs, one per construct). 
   #using function: PooledOddsRatio_metaanalysis.R, which runs metafor library 
   meta_data_likelihoodResults = metaDataLikelihood(likelihood_data = likelihood_data, Construct = Construct, N = N)
   LOGOdds_Ratio_quant = meta_data_likelihoodResults$LOGOdds_Ratio
@@ -89,7 +87,7 @@ BayesUpdateStepByStep = function(x, Construct) {
     Probability = seq( 0 , 1 , length=1000)
     logOddsRatio = seq( -1 , 2 , length=1000)
     
-    #elicit HYPERPRIOR distribution as a Gaussian (aka normal) distribution with mean value = mean from Jaarsma, and variance from Jaarsma
+    #elicit HYPERPRIOR distribution as a Gaussian (aka normal) distribution with mean and variance   from Jaarsma study. 
     
     
     #elicits hyperprior from arguments Total_N_hyperprior, Mean_probability_hyperprior, Variance_hyperprior, Probability
@@ -111,7 +109,7 @@ BayesUpdateStepByStep = function(x, Construct) {
     #elicit PRIOR 
     #On the basis of the results of the prior elicitation task we calculate the log OR for each construct
     data$logOR_expert_elicitation_task = log(PriorExpert_N_PA_X*PriorExpert_N_noPA_noX)/(PriorExpert_N_noPA_X*PriorExpert_N_PA_noX)
-    #the density distribution for probability for phyical activity given a construct according to the experts is centred around the logOR elicited from expert responses 
+    #the density distribution for probability for physical activity given a construct according to the experts is centred around the logOR elicited from expert responses 
     data$variance_expert_elicitation_task = variance_expert_elicitation_task
     #prior distribution 
     data$Prior_qual_density = dnorm(logOddsRatio, data$logOR_expert_elicitation_task,  data$variance_expert_elicitation_task, log = FALSE)
@@ -125,7 +123,7 @@ BayesUpdateStepByStep = function(x, Construct) {
     data$Prior_qual_quantile_0.95 = qnorm(0.95,  data$logOR_expert_elicitation_task, data$variance_expert_elicitation_task, lower.tail = TRUE, log.p = FALSE)
     
     
-    #to update the hyperprior with the qualitative results we use formula from Spieghelhalter p 63: 
+    #to update the hyperprior with the qualitative results we use formula from Spiegelhalter et al., p 63: 
     data$Posterior_qual_only_mean = (data$Log_Odds_hyperprior/data$Variance_hyperprior + data$logOR_expert_elicitation_task/data$variance_expert_elicitation_task)/(1/data$Variance_hyperprior + 1/data$variance_expert_elicitation_task)
     data$Posterior_qual_only_variance = 1/(1/data$Variance_hyperprior +1/data$variance_expert_elicitation_task)
     #posterior distribution for updating hyperprior with prior 
@@ -155,7 +153,7 @@ BayesUpdateStepByStep = function(x, Construct) {
   
   
     #POSTERIOR
-    #Formula from Spieghelhalter p 63: updating prior with likelihood using the following mean nd variance for the distribution: 
+    #Formula from Spiegelhalter p 63: updating prior with likelihood using the following mean and variance for the distribution: 
     data$posterior_QualplusQuant_mean = (data$logOR_expert_elicitation_task/data$variance_expert_elicitation_task + data$LOGOdds_Ratio_quant/data$variance_quant)/(1/data$variance_expert_elicitation_task+1/data$variance_quant)
     data$posterior_QualplusQuant_variance =1/(1/data$variance_expert_elicitation_task+1/data$variance_quant)
     #posterior distribution for updating prior with likelihood  
@@ -197,7 +195,7 @@ BayesUpdateStepByStep = function(x, Construct) {
   
   
     
-  #function for ploting densities, colour values: - grey: "#999999", lilac: "#CC79A7", blue: "#0072B2". This are suitable for colour blind people)
+  #function for ploting densities, colour values: - grey: "#999999", lilac: "#CC79A7", blue: "#0072B2". These are suitable for colour blind people)
   plotting=function(data, ... ,title, values_colour ) {
     library(ggplot2)
     ggplot(data, ...)+
@@ -217,7 +215,7 @@ BayesUpdateStepByStep = function(x, Construct) {
                                      values_colour = c("#999999", "#0072B2"), 
                                      title="Hyperprior: Probability")
   
-  #print plot, so we it can be saved into the local repository 
+  #print plot, so  it can be saved into the local repository 
   print(plot_hyperprior_density)
 
   plot_hyperprior_density_Log_OR = plotting(data=data,
@@ -259,7 +257,7 @@ BayesUpdateStepByStep = function(x, Construct) {
   plot_posterior_QualplusQuant_density = plotting(data=data,
                                           aes(x=logOddsRatio, y= Posterior_QualplusQuant, fill= Posterior_QualplusQuant_CI), 
                                           values_colour = c("#D55E00", "#0072B2"), 
-                                          title = paste("Posterior distribution for physical activity according to qualitative and quantative evidence:", print(Construct)))
+                                          title = paste("Posterior distribution for physical activity according to qualitative and quantitative evidence:", print(Construct)))
   
   
   print(plot_posterior_QualplusQuant_density)
@@ -268,7 +266,7 @@ BayesUpdateStepByStep = function(x, Construct) {
   plot_posterior_All_density = plotting(data=data,
                                                   aes(x=logOddsRatio, y= posterior_All, fill= posterior_All_CI), 
                                                   values_colour = c("#D55E00", "#0072B2"), 
-                                                  title = paste("Posterior distribution for physical activity according to qualitative and quantative evidence (with hyperprior):", print(Construct)))
+                                                  title = paste("Posterior distribution for physical activity according to qualitative and quantitative evidence (with hyperprior):", print(Construct)))
   
   print(plot_posterior_All_density)
   

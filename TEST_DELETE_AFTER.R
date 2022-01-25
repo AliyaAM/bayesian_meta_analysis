@@ -36,14 +36,14 @@ Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_Soc
 Results_Comorbidity =   BayesUpdateStepByStep(x =x, Construct = "Comorbidity"  )
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_Comorbidity) 
 
-Results_NegativeAttitute =   BayesUpdateStepByStep(x =x, Construct = "NegativeAttitute"  )
-Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_NegativeAttitute)
+Results_NegativeAttitude =   BayesUpdateStepByStep(x =x, Construct = "NegativeAttitude"  )
+Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_NegativeAttitude)
 
 Results_Functioning =   BayesUpdateStepByStep(x =x, Construct = "Functioning"  )
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_Functioning)
 
-Results_PositiveAttitute =   BayesUpdateStepByStep(x =x, Construct = "PositiveAttitute"  )
-Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_PositiveAttitute)
+Results_PositiveAttitude =   BayesUpdateStepByStep(x =x, Construct = "PositiveAttitude"  )
+Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_PositiveAttitude)
 
 head(Results_BayesianMeta_Analysis)
 
@@ -91,8 +91,8 @@ density_by_Construct = function(data, Construct){
 Age_density_by_Construct = density_by_Construct(data = Results_BayesianMeta_Analysis, Construct = "Age")
 Comorbidity_density_by_Construct = density_by_Construct(data = Results_BayesianMeta_Analysis, Construct = "Comorbidity")
 SocialSupport_density_by_Construct = density_by_Construct(data = Results_BayesianMeta_Analysis, Construct = "SocialSupport")
-NegativeAttitute_density_by_Construct = density_by_Construct(data = Results_BayesianMeta_Analysis, Construct = "NegativeAttitute")
-PositiveAttitute_density_by_Construct = density_by_Construct(data = Results_BayesianMeta_Analysis, Construct = "PositiveAttitute")
+NegativeAttitude_density_by_Construct = density_by_Construct(data = Results_BayesianMeta_Analysis, Construct = "NegativeAttitude")
+PositiveAttitude_density_by_Construct = density_by_Construct(data = Results_BayesianMeta_Analysis, Construct = "PositiveAttitude")
 SixMWT_density_by_Construct = density_by_Construct(data = Results_BayesianMeta_Analysis, Construct = "6MWT")
 Functioning_density_by_Construct = density_by_Construct(data = Results_BayesianMeta_Analysis, Construct = "Functioning")
 Symptoms_density_by_Construct = density_by_Construct(data = Results_BayesianMeta_Analysis, Construct = "Symptoms")
@@ -115,8 +115,8 @@ length(height)
 density_ALL_Construct = rbind(Age_density_by_Construct,
                               Comorbidity_density_by_Construct,
                               SocialSupport_density_by_Construct,
-                              NegativeAttitute_density_by_Construct,
-                              PositiveAttitute_density_by_Construct,
+                              NegativeAttitude_density_by_Construct,
+                              PositiveAttitude_density_by_Construct,
                               SixMWT_density_by_Construct, 
                               Functioning_density_by_Construct,
                               Symptoms_density_by_Construct,
@@ -132,8 +132,8 @@ nrow(density_ALL_Construct)
 #  y = c(Age_density_by_Construct$posterior_All,
 #        Comorbidity_density_by_Construct$posterior_All,
 #        SocialSupport_density_by_Construct$posterior_All,
-#        NegativeAttitute_density_by_Construct$posterior_All,
-#        PositiveAttitute_density_by_Construct$posterior_All,
+#        NegativeAttitude_density_by_Construct$posterior_All,
+#        PositiveAttitude_density_by_Construct$posterior_All,
 #        SixMWT_density_by_Construct$posterior_All, 
 #        Functioning_density_by_Construct$posterior_All,
 #        Symptoms_density_by_Construct$posterior_All,
