@@ -188,38 +188,57 @@ file.copy(from=plots.png.paths, to=x_directory_quant)
 
 #code for plotting quantitative evidence (prior), next to likelihood, and the posterior. 
 
+#in the below table ombine Prior_qual_density, Likelihood, posterior_QualplusQuant
 
 d <- data.frame(
-  x = density_ALL_Construct$Theta, 
-  y = c(Age_density_by_Construct_qual$posterior,
-        Age_density_by_Construct$posterior,
+  x = density_ALL_Construct$logOddsRatio, 
+  y = c(Age_density_by_Construct$Prior_qual_density, 
+        Age_density_by_Construct$Likelihood, 
+        Age_density_by_Construct$posterior_QualplusQuant, 
+  
         
-        Comorbidity_density_by_Construct_qual$posterior,
-        Comorbidity_density_by_Construct$posterior,
+        Comorbidity_density_by_Construct$Prior_qual_density,
+        Comorbidity_density_by_Construct$Likelihood,
+        Comorbidity_density_by_Construct$posterior_QualplusQuant,
         
-        SocialSupport_density_by_Construct_qual$posterior,
-        SocialSupport_density_by_Construct$posterior,
         
-        NegativeAttitude_density_by_Construct_qual$posterior,
-        NegativeAttitude_density_by_Construct$posterior,
+        SocialSupport_density_by_Construct$Prior_qual_density,
+        SocialSupport_density_by_Construct$Likelihood,
+        SocialSupport_density_by_Construct$posterior_QualplusQuant,
         
-        PositiveAttitude_density_by_Construct_qual$posterior,
-        PositiveAttitude_density_by_Construct$posterior,
         
-        SixMWT_density_by_Construct_qual$posterior, 
-        SixMWT_density_by_Construct$posterior, 
+        NegativeAttitude_density_by_Construct$Prior_qual_density,
+        NegativeAttitude_density_by_Construct$Likelihood,
+        NegativeAttitude_density_by_Construct$posterior_QualplusQuant,
+       
         
-        Functioning_density_by_Construct_qual$posterior,
-        Functioning_density_by_Construct$posterior,
+        PositiveAttitude_density_by_Construct$Prior_qual_density,
+        PositiveAttitude_density_by_Construct$Likelihood,
+        PositiveAttitude_density_by_Construct$posterior_QualplusQuant,
         
-        Symptoms_density_by_Construct_qual$posterior,
-        Symptoms_density_by_Construct$posterior,
+        SixMWT_density_by_Construct$Prior_qual_density,
+        SixMWT_density_by_Construct$Likelihood,
+        SixMWT_density_by_Construct$posterior_QualplusQuant,
         
-        LVEF_density_by_Construct_qual$posterior, 
-        LVEF_density_by_Construct$posterior, 
+ 
+        Functioning_density_by_Construct$Prior_qual_density,
+        Functioning_density_by_Construct$Likelihood,
+        Functioning_density_by_Construct$posterior_QualplusQuant,
         
-        SelfEfficacy_density_by_Construct_qual$posterior,
-        SelfEfficacy_density_by_Construct$posterior),
+
+        Symptoms_density_by_Construct$Prior_qual_density,
+        Symptoms_density_by_Construct$Likelihood,
+        Symptoms_density_by_Construct$posterior_QualplusQuant,
+        
+        
+        LVEF_density_by_Construct$Prior_qual_density,
+        LVEF_density_by_Construct$Likelihood,
+        LVEF_density_by_Construct$posterior_QualplusQuant,
+
+        SelfEfficacy_density_by_Construct$Prior_qual_density,
+        SelfEfficacy_density_by_Construct$Likelihood,
+        SelfEfficacy_density_by_Construct$posterior_QualplusQuant),
+  
   height = height)
 
 #plot5 = ggplot(d, aes(x, y, height = height, group = y)) + 
@@ -227,9 +246,9 @@ d <- data.frame(
 
 #print(plot5)
 
-plot4 = ggplot(density_ALL_Construct, aes(x = Theta, 
+plot4 = ggplot(density_ALL_Construct, aes(x = logOddsRatio, 
                                           y = Construct,
-                                          height=posterior, 
+                                          height= Likelihood, 
                                           group = Construct, 
                                           color = type_evidence,
                                           fill = type_evidence)) +
