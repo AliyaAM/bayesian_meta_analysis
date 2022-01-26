@@ -15,6 +15,11 @@ data_qual = read.csv(paste(OUTPUT_ROOT, "Results_BayesianMeta_Analysis_data_qual
 
 data_QUANT = read.csv(paste(OUTPUT_ROOT, "Results_quant_only.csv", sep=""))
 
+
+
+# filter the data in the quantitative evidence that was also present in the qualitiative evidence: 
+
+
 density_by_Construct = function(data, Construct, type_evidence){
   index = data$Construct == Construct
   logOddsRatio = seq( -2, 3 , length=1000)
