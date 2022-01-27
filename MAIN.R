@@ -36,5 +36,5 @@ source(paste(SOURCE_ROOT, "BayesianMA_Quant_only.R", sep=""))
 
 #plot the fidings with and without qualitative evidence next to each other for comparison
 
-source(paste(SOURCE_ROOT, "Compare_Qual_Quant_posterior_test.R", sep=""))
+source(paste(SOURCE_ROOT, "Compare_Qual_Quant_posterior.R", sep=""))
 
