@@ -78,8 +78,8 @@ QuantUpdate_Dysphoria = BayesUpdate_Quant(data = data, Construct = "Dysphoria")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Dysphoria)
 
 
-QuantUpdate_Education = BayesUpdate_Quant(data = data, Construct = "Education")
-ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Education)
+#QuantUpdate_Education = BayesUpdate_Quant(data = data, Construct = "Education")
+#ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Education)
 
 
 QuantUpdate_Employment = BayesUpdate_Quant(data = data, Construct = "Employment")
@@ -202,7 +202,7 @@ Depression_density_by_Construct = density_by_Construct(data = data, Construct = 
 Digoxin_density_by_Construct = density_by_Construct(data = data, Construct = "Digoxin")
 Doppler_density_by_Construct = density_by_Construct(data = data, Construct = "Doppler")
 Dysphoria_density_by_Construct = density_by_Construct(data = data, Construct = "Dysphoria")
-Education_density_by_Construct = density_by_Construct(data = data, Construct = "Education")
+#Education_density_by_Construct = density_by_Construct(data = data, Construct = "Education")
 Employment_density_by_Construct = density_by_Construct(data = data, Construct = "Employment")
 Ethnicity_density_by_Construct = density_by_Construct(data = data, Construct = "Ethnicity")
 HFDuration_density_by_Construct = density_by_Construct(data = data, Construct = "HFDuration")
@@ -236,7 +236,7 @@ height = c(rep(1, 1000),
            rep(11, 1000), 
            rep(12, 1000), 
            rep(13, 1000), 
-           rep(14, 1000), 
+           #rep(14, 1000), 
            rep(15, 1000), 
            rep(16, 1000), 
            rep(17, 1000), 
@@ -258,44 +258,44 @@ height = c(rep(1, 1000),
            rep(33, 1000))
 
 length(height)
-density_ALL_Construct = rbind(Age_density_by_Construct,
-                              Comorbidity_density_by_Construct,
-                              SocialSupport_density_by_Construct,
-                              NegativeAttitude_density_by_Construct,
-                              PositiveAttitude_density_by_Construct,
-                              SixMWT_density_by_Construct, 
-                              Functioning_density_by_Construct,
-                              Symptoms_density_by_Construct,
-                              LVEF_density_by_Construct, 
-                              SelfEfficacy_density_by_Construct,
-                              Depression_density_by_Construct,
-                              Digoxin_density_by_Construct,
-                              Doppler_density_by_Construct,
-                              Dysphoria_density_by_Construct,
-                              Education_density_by_Construct,
-                              Employment_density_by_Construct,
-                              Ethnicity_density_by_Construct,
-                              HFDuration_density_by_Construct,
-                              HFrEF_Yes_density_by_Construct,
-                              highproBNP_density_by_Construct,
-                              Hostility_density_by_Construct,
-                              Income_density_by_Construct,
-                              LAV_density_by_Construct,
-                              LVAD_density_by_Construct,
-                              LVR_density_by_Construct,
-                              Partner_density_by_Construct,
-                              PeakVO2_density_by_Construct,
-                              PercievedExersion_density_by_Construct,
-                              QoL_density_by_Construct,
-                              RenalFunction_density_by_Construct,
-                              Smoking_density_by_Construct,
-                              Symptoms_distress_density_by_Construct)
+density_ALL_Construct_quant_only = rbind(Age_density_by_Construct,
+                                        Comorbidity_density_by_Construct,
+                                        SocialSupport_density_by_Construct,
+                                        NegativeAttitude_density_by_Construct,
+                                        PositiveAttitude_density_by_Construct,
+                                        SixMWT_density_by_Construct, 
+                                        Functioning_density_by_Construct,
+                                        Symptoms_density_by_Construct,
+                                        LVEF_density_by_Construct, 
+                                        SelfEfficacy_density_by_Construct,
+                                        Depression_density_by_Construct,
+                                        Digoxin_density_by_Construct,
+                                        Doppler_density_by_Construct,
+                                        Dysphoria_density_by_Construct,
+                                        #Education_density_by_Construct,
+                                        Employment_density_by_Construct,
+                                        Ethnicity_density_by_Construct,
+                                        HFDuration_density_by_Construct,
+                                        HFrEF_Yes_density_by_Construct,
+                                        highproBNP_density_by_Construct,
+                                        Hostility_density_by_Construct,
+                                        Income_density_by_Construct,
+                                        LAV_density_by_Construct,
+                                        LVAD_density_by_Construct,
+                                        LVR_density_by_Construct,
+                                        Partner_density_by_Construct,
+                                        PeakVO2_density_by_Construct,
+                                        PercievedExersion_density_by_Construct,
+                                        QoL_density_by_Construct,
+                                        RenalFunction_density_by_Construct,
+                                        Smoking_density_by_Construct,
+                                        Symptoms_distress_density_by_Construct)
 
-density_ALL_Construct = cbind(density_ALL_Construct, height)
+density_ALL_Construct_quant_only = cbind(density_ALL_Construct_quant_only, height)
 
 
 d <- data.frame(
-  x = density_ALL_Construct$logOddsRatio, 
+  x = density_ALL_Construct_quant_only$logOddsRatio, 
   y = c(Age_density_by_Construct$posterior,
         Comorbidity_density_by_Construct$posterior,
         SocialSupport_density_by_Construct$posterior,
@@ -310,7 +310,7 @@ d <- data.frame(
         Digoxin_density_by_Construct$posterior,
         Doppler_density_by_Construct$posterior,
         Dysphoria_density_by_Construct$posterior,
-        Education_density_by_Construct$posterior,
+        #Education_density_by_Construct$posterior,
         Employment_density_by_Construct$posterior,
         Ethnicity_density_by_Construct$posterior,
         HFDuration_density_by_Construct$posterior,
@@ -335,24 +335,22 @@ plot5 = ggplot(d, aes(x, y, height = height, group = y)) +
 
 print(plot5)
 
-plot4 = ggplot(density_ALL_Construct, aes(x = Theta, y = construct, height=posterior, group = construct)) +
-  geom_density_ridges(stat = "identity", scale = 10) +
-  xlim(0, 0.5)
+#plot4 = ggplot(density_ALL_Construct_quant_only, aes(x = Theta, y = construct, height=posterior, group = construct)) +
+#  geom_density_ridges(stat = "identity", scale = 10) +
+#  xlim(0, 0.5)
 
 
 #plotting likelihood (quantitative evidence only)
-Plot_Likelihood = ggplot(density_ALL_Construct, aes(x = logOddsRatio, y = Construct, height=Likelihood, group = Construct)) +
-  geom_density_ridges(stat = "identity", scale = 1) +
+Plot_Likelihood = ggplot(density_ALL_Construct_quant_only, aes(x = logOddsRatio, y = Construct, height=Likelihood, group = Construct)) +
+  geom_density_ridges(stat = "identity", scale = 8) +
   xlim(-2, 3  )
-
 print(Plot_Likelihood)
 
 #plotting the posterior resulted from updating prior with likelihood 
-#Plot_posterior_Quant = ggplot(density_ALL_Construct, aes(x = logOddsRatio, y = Construct, height=posterior_Quant, group = Construct)) +
- # geom_density_ridges(stat = "identity", scale = 1) +
-#  xlim(-2, 3  )
-
-#print(Plot_posterior_Quant)
+Plot_posterior_Quant = ggplot(density_ALL_Construct_quant_only, aes(x = logOddsRatio, y = Construct, height=posterior_Quant, group = Construct)) +
+  geom_density_ridges(stat = "identity", scale = 1) +
+  xlim(-2, 3  )
+print(Plot_posterior_Quant)
 
 plots.dir.path <- list.files(tempdir(), pattern="rs-graphics", full.names = TRUE); 
 plots.png.paths <- list.files(plots.dir.path, pattern=".png", full.names = TRUE)

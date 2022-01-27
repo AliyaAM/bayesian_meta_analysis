@@ -16,6 +16,7 @@ library(coda)
 library(bayestestR)
 library(HDInterval)
 library(assertthat)
+library(RColorBrewer)
 
 ## Set the root directory to look for source code.
 SOURCE_ROOT = "/Users/aliya/my_docs/proj/bayesian_meta_analysis/"

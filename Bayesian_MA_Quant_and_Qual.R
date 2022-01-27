@@ -156,7 +156,7 @@ print(Plot_Prior_qual_density)
 #plotting likelihood (quantitative evidence only)
 Plot_Likelihood = ggplot(density_ALL_Construct, aes(x = logOddsRatio, y = Construct, height=Likelihood, group = Construct)) +
   geom_density_ridges(stat = "identity", scale = 1) +
-  xlim(-2, 3  )
+  xlim(-2, 2  )
 
 print(Plot_Likelihood)
 

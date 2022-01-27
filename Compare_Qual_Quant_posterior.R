@@ -1,6 +1,8 @@
 
 library(dplyr)
 library(RColorBrewer)
+
+
 density_ALL_Construct
 head(density_ALL_Construct)
 
@@ -199,15 +201,15 @@ d$group_name = paste0(as.character(d$Construct)," ", as.character(d$distribution
 
 #we want the distributions to be same color as they are in the intermediate plots so prior should be "#CC79A7" and so on. 
 # however, they do not look nice together so I will pick the same colors but more pastel, Set2 is nice: 
-display.brewer.all(colorblindFriendly = TRUE)
-colors = display.brewer.pal(c(1, 2, 4), "Set2")
+#display.brewer.all(colorblindFriendly = TRUE)
+#colors = display.brewer.pal(c(1, 2, 4), "Set2")
 #print the codes for the colors: 
-brewer.pal(n = 5, name = "Set2")
+#brewer.pal(n = 5, name = "Set2")
 
 ##############
 
 #colors from the set2: "#66C2A5" "#FC8D62" "#E78AC3"
-plot4 = ggplot(d, aes(x = logOddsRatio, 
+Compare_distributions_plot = ggplot(d, aes(x = logOddsRatio, 
                                           y = Construct,
                                           height = y, 
                                           group = group_name, 
@@ -230,6 +232,13 @@ plot4 = ggplot(d, aes(x = logOddsRatio,
 
 
 
-print(plot4)
+print(Compare_distributions_plot)
 
 
+plots.dir.path <- list.files(tempdir(), pattern="rs-graphics", full.names = TRUE); 
+plots.png.paths <- list.files(plots.dir.path, pattern=".png", full.names = TRUE)
+
+
+x_directory_quant <- file.path(paste(OUTPUT_ROOT))
+dir.create(x_directory_quant)
+file.copy(from=plots.png.paths, to=x_directory_quant)
