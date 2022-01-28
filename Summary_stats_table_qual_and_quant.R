@@ -133,8 +133,8 @@ Summary_stats_table_qual_and_quant = function(x, Construct) {
     
     #POSTERIOR
     #Formula from Spiegelhalter p 63: updating prior with likelihood using the following mean and variance for the distribution: 
-    posterior_QualplusQuant_mean = (data$logOR_expert_elicitation_task/data$variance_expert_elicitation_task + data$LOGOdds_Ratio_quant/data$variance_quant)/(1/data$variance_expert_elicitation_task+1/data$variance_quant)
-    posterior_QualplusQuant_variance =1/(1/data$variance_expert_elicitation_task+1/data$variance_quant)
+    posterior_QualplusQuant_mean = (logOR_expert_elicitation_task/variance_expert_elicitation_task + LOGOdds_Ratio_quant/variance_quant)/(1/variance_expert_elicitation_task+1/variance_quant)
+    posterior_QualplusQuant_variance =1/(1/variance_expert_elicitation_task+1/variance_quant)
     summary_data = cbind(summary_data, posterior_QualplusQuant_mean)
     summary_data = cbind(summary_data, posterior_QualplusQuant_variance)
     
