@@ -30,11 +30,11 @@ JaarsmaInternationalStudy = read.csv(paste(SOURCE_ROOT, "HyperPriorData.csv", se
 
 #run Bayesian meta-analysis for two procedures separately: 
 
-#and constructs that were present in quantitative studies only (the main plot is outputed from the function below): 
-source(paste(SOURCE_ROOT, "BayesianMA_Quant_only.R", sep=""))
-
 #on the constructs that were present in both qualitative and quantitative studies (the main plot is outputed from the function below): 
 source(paste(SOURCE_ROOT, "Bayesian_MA_Quant_and_Qual.R", sep=""))
+
+#and constructs that were present in quantitative studies only (the main plot is outputed from the function below): 
+source(paste(SOURCE_ROOT, "BayesianMA_Quant_only.R", sep=""))
 
 
 #plot the fidings with and without qualitative evidence next to each other for comparison

@@ -84,7 +84,7 @@ Summary_stats_table_qual_and_quant = function(x, Construct) {
     Variance_hyperprior = Variance_hyperprior 
     Log_Odds_hyperprior = Log_Odds_hyperprior
     
-    summary_data = data.frame(Variance_hyperprior, Log_Odds_hyperprior)
+    summary_data = cbind(Variance_hyperprior, Log_Odds_hyperprior)
     
     Hyperprior_quantile_0.50 = qnorm(0.50, Log_Odds_hyperprior, Variance_hyperprior, lower.tail = TRUE, log.p = FALSE)
     summary_data = cbind(summary_data, Hyperprior_quantile_0.50)
