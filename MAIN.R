@@ -29,11 +29,13 @@ data = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv
 JaarsmaInternationalStudy = read.csv(paste(SOURCE_ROOT, "HyperPriorData.csv", sep="")) #data used for eliciting the hyperprior (general physical activity levels in HF estimated from a large internaitonal study (Jaarsma et al., 2013)
 
 #run Bayesian meta-analysis for two procedures separately: 
-#on the constructs that were present in both qualitative and quantitative studies (the main plot is outputed from the function below): 
-source(paste(SOURCE_ROOT, "Bayesian_MA_Quant_and_Qual.R", sep=""))
 
 #and constructs that were present in quantitative studies only (the main plot is outputed from the function below): 
 source(paste(SOURCE_ROOT, "BayesianMA_Quant_only.R", sep=""))
+
+#on the constructs that were present in both qualitative and quantitative studies (the main plot is outputed from the function below): 
+source(paste(SOURCE_ROOT, "Bayesian_MA_Quant_and_Qual.R", sep=""))
+
 
 #plot the fidings with and without qualitative evidence next to each other for comparison
 

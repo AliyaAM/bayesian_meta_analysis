@@ -18,64 +18,119 @@ data = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv
 source(paste(SOURCE_ROOT, "BayesUpdate_Quant.R", sep="")) # function that runs Bayesian meta-analysis of quantitative evidence
 
 
+source(paste(SOURCE_ROOT, "Summary_stats_table.R", sep="")) # function that runs Bayesian meta-analysis of quantitative evidence and outputs the summary stats only as opposed to the entire distribution 
+
 ## THE BAYES UPDATE WITHOUT THE PRIOR ELICITED FROM THE QUALITATIVE STUDIES
 ### Bayes update: Jaarsma's empirical hyperprior + quantitative studies 
 
 ResultsBayesianUpdateQuant = data.frame()
+Summary_statistics_table_quant_only = data.frame()
 
 QuantUpdate_Age = BayesUpdate_Quant(data = data, Construct = "Age")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Age)
 
+Summary_stats_table_Age = Summary_stats_table(data = data, Construct = "Age")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_Age)
 
 QuantUpdate_Comorbidity = BayesUpdate_Quant(data = data, Construct = "Comorbidity")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Comorbidity)
+
+Summary_stats_table_Comorbidity = Summary_stats_table(data = data, Construct = "Comorbidity")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_Comorbidity)
 
 
 QuantUpdate_SocialSupport = BayesUpdate_Quant(data = data, Construct = "SocialSupport")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_SocialSupport)
 
+Summary_stats_table_SocialSupport = Summary_stats_table(data = data, Construct = "SocialSupport")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_SocialSupport)
 
 QuantUpdate_NegativeAttitude = BayesUpdate_Quant(data = data, Construct = "NegativeAttitude")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_NegativeAttitude)
 
+Summary_stats_table_NegativeAttitude = Summary_stats_table(data = data, Construct = "NegativeAttitude")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_NegativeAttitude)
 
 QuantUpdate_PositiveAttitude = BayesUpdate_Quant(data = data, Construct = "PositiveAttitude")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_PositiveAttitude)
+
+
+Summary_stats_table_PositiveAttitude= Summary_stats_table(data = data, Construct = "PositiveAttitude")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_PositiveAttitude)
 
 
 QuantUpdate_6MWT= BayesUpdate_Quant(data = data, Construct = "6MWT")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_6MWT)
 
 
+
+Summary_stats_table_6MWT= Summary_stats_table(data = data, Construct = "6MWT")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_6MWT)
+
+
 QuantUpdate_Functioning= BayesUpdate_Quant(data = data, Construct = "Functioning")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Functioning)
 
 
+Summary_stats_table_Functioning= Summary_stats_table(data = data, Construct = "Functioning")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_Functioning)
+
 QuantUpdate_Symptoms= BayesUpdate_Quant(data = data, Construct = "Symptoms")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Symptoms)
+
+
+Summary_stats_table_Symptoms = Summary_stats_table(data = data, Construct = "Symptoms")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_Symptoms)
 
 
 QuantUpdate_LVEF = BayesUpdate_Quant(data = data, Construct = "LVEF")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_LVEF)
 
 
+Summary_stats_table_LVEF = Summary_stats_table(data = data, Construct = "LVEF")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_LVEF)
+
 QuantUpdate_SelfEfficacy = BayesUpdate_Quant(data = data, Construct = "SelfEfficacy")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_SelfEfficacy)
 
+
+
+Summary_stats_table_SelfEfficacy = Summary_stats_table(data = data, Construct = "SelfEfficacy")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_SelfEfficacy)
+
+
+
 QuantUpdate_Depression = BayesUpdate_Quant(data = data, Construct = "Depression")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Depression)
+
+
+Summary_stats_table_Depression = Summary_stats_table(data = data, Construct = "Depression")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_Depression)
 
 
 QuantUpdate_Digoxin = BayesUpdate_Quant(data = data, Construct = "Digoxin")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Digoxin)
 
 
-QuantUpdate_Doppler = BayesUpdate_Quant(data = data, Construct = "Doppler", uncertainty = uncertainty, seed = seed)
+Summary_stats_table_Digoxin = Summary_stats_table(data = data, Construct = "Digoxin")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_Digoxin)
+
+
+QuantUpdate_Doppler = BayesUpdate_Quant(data = data, Construct = "Doppler")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Doppler)
+
+
+Summary_stats_table_Doppler = Summary_stats_table(data = data, Construct = "Doppler")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_Doppler)
 
 
 QuantUpdate_Dysphoria = BayesUpdate_Quant(data = data, Construct = "Dysphoria")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Dysphoria)
+
+
+Summary_stats_table_Dysphoria = Summary_stats_table(data = data, Construct = "Dysphoria")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_Dysphoria)
+
 
 
 #QuantUpdate_Education = BayesUpdate_Quant(data = data, Construct = "Education")
@@ -85,13 +140,26 @@ ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Dysph
 QuantUpdate_Employment = BayesUpdate_Quant(data = data, Construct = "Employment")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Employment)
 
+Summary_stats_table_Employment = Summary_stats_table(data = data, Construct = "Employment")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_Employment)
+
 
 QuantUpdate_Ethnicity = BayesUpdate_Quant(data = data, Construct = "Ethnicity")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Ethnicity)
 
 
+Summary_stats_table_Ethnicity = Summary_stats_table(data = data, Construct = "Ethnicity")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_Ethnicity)
+
+
 QuantUpdate_Functioning = BayesUpdate_Quant(data = data, Construct = "Functioning")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Functioning)
+
+
+
+Summary_stats_table_Functioning = Summary_stats_table(data = data, Construct = "Functioning")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_Functioning)
+
 
 
 QuantUpdate_HFDuration = BayesUpdate_Quant(data = data, Construct = "HFDuration")
@@ -99,12 +167,26 @@ ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_HFDur
 
 
 
+Summary_stats_table_HFDuration = Summary_stats_table(data = data, Construct = "HFDuration")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_HFDuration)
+
+
+
 QuantUpdate_HFrEF_Yes = BayesUpdate_Quant(data = data, Construct = "HFrEF_Yes")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_HFrEF_Yes)
 
 
+Summary_stats_table_HFrEF_Yes = Summary_stats_table(data = data, Construct = "HFrEF_Yes")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_HFrEF_Yes)
+
+
+
 QuantUpdate_highproBNP = BayesUpdate_Quant(data = data, Construct = "highproBNP")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_highproBNP)
+
+
+Summary_stats_table_highproBNP = Summary_stats_table(data = data, Construct = "highproBNP")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_highproBNP)
 
 
 
@@ -112,16 +194,38 @@ QuantUpdate_Hostility = BayesUpdate_Quant(data = data, Construct = "Hostility")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Hostility)
 
 
+Summary_stats_table_Hostility = Summary_stats_table(data = data, Construct = "Hostility")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_Hostility)
+
+
+
 QuantUpdate_Income = BayesUpdate_Quant(data = data, Construct = "Income")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Income)
+
+
+
+Summary_stats_table_Income = Summary_stats_table(data = data, Construct = "Income")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_Income)
+
 
 
 QuantUpdate_LAV = BayesUpdate_Quant(data = data, Construct = "LAV")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_LAV)
 
 
+
+Summary_stats_table_LAV = Summary_stats_table(data = data, Construct = "LAV")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_LAV)
+
+
 QuantUpdate_LVAD = BayesUpdate_Quant(data = data, Construct = "LVAD")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_LVAD)
+
+
+
+Summary_stats_table_LVAD = Summary_stats_table(data = data, Construct = "LVAD")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_LVAD)
+
 
 
 QuantUpdate_LVR = BayesUpdate_Quant(data = data, Construct = "LVR")
@@ -129,39 +233,87 @@ ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_LVR)
 
 
 
+Summary_stats_table_LVR= Summary_stats_table(data = data, Construct = "LVR")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_LVR)
+
+
+
+
+
 QuantUpdate_Partner = BayesUpdate_Quant(data = data, Construct = "Partner")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Partner)
+
+
+Summary_stats_table_Partner= Summary_stats_table(data = data, Construct = "Partner")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_Partner)
+
+
 
 
 QuantUpdate_PeakVO2 = BayesUpdate_Quant(data = data, Construct = "PeakVO2")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_PeakVO2)
 
 
+
+Summary_stats_table_PeakVO2 = Summary_stats_table(data = data, Construct = "PeakVO2")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_PeakVO2)
+
+
+
 QuantUpdate_PercievedExersion = BayesUpdate_Quant(data = data, Construct = "PercievedExersion")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_PercievedExersion)
 
+
+Summary_stats_table_PercievedExersion = Summary_stats_table(data = data, Construct = "PercievedExersion")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_PercievedExersion)
 
 
 QuantUpdate_QoL = BayesUpdate_Quant(data = data, Construct = "QoL")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_QoL)
 
 
+Summary_stats_table_QoL = Summary_stats_table(data = data, Construct = "QoL")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_QoL)
+
+
 QuantUpdate_RenalFunction = BayesUpdate_Quant(data = data, Construct = "RenalFunction")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_RenalFunction)
+
+
+Summary_stats_table_RenalFunction = Summary_stats_table(data = data, Construct = "RenalFunction")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_RenalFunction)
+
 
 
 QuantUpdate_Smoking = BayesUpdate_Quant(data = data, Construct = "Smoking")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Smoking)
 
 
+Summary_stats_table_Smoking = Summary_stats_table(data = data, Construct = "Smoking")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_Smoking)
+
+
+
 QuantUpdate_Symptoms_distress = BayesUpdate_Quant(data = data, Construct = "Symptoms_distress")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Symptoms_distress)
+
+
+Summary_stats_table_Symptoms_distress= Summary_stats_table(data = data, Construct = "Symptoms_distress")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_Symptoms_distress)
 
 
 write.table(ResultsBayesianUpdateQuant, file = paste(OUTPUT_ROOT, "Results_quant_only.csv", sep=""), append = FALSE, quote = TRUE, sep = ", ",
             eol = "\r", na = "NA", dec = ".", row.names = FALSE,
             col.names = TRUE, qmethod = c("escape", "double"),
             fileEncoding = "" )
+
+
+
+write.table(Summary_statistics_table_quant_only, file = paste(OUTPUT_ROOT, "Results_Summary_statistics_table_quant_only.csv", sep=""), append = FALSE, quote = TRUE, sep = ", ",
+            eol = "\r", na = "NA", dec = ".", row.names = FALSE,
+            col.names = TRUE, qmethod = c("escape", "double"),
+            fileEncoding = "" )
+
 
 
 density_by_Construct = function(data, Construct){

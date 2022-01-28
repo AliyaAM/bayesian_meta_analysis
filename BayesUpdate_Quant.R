@@ -13,6 +13,7 @@ library(bayestestR)
 library(HDInterval)
 
 
+
 x = read.csv(paste(SOURCE_ROOT, "input.csv", sep=""))  #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately. 
 
 data = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep=""))  #data extracted from from the quantitative studies 
@@ -34,7 +35,7 @@ source(paste(SOURCE_ROOT, "PooledOddsRatio_metaanalysis.R", sep="")) #run the fr
 #function for computin prior, likelihood and posterior density. reference: https://rpubs.com/RRisto/betadist
 
 
-BayesUpdate_Quant <- function(data, Construct, uncertainty, seed) {
+BayesUpdate_Quant <- function(data, Construct) {
   
   index = x$Construct == Construct
   #data for the HYPERPRIOR: 
@@ -68,30 +69,50 @@ BayesUpdate_Quant <- function(data, Construct, uncertainty, seed) {
   BayesUpdate_func = function(Construct, Total_N_hyperprior, Mean_probability_hyperprior, Variance_hyperprior, Log_Odds_hyperprior, 
                               LOGOdds_Ratio_quant, variance_quant) {
     
+
     Probability = seq( 0 , 1 , length=1000)
     logOddsRatio = seq( -1 , 2 , length=1000)
-    
+
     #elicit HYPERPRIOR distribution as a Gaussian (aka normal) distribution with mean value = mean from Jaarsma, and variance from Jaarsma
-    
-    
+    Variance_hyperprior = Variance_hyperprior
+  
+
     #elicits hyperprior from arguments Total_N_hyperprior, Mean_probability_hyperprior, Variance_hyperprior, Probability
     Hyperprior_density = dnorm(Probability, Mean_probability_hyperprior,  Variance_hyperprior, log = FALSE)
     #normalised hyperprior distribution 
     Hyperprior_density = Hyperprior_density/sum(Hyperprior_density)
+    
     data=data.frame(Probability,logOddsRatio,  Hyperprior_density, Mean_probability_hyperprior, Variance_hyperprior)
     data$Hyperprior_density_cumsum=cumsum(data$Hyperprior_density)
     data$Hyperprior_density_CI=ifelse(data$Hyperprior_density_cumsum<0.025|data$Hyperprior_density_cumsum>0.975, "outside CI", "inside CI")
     
-    
+    Log_Odds_hyperprior = Log_Odds_hyperprior
     data$Log_Odds_hyperprior = Log_Odds_hyperprior
+
     data$Hyperprior_logOdds = dnorm(logOddsRatio, data$Log_Odds_hyperprior,  data$Variance_hyperprior, log = FALSE)
     data$Hyperprior_logOdds = data$Hyperprior_logOdds/sum(data$Hyperprior_logOdds)
     data$Hyperprior_logOdds_cumsum = cumsum(data$Hyperprior_logOdds)
     data$Hyperprior_logOdds_CI = ifelse(data$Hyperprior_logOdds_cumsum<0.025|data$Hyperprior_logOdds_cumsum>0.975, "outside CI", "inside CI")
     
+    #expected value of the log Odds Ratio according to the hyperprior: 
+    summary_data = data.frame(Variance_hyperprior, Log_Odds_hyperprior)
+    Hyperprior_quantile_0.50 = qnorm(0.50, Log_Odds_hyperprior, Variance_hyperprior, lower.tail = TRUE, log.p = FALSE)
+    summary_data = cbind(summary_data, Hyperprior_quantile_0.50)
+      
+
+        
+    #Credible Intervals: Hyperprior
+    data$Hyperprior_quantile_0.05 = qnorm(0.05, data$Log_Odds_hyperprior, data$Variance_hyperprior, lower.tail = TRUE, log.p = FALSE)
+    data$Hyperprior_quantile_0.95 = qnorm(0.95,  data$Log_Odds_hyperprior, data$Variance_hyperprior, lower.tail = TRUE, log.p = FALSE)
     
+    
+  
+    
+ 
     #Likelihood 
+   
     data$LOGOdds_Ratio_quant = LOGOdds_Ratio_quant
+    
     data$variance_quant = variance_quant
     # Likelihood distribution 
     data$Likelihood = dnorm(logOddsRatio, data$LOGOdds_Ratio_quant,  data$variance_quant, log = FALSE)
@@ -102,8 +123,6 @@ BayesUpdate_Quant <- function(data, Construct, uncertainty, seed) {
     #Credible Intervals: Likelihood
     data$Likelihood_qual_quantile_0.05 = qnorm(0.05, data$LOGOdds_Ratio_quant, data$variance_quant, lower.tail = TRUE, log.p = FALSE)
     data$Likelihood_qual_quantile_0.95 = qnorm(0.95,  data$LOGOdds_Ratio_quant, data$variance_quant, lower.tail = TRUE, log.p = FALSE)
-    
-    
     
     #Formula from Spieghelhalter p 63: updating prior with likelihood using the following mean nd variance for the distribution: 
     data$posterior_Quant_mean = (data$Log_Odds_hyperprior/data$Variance_hyperprior + data$LOGOdds_Ratio_quant/data$variance_quant)/(1/data$Variance_hyperprior+1/data$variance_quant)
@@ -121,6 +140,7 @@ BayesUpdate_Quant <- function(data, Construct, uncertainty, seed) {
     
    
     data
+    
   }
   
   data=BayesUpdate_func(Construct = Construct, 
@@ -180,12 +200,6 @@ BayesUpdate_Quant <- function(data, Construct, uncertainty, seed) {
                                      title = paste("Posterior: Probability for physical activity given", print(Construct)))
   
   print(plot_Posterior_Quant)
-  
-  
-  write.table(data, file = '/Users/aliya/my_docs/proj//bayesian_meta_analysis/data_quant_with_hyperprior_test.csv', append = FALSE, quote = TRUE, sep = ", ",
-              eol = "\r", na = "NA", dec = ".", row.names = FALSE,
-              col.names = TRUE, qmethod = c("escape", "double"),
-              fileEncoding = "" )
   
   
   return(params = (data.frame(Construct = Construct, 

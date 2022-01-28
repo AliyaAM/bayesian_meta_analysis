@@ -1,38 +1,106 @@
 
 source(paste(SOURCE_ROOT, "BayesUpdateStepByStep.R", sep=""), local = TRUE) # this function (BayesUpdateStepByStep) runs the Bayesian meta-analysis that combines qualitative and quantitative evidence 
 
+source(paste(SOURCE_ROOT, "Summary_stats_table_qual_and_quant.R", sep=""), local = TRUE) # this function (BayesUpdateStepByStep) runs the Bayesian meta-analysis that combines qualitative and quantitative evidence, and outputs the summary stats only 
+
+
 
 Results_Age =   BayesUpdateStepByStep(x =x, Construct = "Age")
 Results_BayesianMeta_Analysis = rbind(Results_Age)
 
 
+Summary_Results_Age = Summary_stats_table_qual_and_quant(x =x, Construct = "Age")
+Summary_Results = rbind(Summary_Results_Age)
+
 Results_sixMWT =   BayesUpdateStepByStep(x =x, Construct = "6MWT")
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_sixMWT)
+
+
+
+Summary_Results_6MWT = Summary_stats_table_qual_and_quant(x =x, Construct = "6MWT")
+Summary_Results = rbind(Summary_Results, Summary_Results_6MWT)
+
 
 Results_Symptoms =   BayesUpdateStepByStep(x =x, Construct = "Symptoms"  )
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_Symptoms)
 
 
+
+Summary_Results_Symptoms = Summary_stats_table_qual_and_quant(x =x, Construct = "Symptoms")
+Summary_Results = rbind(Summary_Results, Summary_Results_Symptoms)
+
+
+
+
 Results_LVEF =   BayesUpdateStepByStep(x =x, Construct = "LVEF"  )
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_LVEF)
+
+
+
+Summary_Results_LVEF = Summary_stats_table_qual_and_quant(x =x, Construct = "LVEF")
+Summary_Results = rbind(Summary_Results, Summary_Results_LVEF)
+
 
 Results_SelfEfficacy =   BayesUpdateStepByStep(x =x, Construct = "SelfEfficacy"  )
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_SelfEfficacy)
 
+
+Summary_Results_SelfEfficacy= Summary_stats_table_qual_and_quant(x =x, Construct = "SelfEfficacy")
+Summary_Results = rbind(Summary_Results, Summary_Results_SelfEfficacy)
+
+
+
 Results_SocialSupport =   BayesUpdateStepByStep(x =x, Construct = "SocialSupport"  )
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_SocialSupport)
+
+
+
+Summary_Results_SocialSupport= Summary_stats_table_qual_and_quant(x =x, Construct = "SocialSupport")
+Summary_Results = rbind(Summary_Results, Summary_Results_SocialSupport)
+
+
 
 Results_Comorbidity =   BayesUpdateStepByStep(x =x, Construct = "Comorbidity"  )
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_Comorbidity) 
 
+
+
+Summary_Results_Comorbidity = Summary_stats_table_qual_and_quant(x =x, Construct = "Comorbidity")
+Summary_Results = rbind(Summary_Results, Summary_Results_Comorbidity)
+
+
+
 Results_NegativeAttitude =   BayesUpdateStepByStep(x =x, Construct = "NegativeAttitude"  )
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_NegativeAttitude)
+
+
+
+Summary_Results_NegativeAttitude = Summary_stats_table_qual_and_quant(x =x, Construct = "NegativeAttitude")
+Summary_Results = rbind(Summary_Results, Summary_Results_NegativeAttitude)
+
+
+
 
 Results_Functioning =   BayesUpdateStepByStep(x =x, Construct = "Functioning"  )
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_Functioning)
 
+
+
+Summary_Results_Functioning = Summary_stats_table_qual_and_quant(x =x, Construct = "Functioning")
+Summary_Results = rbind(Summary_Results, Summary_Results_Functioning)
+
+
 Results_PositiveAttitude =   BayesUpdateStepByStep(x =x, Construct = "PositiveAttitude"  )
 Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_PositiveAttitude)
+
+
+
+
+Summary_Results_PositiveAttitude = Summary_stats_table_qual_and_quant(x =x, Construct = "PositiveAttitude")
+Summary_Results = rbind(Summary_Results, Summary_Results_PositiveAttitude)
+
+
+
 
 head(Results_BayesianMeta_Analysis)
 
@@ -41,7 +109,10 @@ write.table(Results_BayesianMeta_Analysis, file = paste(OUTPUT_ROOT, "Results_Ba
             col.names = TRUE, qmethod = c("escape", "double"),
             fileEncoding = "" )
 
-
+write.table(Summary_Results, file = paste(OUTPUT_ROOT, "Summary_Results_BayesianMeta_Analysis_data_qual_quant.csv", sep=""), append = FALSE, quote = TRUE, sep = ", ",
+            eol = "\r", na = "NA", dec = ".", row.names = FALSE,
+            col.names = TRUE, qmethod = c("escape", "double"),
+            fileEncoding = "" )
 
 
 density_by_Construct = function(data, Construct){
