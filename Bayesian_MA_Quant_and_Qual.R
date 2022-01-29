@@ -81,13 +81,13 @@ Summary_Results = rbind(Summary_Results, Summary_Results_NegativeAttitude)
 
 
 
-Results_Functioning =   BayesUpdateStepByStep(x =x, Construct = "Functioning"  )
-Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_Functioning)
+Results_PhysicalFunctioning =   BayesUpdateStepByStep(x =x, Construct = "PhysicalFunctioning"  )
+Results_BayesianMeta_Analysis = rbind(Results_BayesianMeta_Analysis, Results_PhysicalFunctioning)
 
 
 
-Summary_Results_Functioning = Summary_stats_table_qual_and_quant(x =x, Construct = "Functioning")
-Summary_Results = rbind(Summary_Results, Summary_Results_Functioning)
+Summary_Results_PhysicalFunctioning = Summary_stats_table_qual_and_quant(x =x, Construct = "PhysicalFunctioning")
+Summary_Results = rbind(Summary_Results, Summary_Results_PhysicalFunctioning)
 
 
 Results_PositiveAttitude =   BayesUpdateStepByStep(x =x, Construct = "PositiveAttitude"  )
@@ -157,7 +157,7 @@ SocialSupport_density_by_Construct = density_by_Construct(data = Results_Bayesia
 NegativeAttitude_density_by_Construct = density_by_Construct(data = Results_BayesianMeta_Analysis, Construct = "NegativeAttitude")
 PositiveAttitude_density_by_Construct = density_by_Construct(data = Results_BayesianMeta_Analysis, Construct = "PositiveAttitude")
 SixMWT_density_by_Construct = density_by_Construct(data = Results_BayesianMeta_Analysis, Construct = "6MWT")
-Functioning_density_by_Construct = density_by_Construct(data = Results_BayesianMeta_Analysis, Construct = "Functioning")
+PhysicalFunctioning_density_by_Construct = density_by_Construct(data = Results_BayesianMeta_Analysis, Construct = "PhysicalFunctioning")
 Symptoms_density_by_Construct = density_by_Construct(data = Results_BayesianMeta_Analysis, Construct = "Symptoms")
 LVEF_density_by_Construct = density_by_Construct(data = Results_BayesianMeta_Analysis, Construct = "LVEF")
 SelfEfficacy_density_by_Construct = density_by_Construct(data = Results_BayesianMeta_Analysis, Construct = "SelfEfficacy")
@@ -181,7 +181,7 @@ density_ALL_Construct = rbind(Age_density_by_Construct,
                               NegativeAttitude_density_by_Construct,
                               PositiveAttitude_density_by_Construct,
                               SixMWT_density_by_Construct, 
-                              Functioning_density_by_Construct,
+                              PhysicalFunctioning_density_by_Construct,
                               Symptoms_density_by_Construct,
                               LVEF_density_by_Construct, 
                               SelfEfficacy_density_by_Construct)
@@ -198,7 +198,7 @@ nrow(density_ALL_Construct)
 #        NegativeAttitude_density_by_Construct$posterior_All,
 #        PositiveAttitude_density_by_Construct$posterior_All,
 #        SixMWT_density_by_Construct$posterior_All, 
-#        Functioning_density_by_Construct$posterior_All,
+#        PhysicalFunctioning_density_by_Construct$posterior_All,
 #        Symptoms_density_by_Construct$posterior_All,
 #        LVEF_density_by_Construct$posterior_All, 
 #        SelfEfficacy_density_by_Construct$posterior_All),

@@ -24,7 +24,7 @@ SocialSupport_density_prior =  All_constructs_prior  %>% filter(Construct == "So
 NegativeAttitude_density_prior = All_constructs_prior  %>% filter(Construct == "NegativeAttitude")
 PositiveAttitude_density_prior = All_constructs_prior  %>% filter(Construct == "PositiveAttitude")
 SixMWT_density_prior = All_constructs_prior  %>% filter(Construct == "6MWT")
-Functioning_density_prior = All_constructs_prior  %>% filter(Construct == "Functioning")
+PhysicalFunctioning_density_prior = All_constructs_prior  %>% filter(Construct == "PhysicalFunctioning")
 Symptoms_density_prior = All_constructs_prior  %>% filter(Construct== "Symptoms")
 LVEF_density_prior = All_constructs_prior  %>% filter(Construct == "LVEF")
 SelfEfficacy_density_prior = All_constructs_prior  %>% filter(Construct == "SelfEfficacy")
@@ -37,7 +37,7 @@ SocialSupport_density_likelihood = All_constructs_likelihood  %>% filter(Constru
 NegativeAttitude_density_likelihood = All_constructs_likelihood  %>% filter(Construct  == "NegativeAttitude")
 PositiveAttitude_density_likelihood = All_constructs_likelihood  %>% filter(Construct  == "PositiveAttitude")
 SixMWT_density_likelihood = All_constructs_likelihood  %>% filter(Construct  == "6MWT")
-Functioning_density_likelihood = All_constructs_likelihood  %>% filter(Construct  == "Functioning")
+PhysicalFunctioning_density_likelihood = All_constructs_likelihood  %>% filter(Construct  == "PhysicalFunctioning")
 Symptoms_density_likelihood = All_constructs_likelihood  %>% filter(Construct  == "Symptoms")
 LVEF_density_likelihood = All_constructs_likelihood  %>% filter(Construct  == "LVEF")
 SelfEfficacy_density_likelihood = All_constructs_likelihood  %>% filter(Construct  == "SelfEfficacy")
@@ -49,7 +49,7 @@ SocialSupport_density_posterior = All_constructs_posterior  %>% filter(Construct
 NegativeAttitude_density_posterior = All_constructs_posterior  %>% filter(Construct  == "NegativeAttitude")
 PositiveAttitude_density_posterior = All_constructs_posterior  %>% filter(Construct  == "PositiveAttitude")
 SixMWT_density_posterior = All_constructs_posterior  %>% filter(Construct == "6MWT")
-Functioning_density_posterior = All_constructs_posterior  %>% filter(Construct  == "Functioning")
+PhysicalFunctioning_density_posterior = All_constructs_posterior  %>% filter(Construct  == "PhysicalFunctioning")
 Symptoms_density_posterior =All_constructs_posterior  %>% filter(Construct  == "Symptoms")
 LVEF_density_posterior = All_constructs_posterior  %>% filter(Construct == "LVEF")
 SelfEfficacy_density_posterior = All_constructs_posterior  %>% filter(Construct  == "SelfEfficacy")
@@ -128,9 +128,9 @@ d <- data.frame(
                         SixMWT_density_likelihood$Construct,
                         SixMWT_density_posterior$Construct,
                         
-                        Functioning_density_prior$Construct,
-                        Functioning_density_likelihood$Construct,
-                        Functioning_density_posterior$Construct,
+                        PhysicalFunctioning_density_prior$Construct,
+                        PhysicalFunctioning_density_likelihood$Construct,
+                        PhysicalFunctioning_density_posterior$Construct,
                         
                         Symptoms_density_prior$Construct,
                         Symptoms_density_likelihood$Construct,
@@ -173,9 +173,9 @@ d <- data.frame(
         SixMWT_density_likelihood$Likelihood,
         SixMWT_density_posterior$posterior_QualplusQuant,
         
-        Functioning_density_prior$Prior_qual_density,
-        Functioning_density_likelihood$Likelihood,
-        Functioning_density_posterior$posterior_QualplusQuant,
+        PhysicalFunctioning_density_prior$Prior_qual_density,
+        PhysicalFunctioning_density_likelihood$Likelihood,
+        PhysicalFunctioning_density_posterior$posterior_QualplusQuant,
         
         Symptoms_density_prior$Prior_qual_density,
         Symptoms_density_likelihood$Likelihood,

@@ -68,12 +68,12 @@ Summary_stats_table_6MWT= Summary_stats_table(data = data, Construct = "6MWT")
 Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_6MWT)
 
 
-QuantUpdate_Functioning= BayesUpdate_Quant(data = data, Construct = "Functioning")
-ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Functioning)
+QuantUpdate_PhysicalFunctioning= BayesUpdate_Quant(data = data, Construct = "PhysicalFunctioning")
+ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_PhysicalFunctioning)
 
 
-Summary_stats_table_Functioning= Summary_stats_table(data = data, Construct = "Functioning")
-Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_Functioning)
+Summary_stats_table_PhysicalFunctioning= Summary_stats_table(data = data, Construct = "PhysicalFunctioning")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_PhysicalFunctioning)
 
 QuantUpdate_Symptoms= BayesUpdate_Quant(data = data, Construct = "Symptoms")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Symptoms)
@@ -152,13 +152,13 @@ Summary_stats_table_Ethnicity = Summary_stats_table(data = data, Construct = "Et
 Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_Ethnicity)
 
 
-QuantUpdate_Functioning = BayesUpdate_Quant(data = data, Construct = "Functioning")
-ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Functioning)
+QuantUpdate_PhysicalFunctioning = BayesUpdate_Quant(data = data, Construct = "PhysicalFunctioning")
+ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_PhysicalFunctioning)
 
 
 
-Summary_stats_table_Functioning = Summary_stats_table(data = data, Construct = "Functioning")
-Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_Functioning)
+Summary_stats_table_PhysicalFunctioning = Summary_stats_table(data = data, Construct = "PhysicalFunctioning")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_PhysicalFunctioning)
 
 
 
@@ -260,12 +260,12 @@ Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only,
 
 
 
-QuantUpdate_PercievedExersion = BayesUpdate_Quant(data = data, Construct = "PercievedExersion")
-ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_PercievedExersion)
+QuantUpdate_PerceivedExertion  = BayesUpdate_Quant(data = data, Construct = "PerceivedExertion ")
+ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_PerceivedExertion )
 
 
-Summary_stats_table_PercievedExersion = Summary_stats_table(data = data, Construct = "PercievedExersion")
-Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_PercievedExersion)
+Summary_stats_table_PerceivedExertion  = Summary_stats_table(data = data, Construct = "PerceivedExertion ")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_PerceivedExertion )
 
 
 QuantUpdate_QoL = BayesUpdate_Quant(data = data, Construct = "QoL")
@@ -346,7 +346,7 @@ SocialSupport_density_by_Construct = density_by_Construct(data = data, Construct
 NegativeAttitude_density_by_Construct = density_by_Construct(data = data, Construct = "NegativeAttitude")
 PositiveAttitude_density_by_Construct = density_by_Construct(data = data, Construct = "PositiveAttitude")
 SixMWT_density_by_Construct = density_by_Construct(data = data, Construct = "6MWT")
-Functioning_density_by_Construct = density_by_Construct(data = data, Construct = "Functioning")
+PhysicalFunctioning_density_by_Construct = density_by_Construct(data = data, Construct = "PhysicalFunctioning")
 Symptoms_density_by_Construct = density_by_Construct(data = data, Construct = "Symptoms")
 LVEF_density_by_Construct = density_by_Construct(data = data, Construct = "LVEF")
 SelfEfficacy_density_by_Construct = density_by_Construct(data = data, Construct = "SelfEfficacy")
@@ -367,7 +367,7 @@ LVAD_density_by_Construct = density_by_Construct(data = data, Construct = "LVAD"
 LVR_density_by_Construct = density_by_Construct(data = data, Construct = "LVR")
 Partner_density_by_Construct = density_by_Construct(data = data, Construct = "Partner")
 PeakVO2_density_by_Construct = density_by_Construct(data = data, Construct = "PeakVO2")
-PercievedExersion_density_by_Construct = density_by_Construct(data = data, Construct = "PercievedExersion")
+PerceivedExertion _density_by_Construct = density_by_Construct(data = data, Construct = "PerceivedExertion ")
 QoL_density_by_Construct = density_by_Construct(data = data, Construct = "QoL")
 RenalFunction_density_by_Construct = density_by_Construct(data = data, Construct = "RenalFunction")
 Smoking_density_by_Construct = density_by_Construct(data = data, Construct = "Smoking")
@@ -416,7 +416,7 @@ density_ALL_Construct_quant_only = rbind(Age_density_by_Construct,
                                         NegativeAttitude_density_by_Construct,
                                         PositiveAttitude_density_by_Construct,
                                         SixMWT_density_by_Construct, 
-                                        Functioning_density_by_Construct,
+                                        PhysicalFunctioning_density_by_Construct,
                                         Symptoms_density_by_Construct,
                                         LVEF_density_by_Construct, 
                                         SelfEfficacy_density_by_Construct,
@@ -437,7 +437,7 @@ density_ALL_Construct_quant_only = rbind(Age_density_by_Construct,
                                         LVR_density_by_Construct,
                                         Partner_density_by_Construct,
                                         PeakVO2_density_by_Construct,
-                                        PercievedExersion_density_by_Construct,
+                                        PerceivedExertion _density_by_Construct,
                                         QoL_density_by_Construct,
                                         RenalFunction_density_by_Construct,
                                         Smoking_density_by_Construct,
@@ -454,7 +454,7 @@ d <- data.frame(
         NegativeAttitude_density_by_Construct$posterior,
         PositiveAttitude_density_by_Construct$posterior,
         SixMWT_density_by_Construct$posterior, 
-        Functioning_density_by_Construct$posterior,
+        PhysicalFunctioning_density_by_Construct$posterior,
         Symptoms_density_by_Construct$posterior,
         LVEF_density_by_Construct$posterior, 
         SelfEfficacy_density_by_Construct$posterior,
@@ -475,7 +475,7 @@ d <- data.frame(
         LVR_density_by_Construct$posterior,
         Partner_density_by_Construct$posterior,
         PeakVO2_density_by_Construct$posterior,
-        PercievedExersion_density_by_Construct$posterior,
+        PerceivedExertion _density_by_Construct$posterior,
         QoL_density_by_Construct$posterior,
         RenalFunction_density_by_Construct$posterior,
         Smoking_density_by_Construct$posterior,
