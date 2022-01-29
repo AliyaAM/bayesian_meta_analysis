@@ -12,8 +12,6 @@ library(filenamer) # library for as.filename
 library(ggridges)
 
 
-x = read.csv(paste(SOURCE_ROOT, "input.csv", sep=""))  #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately. 
-data = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep=""))  #data extracted from from the quantitative studies 
 
 source(paste(SOURCE_ROOT, "BayesUpdate_Quant.R", sep="")) # function that runs Bayesian meta-analysis of quantitative evidence
 
@@ -260,12 +258,12 @@ Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only,
 
 
 
-QuantUpdate_PerceivedExertion  = BayesUpdate_Quant(data = data, Construct = "PerceivedExertion ")
-ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_PerceivedExertion )
+QuantUpdate_PerceivedExertion = BayesUpdate_Quant(data = data, Construct = "PerceivedExertion")
+ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_PerceivedExertion)
 
 
-Summary_stats_table_PerceivedExertion  = Summary_stats_table(data = data, Construct = "PerceivedExertion ")
-Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_PerceivedExertion )
+Summary_stats_table_PerceivedExertion = Summary_stats_table(data = data, Construct = "PerceivedExertion")
+Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_PerceivedExertion)
 
 
 QuantUpdate_QoL = BayesUpdate_Quant(data = data, Construct = "QoL")
@@ -367,7 +365,7 @@ LVAD_density_by_Construct = density_by_Construct(data = data, Construct = "LVAD"
 LVR_density_by_Construct = density_by_Construct(data = data, Construct = "LVR")
 Partner_density_by_Construct = density_by_Construct(data = data, Construct = "Partner")
 PeakVO2_density_by_Construct = density_by_Construct(data = data, Construct = "PeakVO2")
-PerceivedExertion _density_by_Construct = density_by_Construct(data = data, Construct = "PerceivedExertion ")
+PerceivedExertion_density_by_Construct = density_by_Construct(data = data, Construct = "PerceivedExertion")
 QoL_density_by_Construct = density_by_Construct(data = data, Construct = "QoL")
 RenalFunction_density_by_Construct = density_by_Construct(data = data, Construct = "RenalFunction")
 Smoking_density_by_Construct = density_by_Construct(data = data, Construct = "Smoking")
@@ -437,7 +435,7 @@ density_ALL_Construct_quant_only = rbind(Age_density_by_Construct,
                                         LVR_density_by_Construct,
                                         Partner_density_by_Construct,
                                         PeakVO2_density_by_Construct,
-                                        PerceivedExertion _density_by_Construct,
+                                        PerceivedExertion_density_by_Construct,
                                         QoL_density_by_Construct,
                                         RenalFunction_density_by_Construct,
                                         Smoking_density_by_Construct,
@@ -475,7 +473,7 @@ d <- data.frame(
         LVR_density_by_Construct$posterior,
         Partner_density_by_Construct$posterior,
         PeakVO2_density_by_Construct$posterior,
-        PerceivedExertion _density_by_Construct$posterior,
+        PerceivedExertion_density_by_Construct$posterior,
         QoL_density_by_Construct$posterior,
         RenalFunction_density_by_Construct$posterior,
         Smoking_density_by_Construct$posterior,
