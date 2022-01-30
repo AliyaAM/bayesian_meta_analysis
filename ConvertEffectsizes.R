@@ -9,7 +9,8 @@ library(dplyr)
 
 #read data extracted from the individual included papers: 
 
-
+data = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep="")) 
+head(data)
 
 #compute from the F-value 
 results_estimated_from_F = data.frame()
