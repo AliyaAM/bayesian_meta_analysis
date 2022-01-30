@@ -130,11 +130,6 @@ Summary_stats_table_Dysphoria = Summary_stats_table(data = data, Construct = "Dy
 Summary_statistics_table_quant_only = rbind(Summary_statistics_table_quant_only, Summary_stats_table_Dysphoria)
 
 
-
-#QuantUpdate_Education = BayesUpdate_Quant(data = data, Construct = "Education")
-#ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Education)
-
-
 QuantUpdate_Employment = BayesUpdate_Quant(data = data, Construct = "Employment")
 ResultsBayesianUpdateQuant = rbind(ResultsBayesianUpdateQuant, QuantUpdate_Employment)
 
@@ -352,7 +347,6 @@ Depression_density_by_Construct = density_by_Construct(data = data, Construct = 
 Digoxin_density_by_Construct = density_by_Construct(data = data, Construct = "Digoxin")
 Doppler_density_by_Construct = density_by_Construct(data = data, Construct = "Doppler")
 Dysphoria_density_by_Construct = density_by_Construct(data = data, Construct = "Dysphoria")
-#Education_density_by_Construct = density_by_Construct(data = data, Construct = "Education")
 Employment_density_by_Construct = density_by_Construct(data = data, Construct = "Employment")
 Ethnicity_density_by_Construct = density_by_Construct(data = data, Construct = "Ethnicity")
 HFDuration_density_by_Construct = density_by_Construct(data = data, Construct = "HFDuration")
@@ -386,7 +380,6 @@ height = c(rep(1, 1000),
            rep(11, 1000), 
            rep(12, 1000), 
            rep(13, 1000), 
-           #rep(14, 1000), 
            rep(15, 1000), 
            rep(16, 1000), 
            rep(17, 1000), 
@@ -422,7 +415,6 @@ density_ALL_Construct_quant_only = rbind(Age_density_by_Construct,
                                         Digoxin_density_by_Construct,
                                         Doppler_density_by_Construct,
                                         Dysphoria_density_by_Construct,
-                                        #Education_density_by_Construct,
                                         Employment_density_by_Construct,
                                         Ethnicity_density_by_Construct,
                                         HFDuration_density_by_Construct,
@@ -460,7 +452,6 @@ d <- data.frame(
         Digoxin_density_by_Construct$posterior,
         Doppler_density_by_Construct$posterior,
         Dysphoria_density_by_Construct$posterior,
-        #Education_density_by_Construct$posterior,
         Employment_density_by_Construct$posterior,
         Ethnicity_density_by_Construct$posterior,
         HFDuration_density_by_Construct$posterior,
