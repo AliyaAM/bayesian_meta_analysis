@@ -1,9 +1,6 @@
 
 
 
-source(paste(SOURCE_ROOT, "ConvertEffectsizes.R", sep=""))
-source(paste(SOURCE_ROOT, "PooledN.R", sep=""))
-
 
 metaDataLikelihood = function(likelihood_data, Construct, N) {
   index = likelihood_data$Construct == Construct
