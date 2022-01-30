@@ -102,7 +102,7 @@ for (estimate_type in data$estimate_type) {
     estimated_from_Binary$Author = data$Author[row_id]
     estimated_from_Binary$Year = data$Year[row_id]
     estimated_from_Binary$Construct = data$Construct[row_id]
-    estimated_from_Binary$varLOR =  (pi^2*estimated_from_Binary$var.d)/(3)
+    estimated_from_Binary$varLOR =  (pi^2*estimated_from_mean$var.d)/(3)
     estimated_from_Binary = cbind(estimated_from_Binary$varLOR, estimated_from_Binary) 
     results_estimated_Binary= rbind(results_estimated_Binary, estimated_from_Binary) 
   }
