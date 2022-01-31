@@ -4,7 +4,6 @@ source(paste(SOURCE_ROOT, "BayesUpdateStepByStep.R", sep=""), local = TRUE) # th
 source(paste(SOURCE_ROOT, "Summary_stats_table_qual_and_quant.R", sep=""), local = TRUE) # this function (BayesUpdateStepByStep) runs the Bayesian meta-analysis that combines qualitative and quantitative evidence, and outputs the summary stats only 
 
 
-
 Results_Age =   BayesUpdateStepByStep(x =x, Construct = "Age")
 Results_BayesianMeta_Analysis = rbind(Results_Age)
 
