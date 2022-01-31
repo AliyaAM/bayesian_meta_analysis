@@ -1,1 +1,1 @@
-"Construct", "Expected value (log OR)", "95% CrI", "Expected value (log OR)", "95% CrI", "Expected value (log OR)", "95% CrI", "SD""Age", 0.01, "[-0.4;0.42]", -0.41, "[-0.57;-0.25]", -0.29, "[-0.41;-0.18]", 0.26"SelfEfficacy", 0.06, "[-0.15;0.27]", 0.84, "[0.61;1.06]", 0.43, "[0.32;0.54]", 0.26
+"Construct", "Expected value (log OR)", "95% CrI", "Expected value (log OR)", "95% CrI", "Expected value (log OR)", "95% CrI", "SD""SelfEfficacy", 0.06, "[-0.15;0.27]", 1.88, "[1.47;2.29]", 0.68, "[0.54;0.82]", 0.29

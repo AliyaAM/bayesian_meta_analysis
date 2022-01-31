@@ -14,10 +14,10 @@ source(paste(SOURCE_ROOT, "Summary_stats_table_qual_and_quant.R", sep=""), local
 
 
 x = read.csv(paste(SOURCE_ROOT, "input.csv", sep="")) #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately. 
-data = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep=""))  #data extracted from  the quantitative studies, the file lists all data including the data that was not used for the meta-analysis. the data not included in the meta-anslysis is for the cases when insufficient data was reported in the article for it to be pooled in the meta-analysis (for example mean but no SD or variance etc)
+All_data_extracted = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep=""))  #data extracted from  the quantitative studies, the file lists all data including the data that was not used for the meta-analysis. the data not included in the meta-anslysis is for the cases when insufficient data was reported in the article for it to be pooled in the meta-analysis (for example mean but no SD or variance etc)
 JaarsmaInternationalStudy = read.csv(paste(SOURCE_ROOT, "HyperPriorData.csv", sep="")) #data used for eliciting the hyperprior (general physical activity levels in HF estimated from a large internaitonal study (Jaarsma et al., 2013)
 
-AccelerometerUnits_data = subset(data, data$PA_Varme == "AccelerometerUnits")
+data = filter(All_data_extracted, All_data_extracted$PA_Varme == "AccelerometerUnits")
 PA_Varme = "AccelerometerUnits"
 
 
@@ -27,28 +27,28 @@ x$Construct =c("Age",
                "Comorbidity",
                "NegativeAttitude",
                "6MWT",
-               "PhysicalFunctioning2",
+               "PhysicalFunctioning5",
                "Symptoms",
                "LVEF",
                "PositiveAttitude") 
 
-unique(AccelerometerUnits_data$Construct)
+unique(data$Construct)
 Results_AccelerometerUnits_qual_quant = data.frame()
-unique(AccelerometerUnits_data$PA_Varme)
+unique(data$PA_Varme)
 #social support, 
 #Age, 6MWT,LVEF,Comorbidity1,
 #symptoms, selfefficacy, negative attitude, positive attitude, physical functioning 
 
 
 
-AccelerometerUnits_Age = BayesUpdateStepByStep(x = x, Construct = "Age")
-Results_AccelerometerUnits_qual_quant = rbind(Results_AccelerometerUnits_qual_quant, AccelerometerUnits_Age)
+#AccelerometerUnits_Age = BayesUpdateStepByStep(x = x, Construct = "Age")
+#Results_AccelerometerUnits_qual_quant = rbind(Results_AccelerometerUnits_qual_quant, AccelerometerUnits_Age)
 AccelerometerUnits_6MWT = BayesUpdateStepByStep(x = x, Construct = "6MWT")
 Results_AccelerometerUnits_qual_quant = rbind(Results_AccelerometerUnits_qual_quant, AccelerometerUnits_6MWT)
 
 
 
-AccelerometerUnits_PhysicalFunctioning7 = BayesUpdateStepByStep(x = x, Construct = "PhysicalFunctioning2")
+AccelerometerUnits_PhysicalFunctioning7 = BayesUpdateStepByStep(x = x, Construct = "PhysicalFunctioning5")
 Results_AccelerometerUnits_qual_quant = rbind(Results_AccelerometerUnits_qual_quant, AccelerometerUnits_PhysicalFunctioning7)
 
 
@@ -63,16 +63,13 @@ Results_AccelerometerUnits_qual_quant = rbind(Results_AccelerometerUnits_qual_qu
 
 
 Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant = data.frame()
-Summary_stats_table_qual_and_quantAccelerometerUnits_Age = Summary_stats_table_qual_and_quant(x = x, Construct = "Age")
-Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant = rbind(Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant, Summary_stats_table_qual_and_quantAccelerometerUnits_Age)
-
 
 Summary_stats_table_qual_and_quantAccelerometerUnits_6MWT = Summary_stats_table_qual_and_quant(x = x, Construct = "6MWT")
 Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant = rbind(Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant, Summary_stats_table_qual_and_quantAccelerometerUnits_6MWT)
 
 
 
-Summary_stats_table_qual_and_quantAccelerometerUnits_PhysicalFunctioning7  = Summary_stats_table_qual_and_quant(x = x, Construct = "PhysicalFunctioning2")
+Summary_stats_table_qual_and_quantAccelerometerUnits_PhysicalFunctioning7  = Summary_stats_table_qual_and_quant(x = x, Construct = "PhysicalFunctioning5")
 Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant = rbind(Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant, Summary_stats_table_qual_and_quantAccelerometerUnits_PhysicalFunctioning7)
 
 
@@ -180,22 +177,19 @@ data = Results_AccelerometerUnits_qual_quant
 
 
 
-Age_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "Age")
 SixMWT_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "6MWT")
 PositiveAttitude2_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "PositiveAttitude")
 
-PhysicalFunctioning7_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "PhysicalFunctioning2")
+PhysicalFunctioning7_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "PhysicalFunctioning5")
 
 
 
 height = c(rep(1, 1000),
            rep(2, 1000), 
-           rep(3, 1000), 
-           rep(4, 1000))
+           rep(3, 1000))
 
 length(height)
-density_ALL_Construct_quant_stratified = rbind(Age_density_by_Construct_stratified,
-                                               SixMWT_density_by_Construct_stratified, 
+density_ALL_Construct_quant_stratified = rbind(SixMWT_density_by_Construct_stratified, 
                                                PhysicalFunctioning7_density_by_Construct_stratified, 
                                                PositiveAttitude2_density_by_Construct_stratified)
 
@@ -219,9 +213,9 @@ Plot_Likelihood_stratified = ggplot(density_ALL_Construct_quant_stratified, aes(
   xlim(-3, 4  )+ 
   
   scale_y_discrete(labels=c("6MWT"  =     "6MWT" ,
-                            "Age"       =      "Age",
+                          
 
-                            "PhysicalFunctioning2" = "PhysicalFunctioning", 
+                            "PhysicalFunctioning5" = "PhysicalFunctioning", 
 
                             "PositiveAttitude"  = "PositiveAttitude"))   
 print(Plot_Likelihood_stratified)
@@ -233,9 +227,9 @@ Plot_posterior_QualplusQuant = ggplot(density_ALL_Construct_quant_stratified, ae
   xlim(-3, 4  ) + 
   
   scale_y_discrete(labels=c("6MWT"  =     "6MWT" ,
-                            "Age"       =      "Age",
+                    
                             
-                            "PhysicalFunctioning2" = "PhysicalFunctioning", 
+                            "PhysicalFunctioning5" = "PhysicalFunctioning", 
                             
                             "PositiveAttitude"  = "PositiveAttitude"))   
 
@@ -259,27 +253,21 @@ All_constructs_likelihood = select(density_ALL_Construct_quant_stratified, logOd
 All_constructs_posterior = select(density_ALL_Construct_quant_stratified, logOddsRatio, Construct, posterior_QualplusQuant) 
 
 
-Age_density_prior = All_constructs_prior  %>% filter(Construct == 'Age')
-unique(Age_density_prior$Construct)
-
-
 
 PositiveAttitude_density_prior = All_constructs_prior  %>% filter(Construct == "PositiveAttitude")
 SixMWT_density_prior = All_constructs_prior  %>% filter(Construct == "6MWT")
-PhysicalFunctioning_density_prior = All_constructs_prior  %>% filter(Construct == "PhysicalFunctioning2")
+PhysicalFunctioning_density_prior = All_constructs_prior  %>% filter(Construct == "PhysicalFunctioning5")
 
 
 
-Age_density_likelihood = All_constructs_likelihood  %>% filter(Construct  == "Age")
 PositiveAttitude_density_likelihood = All_constructs_likelihood  %>% filter(Construct  == "PositiveAttitude")
 SixMWT_density_likelihood = All_constructs_likelihood  %>% filter(Construct  == "6MWT")
-PhysicalFunctioning_density_likelihood = All_constructs_likelihood  %>% filter(Construct  == "PhysicalFunctioning2")
+PhysicalFunctioning_density_likelihood = All_constructs_likelihood  %>% filter(Construct  == "PhysicalFunctioning5")
 
 
-Age_density_posterior = All_constructs_posterior  %>% filter(Construct  == "Age")
 PositiveAttitude_density_posterior = All_constructs_posterior  %>% filter(Construct  == "PositiveAttitude")
 SixMWT_density_posterior = All_constructs_posterior  %>% filter(Construct == "6MWT")
-PhysicalFunctioning_density_posterior = All_constructs_posterior  %>% filter(Construct  == "PhysicalFunctioning2")
+PhysicalFunctioning_density_posterior = All_constructs_posterior  %>% filter(Construct  == "PhysicalFunctioning5")
 
 
 prior_name = rep("Qualitative evidence", times = 1000)
@@ -300,22 +288,14 @@ height = c(rep(10, 1000),
            rep(60, 1000), 
            rep(70, 1000), 
            rep(80, 1000), 
-           rep(90, 1000),
-           rep(100, 1000), 
-           rep(110, 1000),
-           rep(120, 1000))
+           rep(90, 1000))
 
 
 
 
 d <- data.frame(
   logOddsRatio = density_ALL_Construct_quant_stratified$logOddsRatio, 
-  Construct = c(Age_density_prior$Construct,
-                Age_density_likelihood$Construct,
-                Age_density_posterior$Construct,
-                
-            
-                PositiveAttitude_density_prior$Construct,
+  Construct = c( PositiveAttitude_density_prior$Construct,
                 PositiveAttitude_density_likelihood$Construct,
                 PositiveAttitude_density_posterior$Construct,
                 
@@ -328,12 +308,7 @@ d <- data.frame(
                 PhysicalFunctioning_density_likelihood$Construct,
                 PhysicalFunctioning_density_posterior$Construct),
   
-  y = c(Age_density_prior$Prior_qual_density,
-        Age_density_likelihood$Likelihood,
-        Age_density_posterior$posterior_QualplusQuant,
-        
-      
-        PositiveAttitude_density_prior$Prior_qual_density, 
+  y = c(PositiveAttitude_density_prior$Prior_qual_density, 
         
         PositiveAttitude_density_likelihood$Likelihood,
         

@@ -14,16 +14,16 @@ source(paste(SOURCE_ROOT, "Summary_stats_table_qual_and_quant.R", sep=""), local
 
 
 x = read.csv(paste(SOURCE_ROOT, "input.csv", sep="")) #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately. 
-data = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep=""))  #data extracted from  the quantitative studies, the file lists all data including the data that was not used for the meta-analysis. the data not included in the meta-anslysis is for the cases when insufficient data was reported in the article for it to be pooled in the meta-analysis (for example mean but no SD or variance etc)
+ALL_data_extracted = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep=""))  #data extracted from  the quantitative studies, the file lists all data including the data that was not used for the meta-analysis. the data not included in the meta-anslysis is for the cases when insufficient data was reported in the article for it to be pooled in the meta-analysis (for example mean but no SD or variance etc)
 JaarsmaInternationalStudy = read.csv(paste(SOURCE_ROOT, "HyperPriorData.csv", sep="")) #data used for eliciting the hyperprior (general physical activity levels in HF estimated from a large internaitonal study (Jaarsma et al., 2013)
 
-IPAQ_scale_data = subset(data, data$PA_Varme == "IPAQ_scale")
+data = subset(ALL_data_extracted, ALL_data_extracted$PA_Varme == "IPAQ_scale")
 PA_Varme = "IPAQ_scale"
 
 
-unique(IPAQ_scale_data$Construct)
+unique(data$Construct)
 Results_IPAQ_scale_qual_quant = data.frame()
-unique(IPAQ_scale_data$PA_Varme)
+unique(data$PA_Varme)
 #social support, 
 #Age, 6MWT,LVEF,Comorbidity1,
 #symptoms, selfefficacy, negative attitude, positive attitude, physical functioning 
@@ -31,8 +31,6 @@ unique(IPAQ_scale_data$PA_Varme)
 Results_IPAQ_scale_qual_quant = data.frame()
 
 
-IPAQ_scale_Age = BayesUpdateStepByStep(x = x, Construct = "Age")
-Results_IPAQ_scale_qual_quant =rbind(Results_IPAQ_scale_qual_quant, IPAQ_scale_Age)
 
 IPAQ_scale_SelfEfficacy = BayesUpdateStepByStep(x = x, Construct = "SelfEfficacy")
 Results_IPAQ_scale_qual_quant = rbind(Results_IPAQ_scale_qual_quant, IPAQ_scale_SelfEfficacy)
@@ -44,8 +42,6 @@ Results_IPAQ_scale_qual_quant = rbind(Results_IPAQ_scale_qual_quant, IPAQ_scale_
 
 
 Summary_stats_table_qual_and_quantResults_IPAQ_scale_qual_quant = data.frame()
-Summary_stats_table_qual_and_quantIPAQ_scale_Age = Summary_stats_table_qual_and_quant(x = x, Construct = "Age")
-Summary_stats_table_qual_and_quantResults_IPAQ_scale_qual_quant = rbind(Summary_stats_table_qual_and_quantResults_IPAQ_scale_qual_quant, Summary_stats_table_qual_and_quantIPAQ_scale_Age)
 
 
 
@@ -146,23 +142,18 @@ density_by_Construct_stratified = function(data, Construct){
   colnames(df) = c("logOddsRatio", "Construct", "Prior_qual_density", "Posterior_qual_only", "Likelihood",  "posterior_QualplusQuant", "posterior_All")
   return(df)
 }
-data = Results_IPAQ_scale_qual_quant
 
 
 
-Age_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "Age")
 
-SelfEfficacy_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "SelfEfficacy")
-
+SelfEfficacy_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_IPAQ_scale_qual_quant, Construct = "SelfEfficacy")
 
 
-height = c(rep(1, 1000),
-           rep(2, 1000))
+
+height = c(rep(1, 1000))
 
 length(height)
-density_ALL_Construct_quant_stratified = rbind(Age_density_by_Construct_stratified,
-                                              
-                                               SelfEfficacy_density_by_Construct_stratified)
+density_ALL_Construct_quant_stratified = rbind(SelfEfficacy_density_by_Construct_stratified)
 
 density_ALL_Construct_quant_stratified = cbind(density_ALL_Construct_quant_stratified, height)
 
@@ -209,18 +200,13 @@ All_constructs_likelihood = select(density_ALL_Construct_quant_stratified, logOd
 All_constructs_posterior = select(density_ALL_Construct_quant_stratified, logOddsRatio, Construct, posterior_QualplusQuant) 
 
 
-Age_density_prior = All_constructs_prior  %>% filter(Construct == 'Age')
-unique(Age_density_prior$Construct)
-
 SelfEfficacy_density_prior = All_constructs_prior  %>% filter(Construct == "SelfEfficacy")
 
 
 
-Age_density_likelihood = All_constructs_likelihood  %>% filter(Construct  == "Age")
 SelfEfficacy_density_likelihood = All_constructs_likelihood  %>% filter(Construct  == "SelfEfficacy")
 
 
-Age_density_posterior = All_constructs_posterior  %>% filter(Construct  == "Age")
 SelfEfficacy_density_posterior = All_constructs_posterior  %>% filter(Construct  == "SelfEfficacy")
 
 
@@ -234,33 +220,20 @@ posterior_name = rep("Posterior (Qual + QUANT)", times = 1000)
 distribution = c(prior_name, likelihood_name, posterior_name)
 
 
-height = c(rep(10, 1000),
+height = c(rep(10, 1000), 
            rep(20, 1000), 
-           rep(30, 1000), 
-           rep(40, 1000), 
-           rep(50, 1000), 
-           rep(60, 1000))
+           rep(30, 1000))
 
 
 
 
 d <- data.frame(
   logOddsRatio = density_ALL_Construct_quant_stratified$logOddsRatio, 
-  Construct = c(Age_density_prior$Construct,
-                Age_density_likelihood$Construct,
-                Age_density_posterior$Construct,
-                
-              
-                SelfEfficacy_density_prior$Construct,
+  Construct = c( SelfEfficacy_density_prior$Construct,
                 SelfEfficacy_density_likelihood$Construct,
                 SelfEfficacy_density_posterior$Construct),
   
-  y = c(Age_density_prior$Prior_qual_density,
-        Age_density_likelihood$Likelihood,
-        Age_density_posterior$posterior_QualplusQuant,
-        
-      
-        SelfEfficacy_density_prior$Prior_qual_density,
+  y = c( SelfEfficacy_density_prior$Prior_qual_density,
         SelfEfficacy_density_likelihood$Likelihood,
         SelfEfficacy_density_posterior$posterior_QualplusQuant),
   

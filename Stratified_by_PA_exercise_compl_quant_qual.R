@@ -14,25 +14,26 @@ source(paste(SOURCE_ROOT, "Summary_stats_table_qual_and_quant.R", sep=""), local
 
 
 x = read.csv(paste(SOURCE_ROOT, "input.csv", sep="")) #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately. 
-data = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep=""))  #data extracted from  the quantitative studies, the file lists all data including the data that was not used for the meta-analysis. the data not included in the meta-anslysis is for the cases when insufficient data was reported in the article for it to be pooled in the meta-analysis (for example mean but no SD or variance etc)
+ALL_data_extracted = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep=""))  #data extracted from  the quantitative studies, the file lists all data including the data that was not used for the meta-analysis. the data not included in the meta-anslysis is for the cases when insufficient data was reported in the article for it to be pooled in the meta-analysis (for example mean but no SD or variance etc)
+class(ALL_data_extracted)
+
 JaarsmaInternationalStudy = read.csv(paste(SOURCE_ROOT, "HyperPriorData.csv", sep="")) #data used for eliciting the hyperprior (general physical activity levels in HF estimated from a large internaitonal study (Jaarsma et al., 2013)
 
-Exercise_complient_Binary_data = subset(data, data$PA_Varme == "Exercise_complient_Binary")
+data = ALL_data_extracted  %>% filter(ALL_data_extracted$PA_Varme == "Exercise_complient_Binary")
+data = data
 PA_Varme = "Exercise_complient_Binary"
 
 
 
 
-unique(Exercise_complient_Binary_data$Construct)
+unique(data$Construct)
 Results_Exercise_complient_Binary_qual_quant = data.frame()
-unique(Exercise_complient_Binary_data$PA_Varme)
+unique(data$PA_Varme)
 
 #Age, 6MWT, symptoms, LVEF, selfefficacy, social support, comorbidity, negative attitude, positive attitude, physical functioning 
 
 
 
-Exercise_complient_Binary_Age = BayesUpdateStepByStep(x = x, Construct = "Age")
-Results_Exercise_complient_Binary_qual_quant = rbind(Results_Exercise_complient_Binary_qual_quant, Exercise_complient_Binary_Age)
 Exercise_complient_Binary_6MWT = BayesUpdateStepByStep(x = x, Construct = "6MWT")
 Results_Exercise_complient_Binary_qual_quant = rbind(Results_Exercise_complient_Binary_qual_quant, Exercise_complient_Binary_6MWT)
 
@@ -40,15 +41,9 @@ Exercise_complient_Binary_Comorbidity = BayesUpdateStepByStep(x = x, Construct =
 Results_Exercise_complient_Binary_qual_quant = rbind(Results_Exercise_complient_Binary_qual_quant, Exercise_complient_Binary_Comorbidity)
 
 
-Exercise_complient_Binary_LVEF = BayesUpdateStepByStep(x = x, Construct = "LVEF")
-Results_Exercise_complient_Binary_qual_quant = rbind(Results_Exercise_complient_Binary_qual_quant, Exercise_complient_Binary_LVEF)
-
-
 
 
 Summary_stats_table_qual_and_quantResults_Exercise_complient_Binary_qual_quant = data.frame()
-Summary_stats_table_qual_and_quantExercise_complient_Binary_Age = Summary_stats_table_qual_and_quant(x = x, Construct = "Age")
-Summary_stats_table_qual_and_quantResults_Exercise_complient_Binary_qual_quant = rbind(Summary_stats_table_qual_and_quantResults_Exercise_complient_Binary_qual_quant, Summary_stats_table_qual_and_quantExercise_complient_Binary_Age)
 
 
 Summary_stats_table_qual_and_quantExercise_complient_Binary_Comorbidity = Summary_stats_table_qual_and_quant(x = x, Construct = "Comorbidity")
@@ -56,11 +51,6 @@ Summary_stats_table_qual_and_quantResults_Exercise_complient_Binary_qual_quant =
 
 Summary_stats_table_qual_and_quantExercise_complient_Binary_6MWT = Summary_stats_table_qual_and_quant(x = x, Construct = "6MWT")
 Summary_stats_table_qual_and_quantResults_Exercise_complient_Binary_qual_quant = rbind(Summary_stats_table_qual_and_quantResults_Exercise_complient_Binary_qual_quant, Summary_stats_table_qual_and_quantExercise_complient_Binary_6MWT)
-
-Summary_stats_table_qual_and_quantExercise_complient_Binary_LVEF = Summary_stats_table_qual_and_quant(x = x, Construct = "LVEF")
-Summary_stats_table_qual_and_quantResults_Exercise_complient_Binary_qual_quant = rbind(Summary_stats_table_qual_and_quantResults_Exercise_complient_Binary_qual_quant, Summary_stats_table_qual_and_quantExercise_complient_Binary_LVEF)
-
-
 
 
 
@@ -157,29 +147,24 @@ density_by_Construct_stratified = function(data, Construct){
   colnames(df) = c("logOddsRatio", "Construct", "Prior_qual_density", "Posterior_qual_only", "Likelihood",  "posterior_QualplusQuant", "posterior_All")
   return(df)
 }
-data = Results_Exercise_complient_Binary_qual_quant
 
 
 
-Age_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "Age")
-SixMWT_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "6MWT")
-Comorbidity_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "Comorbidity")
+SixMWT_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_Exercise_complient_Binary_qual_quant, Construct = "6MWT")
+Comorbidity_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_Exercise_complient_Binary_qual_quant, Construct = "Comorbidity")
 
-LVEF_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "LVEF")
+LVEF_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_Exercise_complient_Binary_qual_quant, Construct = "LVEF")
 
 
 
 
 height = c(rep(1, 1000),
            rep(2, 1000), 
-           rep(3, 1000), 
-           rep(4, 1000))
+           rep(3, 1000))
 
 length(height)
-density_ALL_Construct_quant_stratified = rbind(Age_density_by_Construct_stratified,
-                                               SixMWT_density_by_Construct_stratified, 
-                                               Comorbidity_density_by_Construct_stratified,
-                                               LVEF_density_by_Construct_stratified)
+density_ALL_Construct_quant_stratified = rbind(SixMWT_density_by_Construct_stratified, 
+                                               Comorbidity_density_by_Construct_stratified)
 
 density_ALL_Construct_quant_stratified = cbind(density_ALL_Construct_quant_stratified, height)
 
@@ -227,27 +212,19 @@ All_constructs_likelihood = select(density_ALL_Construct_quant_stratified, logOd
 All_constructs_posterior = select(density_ALL_Construct_quant_stratified, logOddsRatio, Construct, posterior_QualplusQuant) 
 
 
-Age_density_prior = All_constructs_prior  %>% filter(Construct == 'Age')
-unique(Age_density_prior$Construct)
-
 
 
 Comorbidity_density_prior =  All_constructs_prior  %>% filter(Construct == 'Comorbidity')
 SixMWT_density_prior = All_constructs_prior  %>% filter(Construct == "6MWT")
-LVEF_density_prior = All_constructs_prior  %>% filter(Construct == "LVEF")
 
 
 
-Age_density_likelihood = All_constructs_likelihood  %>% filter(Construct  == "Age")
 Comorbidity_density_likelihood = All_constructs_likelihood  %>% filter(Construct  == "Comorbidity")
 SixMWT_density_likelihood = All_constructs_likelihood  %>% filter(Construct  == "6MWT")
-LVEF_density_likelihood = All_constructs_likelihood  %>% filter(Construct  == "LVEF")
 
 
-Age_density_posterior = All_constructs_posterior  %>% filter(Construct  == "Age")
 Comorbidity_density_posterior = All_constructs_posterior  %>% filter(Construct  == "Comorbidity")
 SixMWT_density_posterior = All_constructs_posterior  %>% filter(Construct == "6MWT")
-LVEF_density_posterior = All_constructs_posterior  %>% filter(Construct == "LVEF")
 
 prior_name = rep("Qualitative evidence", times = 1000)
 
@@ -260,20 +237,14 @@ distribution = c(prior_name, likelihood_name, posterior_name)
 
 
 height = c(rep(10, 1000),
-           rep(20, 1000), 
-           rep(30, 1000), 
-           rep(40, 1000))
+           rep(20, 1000))
 
 
 
 
 d <- data.frame(
   logOddsRatio = density_ALL_Construct_quant_stratified$logOddsRatio, 
-  Construct = c(Age_density_prior$Construct,
-                Age_density_likelihood$Construct,
-                Age_density_posterior$Construct,
-                
-                Comorbidity_density_prior$Construct,
+  Construct = c(Comorbidity_density_prior$Construct,
                 Comorbidity_density_likelihood$Construct,
                 Comorbidity_density_posterior$Construct,
                 
@@ -282,18 +253,9 @@ d <- data.frame(
                 
                 SixMWT_density_prior$Construct,
                 SixMWT_density_likelihood$Construct,
-                SixMWT_density_posterior$Construct,
-                
-                
-                LVEF_density_prior$Construct, 
-                LVEF_density_likelihood$Construct,
-                LVEF_density_posterior$Construct),
+                SixMWT_density_posterior$Construct),
   
-  y = c(Age_density_prior$Prior_qual_density,
-        Age_density_likelihood$Likelihood,
-        Age_density_posterior$posterior_QualplusQuant,
-        
-        Comorbidity_density_prior$Prior_qual_density,
+  y = c(Comorbidity_density_prior$Prior_qual_density,
         Comorbidity_density_likelihood$Likelihood,
         Comorbidity_density_posterior$posterior_QualplusQuant,
         
@@ -302,13 +264,7 @@ d <- data.frame(
         
         SixMWT_density_prior$Prior_qual_density,
         SixMWT_density_likelihood$Likelihood,
-        SixMWT_density_posterior$posterior_QualplusQuant,
-        
-      
-        
-        LVEF_density_prior$Prior_qual_density, 
-        LVEF_density_likelihood$Likelihood,
-        LVEF_density_posterior$posterior_QualplusQuant),
+        SixMWT_density_posterior$posterior_QualplusQuant),
   
   distribution = distribution, 
   

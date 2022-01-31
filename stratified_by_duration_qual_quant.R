@@ -14,10 +14,10 @@ source(paste(SOURCE_ROOT, "Summary_stats_table_qual_and_quant.R", sep=""), local
 
 
 x = read.csv(paste(SOURCE_ROOT, "input.csv", sep="")) #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately. 
-data = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep=""))  #data extracted from  the quantitative studies, the file lists all data including the data that was not used for the meta-analysis. the data not included in the meta-anslysis is for the cases when insufficient data was reported in the article for it to be pooled in the meta-analysis (for example mean but no SD or variance etc)
+ALL_data_extracted = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep=""))  #data extracted from  the quantitative studies, the file lists all data including the data that was not used for the meta-analysis. the data not included in the meta-anslysis is for the cases when insufficient data was reported in the article for it to be pooled in the meta-analysis (for example mean but no SD or variance etc)
 JaarsmaInternationalStudy = read.csv(paste(SOURCE_ROOT, "HyperPriorData.csv", sep="")) #data used for eliciting the hyperprior (general physical activity levels in HF estimated from a large internaitonal study (Jaarsma et al., 2013)
 
-Duration_dayMins_data = subset(data, data$PA_Varme == "Duration_dayMins")
+data = filter(ALL_data_extracted, ALL_data_extracted$PA_Varme == "Duration_dayMins")
 PA_Varme = "Duration_dayMins"
 
 x$Construct =c("Age",
@@ -31,9 +31,9 @@ x$Construct =c("Age",
                "LVEF5",
                "PositiveAttitude") 
 
-unique(Duration_dayMins_data$Construct)
+unique(data$Construct)
 Results_Duration_dayMins_qual_quant = data.frame()
-unique(Duration_dayMins_data$PA_Varme)
+unique(data$PA_Varme)
 #social support, 
 #Age, 6MWT,LVEF,Comorbidity1,
 #symptoms, selfefficacy, negative attitude, positive attitude, physical functioning 
@@ -208,19 +208,19 @@ data = Results_Duration_dayMins_qual_quant
 
 
 
-Age_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "Age")
-SixMWT_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "6MWT")
-Comorbidity1_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "Comorbidity")
+Age_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_Duration_dayMins_qual_quant, Construct = "Age")
+SixMWT_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_Duration_dayMins_qual_quant, Construct = "6MWT")
+Comorbidity1_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_Duration_dayMins_qual_quant, Construct = "Comorbidity")
 
-LVEF_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "LVEF5")
+LVEF_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_Duration_dayMins_qual_quant, Construct = "LVEF5")
 
-Symptoms_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "Symptoms")
+Symptoms_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_Duration_dayMins_qual_quant, Construct = "Symptoms")
 
-SelfEfficacy_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "SelfEfficacy")
-NegativeAttitude2_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "NegativeAttitude")
-PositiveAttitude2_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "PositiveAttitude")
+SelfEfficacy_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_Duration_dayMins_qual_quant, Construct = "SelfEfficacy")
+NegativeAttitude2_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_Duration_dayMins_qual_quant, Construct = "NegativeAttitude")
+PositiveAttitude2_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_Duration_dayMins_qual_quant, Construct = "PositiveAttitude")
 
-PhysicalFunctioning7_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "PhysicalFunctioning")
+PhysicalFunctioning7_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_Duration_dayMins_qual_quant, Construct = "PhysicalFunctioning")
 
 
 

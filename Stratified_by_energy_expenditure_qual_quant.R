@@ -14,10 +14,10 @@ source(paste(SOURCE_ROOT, "Summary_stats_table_qual_and_quant.R", sep=""), local
 
 
 x = read.csv(paste(SOURCE_ROOT, "input.csv", sep="")) #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately. 
-data = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep=""))  #data extracted from  the quantitative studies, the file lists all data including the data that was not used for the meta-analysis. the data not included in the meta-anslysis is for the cases when insufficient data was reported in the article for it to be pooled in the meta-analysis (for example mean but no SD or variance etc)
+All_data_extracted = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep=""))  #data extracted from  the quantitative studies, the file lists all data including the data that was not used for the meta-analysis. the data not included in the meta-anslysis is for the cases when insufficient data was reported in the article for it to be pooled in the meta-analysis (for example mean but no SD or variance etc)
 JaarsmaInternationalStudy = read.csv(paste(SOURCE_ROOT, "HyperPriorData.csv", sep="")) #data used for eliciting the hyperprior (general physical activity levels in HF estimated from a large internaitonal study (Jaarsma et al., 2013)
 
-EnergyExpend_total_data = subset(data, data$PA_Varme == "EnergyExpend_total")
+data = filter(All_data_extracted, All_data_extracted$PA_Varme == "EnergyExpend_total")
 PA_Varme = "EnergyExpend_total"
 
 x$Construct =c("Age",
@@ -31,9 +31,9 @@ x$Construct =c("Age",
                 "LVEF",
                 "PositiveAttitude2") 
 
-unique(EnergyExpend_total_data$Construct)
+unique(data$Construct)
 Results_EnergyExpend_total_qual_quant = data.frame()
-unique(EnergyExpend_total_data$PA_Varme)
+unique(data$PA_Varme)
 #social support, 
 #Age, 6MWT,LVEF,Comorbidity1,
 #symptoms, selfefficacy, negative attitude, positive attitude, physical functioning 
@@ -208,23 +208,22 @@ density_by_Construct_stratified = function(data, Construct){
   colnames(df) = c("logOddsRatio", "Construct", "Prior_qual_density", "Posterior_qual_only", "Likelihood",  "posterior_QualplusQuant", "posterior_All")
   return(df)
 }
-data = Results_EnergyExpend_total_qual_quant
 
 
 
-Age_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "Age")
-SixMWT_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "6MWT")
-Comorbidity1_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "Comorbidity1")
+Age_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_EnergyExpend_total_qual_quant, Construct = "Age")
+SixMWT_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_EnergyExpend_total_qual_quant, Construct = "6MWT")
+Comorbidity1_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_EnergyExpend_total_qual_quant, Construct = "Comorbidity1")
 
-LVEF_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "LVEF")
+LVEF_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_EnergyExpend_total_qual_quant, Construct = "LVEF")
 
-Symptoms_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "Symptoms")
+Symptoms_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_EnergyExpend_total_qual_quant, Construct = "Symptoms")
 
-SelfEfficacy_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "SelfEfficacy")
-NegativeAttitude2_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "NegativeAttitude2")
-PositiveAttitude2_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "PositiveAttitude2")
+SelfEfficacy_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_EnergyExpend_total_qual_quant, Construct = "SelfEfficacy")
+NegativeAttitude2_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_EnergyExpend_total_qual_quant, Construct = "NegativeAttitude2")
+PositiveAttitude2_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_EnergyExpend_total_qual_quant, Construct = "PositiveAttitude2")
 
-PhysicalFunctioning7_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "PhysicalFunctioning7")
+PhysicalFunctioning7_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_EnergyExpend_total_qual_quant, Construct = "PhysicalFunctioning7")
 
 
 
