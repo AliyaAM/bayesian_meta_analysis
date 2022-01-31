@@ -42,6 +42,51 @@ write.table(Summary_Results_SocialSupport, file = paste(OUTPUT_ROOT, "Summary_Re
             fileEncoding = "" )
 
 
+
+
+Summary_Results_SocialSupport$QualplusQuantSD = sqrt(Summary_Results_SocialSupport$posterior_QualplusQuant_variance)
+
+
+Summary_Results_SocialSupport = Summary_Results_SocialSupport %>% 
+  mutate_if(is.numeric, round, digits = 2)
+
+
+Summary_Results_SocialSupport$prior_CI = paste("[", Summary_Results_SocialSupport$Prior_qual_quantile_0.05, ";", Summary_Results_SocialSupport$Prior_qual_quantile_0.95, "]", sep = "")
+Summary_Results_SocialSupport$Prior_qual_quantile_0.05 = Summary_Results_SocialSupport$prior_CI
+
+
+Summary_Results_SocialSupport$Likelihood_CI = paste("[", Summary_Results_SocialSupport$Likelihood_qual_quantile_0.05, ";", Summary_Results_SocialSupport$Likelihood_qual_quantile_0.95, "]", sep = "")
+Summary_Results_SocialSupport$Likelihood_qual_quantile_0.05 = Summary_Results_SocialSupport$Likelihood_CI
+
+
+Summary_Results_SocialSupport$Posterior_CI = paste("[", Summary_Results_SocialSupport$Posterior_QualplusQuant_quantile_0.05, ";", Summary_Results_SocialSupport$Posterior_QualplusQuant_quantile_0.95, "]", sep = "")
+Summary_Results_SocialSupport$Posterior_QualplusQuant_quantile_0.05 = Summary_Results_SocialSupport$Posterior_CI
+
+Summary_Results_SocialSupport = data.frame(Summary_Results_SocialSupport$Construct,
+                                                                                            Summary_Results_SocialSupport$Prior_qual_quantile_0.50,
+                                                                                            Summary_Results_SocialSupport$Prior_qual_quantile_0.05,
+                                                                                            Summary_Results_SocialSupport$Likelihood_qual_quantile_0.50,
+                                                                                            Summary_Results_SocialSupport$Likelihood_qual_quantile_0.05,
+                                                                                            Summary_Results_SocialSupport$Posterior_QualplusQuant_quantile_0.50,	
+                                                                                            Summary_Results_SocialSupport$Posterior_QualplusQuant_quantile_0.05, 
+                                                                                            Summary_Results_SocialSupport$QualplusQuantSD) 
+
+colnames(Summary_Results_SocialSupport) = c("Construct",
+                                                                                             "Expected value (log OR)", 
+                                                                                             "95% CrI",
+                                                                                             "Expected value (log OR)", 
+                                                                                             "95% CrI", 
+                                                                                             "Expected value (log OR)", 
+                                                                                             "95% CrI", 
+                                                                                             "SD")
+
+
+write.table(Summary_Results_SocialSupport, file = paste(OUTPUT_ROOT, "_edited_Summary_Results_SocialSupport.csv", sep=""), append = FALSE, quote = TRUE, sep = ", ",
+            eol = "\r", na = "NA", dec = ".", row.names = FALSE,
+            col.names = TRUE, qmethod = c("escape", "double"),
+            fileEncoding = "" )
+
+
 density_by_Construct = function(data, Construct){
   index = data$Construct == Construct
   logOddsRatio = seq( -2, 3 , length=1000)

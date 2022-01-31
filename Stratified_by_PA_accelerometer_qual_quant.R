@@ -94,6 +94,53 @@ write.table(Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_qu
 
 
 
+
+
+
+Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant$QualplusQuantSD = sqrt(Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant$posterior_QualplusQuant_variance)
+
+
+Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant = Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant %>% 
+  mutate_if(is.numeric, round, digits = 2)
+
+
+Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant$prior_CI = paste("[", Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant$Prior_qual_quantile_0.05, ";", Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant$Prior_qual_quantile_0.95, "]", sep = "")
+Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant$Prior_qual_quantile_0.05 = Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant$prior_CI
+
+
+Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant$Likelihood_CI = paste("[", Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant$Likelihood_qual_quantile_0.05, ";", Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant$Likelihood_qual_quantile_0.95, "]", sep = "")
+Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant$Likelihood_qual_quantile_0.05 = Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant$Likelihood_CI
+
+
+Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant$Posterior_CI = paste("[", Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant$Posterior_QualplusQuant_quantile_0.05, ";", Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant$Posterior_QualplusQuant_quantile_0.95, "]", sep = "")
+Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant$Posterior_QualplusQuant_quantile_0.05 = Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant$Posterior_CI
+
+Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant = data.frame(Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant$Construct,
+                                                                                     Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant$Prior_qual_quantile_0.50,
+                                                                                     Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant$Prior_qual_quantile_0.05,
+                                                                                     Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant$Likelihood_qual_quantile_0.50,
+                                                                                     Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant$Likelihood_qual_quantile_0.05,
+                                                                                     Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant$Posterior_QualplusQuant_quantile_0.50,	
+                                                                                     Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant$Posterior_QualplusQuant_quantile_0.05, 
+                                                                                     Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant$QualplusQuantSD) 
+
+colnames(Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant) = c("Construct",
+                                                                                      "Expected value (log OR)", 
+                                                                                      "95% CrI",
+                                                                                      "Expected value (log OR)", 
+                                                                                      "95% CrI", 
+                                                                                      "Expected value (log OR)", 
+                                                                                      "95% CrI", 
+                                                                                      "SD")
+
+
+write.table(Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant, file = paste(OUTPUT_ROOT, "_edited_Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant.csv", sep=""), append = FALSE, quote = TRUE, sep = ", ",
+            eol = "\r", na = "NA", dec = ".", row.names = FALSE,
+            col.names = TRUE, qmethod = c("escape", "double"),
+            fileEncoding = "" )
+
+
+
 density_by_Construct_stratified = function(data, Construct){
   index = data$Construct == Construct
   logOddsRatio = seq(-3, 4  , length=1000)

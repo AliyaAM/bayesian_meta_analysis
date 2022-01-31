@@ -178,6 +178,44 @@ write.table(Summary_stats_tableResults_AccelerometerUnits, file = paste(OUTPUT_R
 
 
 
+
+
+########
+Summary_stats_tableResults_AccelerometerUnits$QualplusQuantSD = sqrt(Summary_stats_tableResults_AccelerometerUnits$variance_quant)
+
+
+Summary_stats_tableResults_AccelerometerUnits = Summary_stats_tableResults_AccelerometerUnits %>% 
+  mutate_if(is.numeric, round, digits = 2)
+
+
+
+Summary_stats_tableResults_AccelerometerUnits$Likelihood_CI = paste("[", Summary_stats_tableResults_AccelerometerUnits$Likelihood_qual_quantile_0.05, ";", Summary_stats_tableResults_AccelerometerUnits$Likelihood_qual_quantile_0.95, "]", sep = "")
+Summary_stats_tableResults_AccelerometerUnits$Likelihood_qual_quantile_0.05 = Summary_stats_tableResults_AccelerometerUnits$Likelihood_CI
+
+
+Summary_stats_tableResults_AccelerometerUnits = data.frame(Summary_stats_tableResults_AccelerometerUnits$Construct,
+                                                                                           
+                                                                                           Summary_stats_tableResults_AccelerometerUnits$Likelihood_qual_quantile_0.50,
+                                                                                           Summary_stats_tableResults_AccelerometerUnits$Likelihood_qual_quantile_0.05,
+                                                                                          
+                                                                                          Summary_stats_tableResults_AccelerometerUnits$QualplusQuantSD) 
+
+colnames(Summary_stats_tableResults_AccelerometerUnits) = c("Construct",
+                                                                                            
+                                                                                             "Expected value (log OR)", 
+                                                                                             "95% CrI", 
+                                                                                             "SD")
+
+
+write.table(Summary_stats_tableResults_AccelerometerUnits, file = paste(OUTPUT_ROOT, "_edited_Summary_stats_tableResults_AccelerometerUnits_QUANT.csv", sep=""), append = FALSE, quote = TRUE, sep = ", ",
+            eol = "\r", na = "NA", dec = ".", row.names = FALSE,
+            col.names = TRUE, qmethod = c("escape", "double"),
+            fileEncoding = "" )
+
+
+
+
+
 density_by_Construct_stratified = function(data, Construct){
   index = AccelerometerUnits_data$Construct == Construct
   logOddsRatio = seq( -3, 4 , length=1000)

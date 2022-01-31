@@ -225,6 +225,41 @@ write.table(Summary_stats_tableResults_EnergyExpend_total, file = paste(OUTPUT_R
 
 
 
+########
+Summary_stats_tableResults_EnergyExpend_total$QualplusQuantSD = sqrt(Summary_stats_tableResults_EnergyExpend_total$variance_quant)
+
+
+Summary_stats_tableResults_EnergyExpend_total = Summary_stats_tableResults_EnergyExpend_total %>% 
+  mutate_if(is.numeric, round, digits = 2)
+
+
+
+Summary_stats_tableResults_EnergyExpend_total$Likelihood_CI = paste("[", Summary_stats_tableResults_EnergyExpend_total$Likelihood_qual_quantile_0.05, ";", Summary_stats_tableResults_EnergyExpend_total$Likelihood_qual_quantile_0.95, "]", sep = "")
+Summary_stats_tableResults_EnergyExpend_total$Likelihood_qual_quantile_0.05 = Summary_stats_tableResults_EnergyExpend_total$Likelihood_CI
+
+
+Summary_stats_tableResults_EnergyExpend_total = data.frame(Summary_stats_tableResults_EnergyExpend_total$Construct,
+                                                         
+                                                         Summary_stats_tableResults_EnergyExpend_total$Likelihood_qual_quantile_0.50,
+                                                         Summary_stats_tableResults_EnergyExpend_total$Likelihood_qual_quantile_0.05,
+                                                         
+                                                         Summary_stats_tableResults_EnergyExpend_total$QualplusQuantSD) 
+
+colnames(Summary_stats_tableResults_EnergyExpend_total) = c("Construct",
+                                                          
+                                                          "Expected value (log OR)", 
+                                                          "95% CrI", 
+                                                          "SD")
+
+
+write.table(Summary_stats_tableResults_EnergyExpend_total, file = paste(OUTPUT_ROOT, "_edited_Summary_stats_tableResults_EnergyExpend_total_QUANT.csv", sep=""), append = FALSE, quote = TRUE, sep = ", ",
+            eol = "\r", na = "NA", dec = ".", row.names = FALSE,
+            col.names = TRUE, qmethod = c("escape", "double"),
+            fileEncoding = "" )
+
+
+
+
 density_by_Construct_stratified = function(data, Construct){
   index = EnergyExpend_total_data$Construct == Construct
   logOddsRatio = seq( -3, 4 , length=1000)
@@ -375,24 +410,4 @@ Plot_Likelihood_stratified = ggplot(density_ALL_Construct_quant_stratified, aes(
                                     
 
 print(Plot_Likelihood_stratified)
-
-
-plots.dir.path <- list.files(tempdir(), pattern="rs-graphics", full.names = TRUE); 
-plots.png.paths <- list.files(plots.dir.path, pattern=".png", full.names = TRUE)
-
-
-x_directory_quant <- file.path(paste(c(OUTPUT_ROOT, PA_Varme), "/PLOTS_QUANT_stratified_by_PA", sep=""))
-
-dir.create(x_directory_quant)
-file.copy(from=plots.png.paths, to=x_directory_quant)
-
-
-
-
-
-
-#"Duration_dayMins")
-
-
-# "AccelerometerUnits")
 

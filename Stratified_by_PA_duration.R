@@ -182,7 +182,37 @@ write.table(Summary_stats_tableResults_Duration_dayMins, file = paste(OUTPUT_ROO
             fileEncoding = "" )
 
 
+########
+Summary_stats_tableResults_Duration_dayMins$QualplusQuantSD = sqrt(Summary_stats_tableResults_Duration_dayMins$variance_quant)
 
+
+Summary_stats_tableResults_Duration_dayMins = Summary_stats_tableResults_Duration_dayMins %>% 
+  mutate_if(is.numeric, round, digits = 2)
+
+
+
+Summary_stats_tableResults_Duration_dayMins$Likelihood_CI = paste("[", Summary_stats_tableResults_Duration_dayMins$Likelihood_qual_quantile_0.05, ";", Summary_stats_tableResults_Duration_dayMins$Likelihood_qual_quantile_0.95, "]", sep = "")
+Summary_stats_tableResults_Duration_dayMins$Likelihood_qual_quantile_0.05 = Summary_stats_tableResults_Duration_dayMins$Likelihood_CI
+
+
+Summary_stats_tableResults_Duration_dayMins = data.frame(Summary_stats_tableResults_Duration_dayMins$Construct,
+                                                  
+                                                  Summary_stats_tableResults_Duration_dayMins$Likelihood_qual_quantile_0.50,
+                                                  Summary_stats_tableResults_Duration_dayMins$Likelihood_qual_quantile_0.05,
+                                                  
+                                                  Summary_stats_tableResults_Duration_dayMins$QualplusQuantSD) 
+
+colnames(Summary_stats_tableResults_Duration_dayMins) = c("Construct",
+                                                   
+                                                   "Expected value (log OR)", 
+                                                   "95% CrI", 
+                                                   "SD")
+
+
+write.table(Summary_stats_tableResults_Duration_dayMins, file = paste(OUTPUT_ROOT, "_edited_Summary_stats_tableResults_Duration_dayMins_QUANT.csv", sep=""), append = FALSE, quote = TRUE, sep = ", ",
+            eol = "\r", na = "NA", dec = ".", row.names = FALSE,
+            col.names = TRUE, qmethod = c("escape", "double"),
+            fileEncoding = "" )
 density_by_Construct_stratified = function(data, Construct){
   index = Duration_dayMins_data$Construct == Construct
   logOddsRatio = seq( -3, 4 , length=1000)

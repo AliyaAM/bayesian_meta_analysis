@@ -96,6 +96,39 @@ write.table(Summary_stats_tableResults_Steps_day, file = paste(OUTPUT_ROOT, "Sum
 
 
 
+########
+Summary_stats_tableResults_Steps_day$QualplusQuantSD = sqrt(Summary_stats_tableResults_Steps_day$variance_quant)
+
+
+Summary_stats_tableResults_Steps_day = Summary_stats_tableResults_Steps_day %>% 
+  mutate_if(is.numeric, round, digits = 2)
+
+
+
+Summary_stats_tableResults_Steps_day$Likelihood_CI = paste("[", Summary_stats_tableResults_Steps_day$Likelihood_qual_quantile_0.05, ";", Summary_stats_tableResults_Steps_day$Likelihood_qual_quantile_0.95, "]", sep = "")
+Summary_stats_tableResults_Steps_day$Likelihood_qual_quantile_0.05 = Summary_stats_tableResults_Steps_day$Likelihood_CI
+
+
+Summary_stats_tableResults_Steps_day = data.frame(Summary_stats_tableResults_Steps_day$Construct,
+                                                           
+                                                           Summary_stats_tableResults_Steps_day$Likelihood_qual_quantile_0.50,
+                                                           Summary_stats_tableResults_Steps_day$Likelihood_qual_quantile_0.05,
+                                                           
+                                                           Summary_stats_tableResults_Steps_day$QualplusQuantSD) 
+
+colnames(Summary_stats_tableResults_Steps_day) = c("Construct",
+                                                            
+                                                            "Expected value (log OR)", 
+                                                            "95% CrI", 
+                                                            "SD")
+
+
+write.table(Summary_stats_tableResults_Steps_day, file = paste(OUTPUT_ROOT, "_edited_Summary_stats_tableResults_Steps_day_QUANT.csv", sep=""), append = FALSE, quote = TRUE, sep = ", ",
+            eol = "\r", na = "NA", dec = ".", row.names = FALSE,
+            col.names = TRUE, qmethod = c("escape", "double"),
+            fileEncoding = "" )
+
+
 density_by_Construct_stratified = function(data, Construct){
   index = Steps_day_data$Construct == Construct
   logOddsRatio = seq( -3, 4 , length=1000)
