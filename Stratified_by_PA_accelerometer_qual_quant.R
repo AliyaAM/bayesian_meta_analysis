@@ -357,22 +357,15 @@ Compare_distributions_plot = ggplot(d, aes(x = logOddsRatio,
   #scale_color_brewer(palette = "Set2")+
   scale_fill_manual(values = c("#FC8D62" , "#E78AC3" ,"#66C2A5"))+
   scale_color_manual(values = c("#FC8D62" , "#E78AC3" ,"#66C2A5"))+
-  
-  xlim(-2,3) +
-  
-  theme(plot.margin = margin(1, 1, 1, 1, "cm"),
+  theme(plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
         panel.grid.major = element_line(colour = "grey", size = 0.2),
-        panel.grid.minor = element_line(colour = "grey", size = 0.1)) 
-
-
+        panel.grid.minor = element_line(colour = "grey", size = 0.1))+ 
+  xlim(-6,6) +
+  
+  theme(text = element_text(size = 25))   
 
 print(Compare_distributions_plot)
 
-
-plots.dir.path <- list.files(tempdir(), pattern="rs-graphics", full.names = TRUE); 
-plots.png.paths <- list.files(plots.dir.path, pattern=".png", full.names = TRUE)
+ggsave(file = paste(OUTPUT_ROOT, "/Compare_distributions_plot_accelerometer.pdf",  sep=""),Compare_distributions_plot, width=4, height=3, units="in", scale=3)
 
 
-x_directory_quant <- file.path(paste(OUTPUT_ROOT))
-dir.create(x_directory_quant)
-file.copy(from=plots.png.paths, to=x_directory_quant)

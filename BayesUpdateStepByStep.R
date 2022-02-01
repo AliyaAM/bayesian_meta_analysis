@@ -212,6 +212,10 @@ BayesUpdateStepByStep = function(x, Construct) {
                                      values_colour = c("#999999", "#0072B2"), 
                                      title="Hyperprior: Probability")
   
+  
+  ggsave(file = paste(OUTPUT_ROOT, "/plot_hyperprior_density.pdf",  sep=""),plot_hyperprior_density, width=4, height=3, units="in", scale=3)
+  
+  
   #print plot, so  it can be saved into the local repository 
   print(plot_hyperprior_density)
 
@@ -231,6 +235,7 @@ BayesUpdateStepByStep = function(x, Construct) {
   
   print(plot_Prior_Qual_density)
   
+  
   #plot posterior_qual only 
   plot_Posterior_qual_only = plotting(data=data,
                                         aes(x=logOddsRatio, y= Posterior_qual_only, fill= Posterior_qual_only_CI), 
@@ -249,6 +254,7 @@ BayesUpdateStepByStep = function(x, Construct) {
   print(plot_Likelihood_density)
   
 
+
   #update the qualitative evidence with quantitative evidence
   
   plot_posterior_QualplusQuant_density = plotting(data=data,
@@ -258,15 +264,8 @@ BayesUpdateStepByStep = function(x, Construct) {
   
   
   print(plot_posterior_QualplusQuant_density)
-  
-  
-  plot_posterior_All_density = plotting(data=data,
-                                                  aes(x=logOddsRatio, y= posterior_All, fill= posterior_All_CI), 
-                                                  values_colour = c("#D55E00", "#0072B2"), 
-                                                  title = paste("Posterior distribution for physical activity according to qualitative and quantitative evidence (with hyperprior):", print(Construct)))
-  
-  print(plot_posterior_All_density)
-  
+
+
   
   write.table(data, file = '/Users/aliya/my_docs/proj//bayesian_meta_analysis/data_qual_quant_with_hyperprior_test.csv', append = FALSE, quote = TRUE, sep = ", ",
               eol = "\r", na = "NA", dec = ".", row.names = FALSE,

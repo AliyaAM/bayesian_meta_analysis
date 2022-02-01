@@ -212,7 +212,19 @@ nrow(density_ALL_Construct)
 #plotting the results of the expert elicitation task 
 Plot_Prior_qual_density = ggplot(density_ALL_Construct, aes(x = logOddsRatio, y = Construct, height=Prior_qual_density, group = Construct)) +
   geom_density_ridges(stat = "identity", scale = 1) +
-  xlim(-2, 3 )
+xlim(-6,6) +
+  
+  theme(plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
+        panel.grid.major = element_line(colour = "grey", size = 0.2),
+        panel.grid.minor = element_line(colour = "grey", size = 0.1))+
+  theme(text = element_text(size = 25))   
+
+
+print(Plot_Prior_qual_density)
+
+
+ggsave(file = paste(OUTPUT_ROOT, "/Plot_Prior_qual_density.pdf",  sep=""),Plot_Prior_qual_density, width=4, height=3, units="in", scale=3)
+
 
 print(Plot_Prior_qual_density)
 
@@ -226,14 +238,22 @@ print(Plot_Prior_qual_density)
 #plotting likelihood (quantitative evidence only)
 Plot_Likelihood = ggplot(density_ALL_Construct, aes(x = logOddsRatio, y = Construct, height=Likelihood, group = Construct)) +
   geom_density_ridges(stat = "identity", scale = 1) +
-  xlim(-2, 2  )
+  xlim(-6,6) +
+  theme(plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
+        panel.grid.major = element_line(colour = "grey", size = 0.2),
+        panel.grid.minor = element_line(colour = "grey", size = 0.1))+
+  theme(text = element_text(size = 25))   
 
 print(Plot_Likelihood)
 
 #plotting the posterior resulted from updating prior with likelihood 
 Plot_posterior_QualplusQuant = ggplot(density_ALL_Construct, aes(x = logOddsRatio, y = Construct, height=posterior_QualplusQuant, group = Construct)) +
   geom_density_ridges(stat = "identity", scale = 1) +
-  xlim(-2, 3  )
+  xlim(-6,6) +
+  theme(plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
+      panel.grid.major = element_line(colour = "grey", size = 0.2),
+      panel.grid.minor = element_line(colour = "grey", size = 0.1))+
+  theme(text = element_text(size = 25))   
 
 print(Plot_posterior_QualplusQuant)
 
@@ -245,12 +265,5 @@ print(Plot_posterior_QualplusQuant)
 #print(Plot_posterior_All)
 
 
-plots.dir.path <- list.files(tempdir(), pattern="rs-graphics", full.names = TRUE); 
-plots.png.paths <- list.files(plots.dir.path, pattern=".png", full.names = TRUE)
-
-
-x_directory_quant <- file.path(paste(OUTPUT_ROOT, "/PLOTS_QUANT_and_qual", sep=""))
-dir.create(x_directory_quant)
-file.copy(from=plots.png.paths, to=x_directory_quant)
 
 

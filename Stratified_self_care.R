@@ -1,4 +1,25 @@
 
+
+
+library(tidyverse)
+library(dplyr)
+library(assertthat)
+library(ggplot2)
+library(filenamer)
+library(reshape2)  
+library(tibble)
+library(compute.es)
+library(metafor)
+library(bayesplot)
+library(ggplot2)
+library(ggridges)
+library(rstan) 
+library(coda)
+library(bayestestR)
+library(HDInterval)
+library(assertthat)
+library(RColorBrewer)
+
 ## Set the root directory to look for source code.
 SOURCE_ROOT = "/Users/aliya/my_docs/proj/bayesian_meta_analysis/"
 ## Set the root location on the user's local machine to save output files.
@@ -13,14 +34,14 @@ source(paste(SOURCE_ROOT, "Summary_stats_table_qual_and_quant.R", sep=""), local
 
 x = read.csv(paste(SOURCE_ROOT, "input.csv", sep="")) #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately. 
 
-data = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep=""))  #data extracted from  the quantitative studies, the file lists all data including the data that was not used for the meta-analysis. the data not included in the meta-anslysis is for the cases when insufficient data was reported in the article for it to be pooled in the meta-analysis (for example mean but no SD or variance etc)
+All_data_extracted = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep=""))  #data extracted from  the quantitative studies, the file lists all data including the data that was not used for the meta-analysis. the data not included in the meta-anslysis is for the cases when insufficient data was reported in the article for it to be pooled in the meta-analysis (for example mean but no SD or variance etc)
 JaarsmaInternationalStudy = read.csv(paste(SOURCE_ROOT, "HyperPriorData.csv", sep="")) #data used for eliciting the hyperprior (general physical activity levels in HF estimated from a large internaitonal study (Jaarsma et al., 2013)
 
 
 #the coplinace rate with the self-care: self-care item : do you exercise regularly? as part of the self-care scale. 
 
-data_self_care = subset(data, data$PA_Varme == "ComplienceRate" &  data$Construct == "SocialSupport")
 
+data = All_data_extracted %>% filter(PA_Varme == "ComplienceRate" &  Construct == "SocialSupport")
 
 
 
@@ -257,21 +278,14 @@ Compare_distributions_plot = ggplot(d, aes(x = logOddsRatio,
   scale_fill_manual(values = c("#FC8D62" , "#E78AC3" ,"#66C2A5"))+
   scale_color_manual(values = c("#FC8D62" , "#E78AC3" ,"#66C2A5"))+
   
-  xlim(-2,3) +
-  
-  theme(plot.margin = margin(1, 1, 1, 1, "cm"),
+  theme(plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
         panel.grid.major = element_line(colour = "grey", size = 0.2),
-        panel.grid.minor = element_line(colour = "grey", size = 0.1)) 
-
-
+        panel.grid.minor = element_line(colour = "grey", size = 0.1))+ 
+  xlim(-6,6) +
+  
+  theme(text = element_text(size = 25))   
 
 print(Compare_distributions_plot)
 
+ggsave(file = paste(OUTPUT_ROOT, "/Compare_distributions_plot_self_care.pdf",  sep=""),Compare_distributions_plot, width=4, height=3, units="in", scale=3)
 
-plots.dir.path <- list.files(tempdir(), pattern="rs-graphics", full.names = TRUE); 
-plots.png.paths <- list.files(plots.dir.path, pattern=".png", full.names = TRUE)
-
-
-x_directory_quant <- file.path(paste(OUTPUT_ROOT))
-dir.create(x_directory_quant)
-file.copy(from=plots.png.paths, to=x_directory_quant)
