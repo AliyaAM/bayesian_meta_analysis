@@ -46,6 +46,11 @@ data = All_data_extracted %>% filter(PA_Varme == "ComplienceRate" &  Construct =
 
 
 
+source(paste(SOURCE_ROOT, "ConvertEffectsizes.R", sep="")) #### convert effect sizes from individual studies  (F-value, Binary (Absolute numbers and proportions), r coeffcient and SMD) into log odds ratios. All quantitative results are converted to log OR in order to be comptable with qualitative evidence, we treated all results as binary. 
+likelihood_data =  ConvertEffectsizes(data = data)
+
+
+
 Results_SocialSupport =   BayesUpdateStepByStep(x =x, Construct = "SocialSupport"  )
 
 Summary_Results_SocialSupport= Summary_stats_table_qual_and_quant(x =x, Construct = "SocialSupport")
@@ -101,8 +106,14 @@ colnames(Summary_Results_SocialSupport) = c("Construct",
                                                                                              "95% CrI", 
                                                                                              "SD")
 
+folder = paste(OUTPUT_ROOT, "stratified_by_PA_results/",  sep="")
+if (file.exists(folder)) {
+  cat("The folder already exists")
+} else {
+  dir.create(folder)
+}
 
-write.table(Summary_Results_SocialSupport, file = paste(OUTPUT_ROOT, "_edited_Summary_Results_SocialSupport.csv", sep=""), append = FALSE, quote = TRUE, sep = ", ",
+write.table(Summary_Results_SocialSupport, file = paste(folder, "_edited_Summary_Results_SocialSupport.csv", sep=""), append = FALSE, quote = TRUE, sep = ", ",
             eol = "\r", na = "NA", dec = ".", row.names = FALSE,
             col.names = TRUE, qmethod = c("escape", "double"),
             fileEncoding = "" )
@@ -171,7 +182,13 @@ print(Plot_Prior_qual_density)
 #plotting likelihood (quantitative evidence only)
 Plot_Likelihood = ggplot(SocialSupport_density_by_Construct, aes(x = logOddsRatio, y = Construct, height=Likelihood, group = Construct)) +
   geom_density_ridges(stat = "identity", scale = 1) +
-  xlim(-2, 2  )
+  xlim(-3,3) +
+  
+  theme(text = element_text(size = 25))   
+
+ggsave(file = paste(folder, "/Plot_Likelihood_selfcare.pdf",  sep=""),Plot_Likelihood, width=4, height=3, units="in", scale=3)
+
+
 
 print(Plot_Likelihood)
 
@@ -281,11 +298,19 @@ Compare_distributions_plot = ggplot(d, aes(x = logOddsRatio,
   theme(plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
         panel.grid.major = element_line(colour = "grey", size = 0.2),
         panel.grid.minor = element_line(colour = "grey", size = 0.1))+ 
-  xlim(-6,6) +
+  xlim(-3,3) +
   
   theme(text = element_text(size = 25))   
 
 print(Compare_distributions_plot)
 
-ggsave(file = paste(OUTPUT_ROOT, "/Compare_distributions_plot_self_care.pdf",  sep=""),Compare_distributions_plot, width=4, height=3, units="in", scale=3)
+
+folder = paste(OUTPUT_ROOT, "stratified_by_PA_results/",  sep="")
+if (file.exists(folder)) {
+  cat("The folder already exists")
+} else {
+  dir.create(folder)
+}
+
+ggsave(file = paste(folder, "/Compare_distributions_plot_self_care.pdf",  sep=""),Compare_distributions_plot, width=4, height=3, units="in", scale=3)
 

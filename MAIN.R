@@ -28,13 +28,22 @@ x = read.csv(paste(SOURCE_ROOT, "input.csv", sep="")) #to perform the analysis w
 data = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep=""))  #data extracted from  the quantitative studies, the file lists all data including the data that was not used for the meta-analysis. the data not included in the meta-anslysis is for the cases when insufficient data was reported in the article for it to be pooled in the meta-analysis (for example mean but no SD or variance etc)
 JaarsmaInternationalStudy = read.csv(paste(SOURCE_ROOT, "HyperPriorData.csv", sep="")) #data used for eliciting the hyperprior (general physical activity levels in HF estimated from a large internaitonal study (Jaarsma et al., 2013)
 
+
+
+source(paste(SOURCE_ROOT, "ConvertEffectsizes.R", sep="")) #### convert effect sizes from individual studies  (F-value, Binary (Absolute numbers and proportions), r coeffcient and SMD) into log odds ratios. All quantitative results are converted to log OR in order to be comptable with qualitative evidence, we treated all results as binary. 
+likelihood_data =  ConvertEffectsizes(data = data)
+
+
 #run Bayesian meta-analysis for two procedures separately: 
 
 #on the constructs that were present in both qualitative and quantitative studies (the main plot is outputed from the function below): 
 source(paste(SOURCE_ROOT, "Bayesian_MA_Quant_and_Qual.R", sep=""))
 
-#and constructs that were present in quantitative studies only (the main plot is outputed from the function below): 
+
+
+#constructs that were present in quantitative studies only (the main plot is outputed from the function below): 
 source(paste(SOURCE_ROOT, "BayesianMA_Quant_only.R", sep=""))
+
 
 
 #plot the fidings with and without qualitative evidence next to each other for comparison

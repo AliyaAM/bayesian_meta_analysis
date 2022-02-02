@@ -9,6 +9,7 @@ library(dplyr)
 
 #read data extracted from the individual included papers: 
 
+ConvertEffectsizes = function(data){
 
 #compute from the F-value 
 results_estimated_from_F = data.frame()
@@ -226,6 +227,19 @@ for (estimate_type in data$estimate_type) {
                                 "Total_N")
  
 
+ filename_likelihood_data <- file.path(paste(OUTPUT_ROOT, "likelihood_data.csv", sep=""))
+ fn_filename_likelihood_data <- as.filename(filename_likelihood_data)
+ make_path(fn_filename_likelihood_data)
+ write.table(likelihood_data, file = filename_likelihood_data, 
+             append = FALSE, 
+             quote = TRUE, 
+             sep = ",", 
+             eol = "\r", 
+             na = "NA", 
+             dec = ".",
+             row.names = FALSE, 
+             col.names = TRUE, 
+             fileEncoding = "" )
  
-
-
+return(params = (likelihood_data))
+}

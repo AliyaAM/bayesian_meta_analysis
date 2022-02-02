@@ -10,15 +10,17 @@ source(paste(SOURCE_ROOT, "BayesUpdateStepByStep.R", sep=""), local = TRUE) # th
 
 source(paste(SOURCE_ROOT, "Summary_stats_table_qual_and_quant.R", sep=""), local = TRUE) # this function (BayesUpdateStepByStep) runs the Bayesian meta-analysis that combines qualitative and quantitative evidence, and outputs the summary stats only 
 
-
-
-
 x = read.csv(paste(SOURCE_ROOT, "input.csv", sep="")) #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately. 
 All_data_extracted = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep=""))  #data extracted from  the quantitative studies, the file lists all data including the data that was not used for the meta-analysis. the data not included in the meta-anslysis is for the cases when insufficient data was reported in the article for it to be pooled in the meta-analysis (for example mean but no SD or variance etc)
 JaarsmaInternationalStudy = read.csv(paste(SOURCE_ROOT, "HyperPriorData.csv", sep="")) #data used for eliciting the hyperprior (general physical activity levels in HF estimated from a large internaitonal study (Jaarsma et al., 2013)
 
 data = filter(All_data_extracted, All_data_extracted$PA_Varme == "AccelerometerUnits")
 PA_Varme = "AccelerometerUnits"
+
+
+
+source(paste(SOURCE_ROOT, "ConvertEffectsizes.R", sep="")) #### convert effect sizes from individual studies  (F-value, Binary (Absolute numbers and proportions), r coeffcient and SMD) into log odds ratios. All quantitative results are converted to log OR in order to be comptable with qualitative evidence, we treated all results as binary. 
+likelihood_data =  ConvertEffectsizes(data = data)
 
 
 x$Construct =c("Age",
@@ -51,16 +53,8 @@ Results_AccelerometerUnits_qual_quant = rbind(Results_AccelerometerUnits_qual_qu
 AccelerometerUnits_PhysicalFunctioning7 = BayesUpdateStepByStep(x = x, Construct = "PhysicalFunctioning5")
 Results_AccelerometerUnits_qual_quant = rbind(Results_AccelerometerUnits_qual_quant, AccelerometerUnits_PhysicalFunctioning7)
 
-
-
-
 AccelerometerUnits_PositiveAttitude2 = BayesUpdateStepByStep(x = x, Construct = "PositiveAttitude")
 Results_AccelerometerUnits_qual_quant = rbind(Results_AccelerometerUnits_qual_quant, AccelerometerUnits_PositiveAttitude2)
-
-
-
-
-
 
 Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant = data.frame()
 
@@ -131,7 +125,16 @@ colnames(Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant
                                                                                       "SD")
 
 
-write.table(Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant, file = paste(OUTPUT_ROOT, "_edited_Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant.csv", sep=""), append = FALSE, quote = TRUE, sep = ", ",
+
+folder = paste(OUTPUT_ROOT, "stratified_by_PA_results/",  sep="")
+if (file.exists(folder)) {
+  cat("The folder already exists")
+} else {
+  dir.create(folder)
+}
+
+
+write.table(Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant, file = paste(folder, "_edited_Summary_stats_table_qual_and_quantResults_AccelerometerUnits_qual_quant.csv", sep=""), append = FALSE, quote = TRUE, sep = ", ",
             eol = "\r", na = "NA", dec = ".", row.names = FALSE,
             col.names = TRUE, qmethod = c("escape", "double"),
             fileEncoding = "" )
@@ -353,6 +356,10 @@ Compare_distributions_plot = ggplot(d, aes(x = logOddsRatio,
   geom_density_ridges(stat = "identity",
                       scale = 1) +
   
+  scale_y_discrete(labels=c(  "6MWT"  =     "6MWT" ,
+                              "PhysicalFunctioning5" = "PhysicalFunctioning", 
+                              "PositiveAttitude"  = "PositiveAttitude"))+
+  
   #scale_fill_brewer(palette = "Set2")+
   #scale_color_brewer(palette = "Set2")+
   scale_fill_manual(values = c("#FC8D62" , "#E78AC3" ,"#66C2A5"))+
@@ -360,12 +367,19 @@ Compare_distributions_plot = ggplot(d, aes(x = logOddsRatio,
   theme(plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
         panel.grid.major = element_line(colour = "grey", size = 0.2),
         panel.grid.minor = element_line(colour = "grey", size = 0.1))+ 
-  xlim(-6,6) +
+  xlim(-3,3) +
   
   theme(text = element_text(size = 25))   
 
 print(Compare_distributions_plot)
 
-ggsave(file = paste(OUTPUT_ROOT, "/Compare_distributions_plot_accelerometer.pdf",  sep=""),Compare_distributions_plot, width=4, height=3, units="in", scale=3)
+folder = paste(OUTPUT_ROOT, "stratified_by_PA_results/",  sep="")
+if (file.exists(folder)) {
+  cat("The folder already exists")
+} else {
+  dir.create(folder)
+}
+
+ggsave(file = paste(folder, "/Compare_distributions_plot_accelerometer.pdf",  sep=""),Compare_distributions_plot, width=4, height=3, units="in", scale=3)
 
 

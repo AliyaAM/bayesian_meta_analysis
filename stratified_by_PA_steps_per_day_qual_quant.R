@@ -43,6 +43,10 @@ PA_Varme = "Steps_day"
 
 
 
+
+source(paste(SOURCE_ROOT, "ConvertEffectsizes.R", sep="")) #### convert effect sizes from individual studies  (F-value, Binary (Absolute numbers and proportions), r coeffcient and SMD) into log odds ratios. All quantitative results are converted to log OR in order to be comptable with qualitative evidence, we treated all results as binary. 
+likelihood_data =  ConvertEffectsizes(data = data)
+
 Results_Steps_day_qual_quant = data.frame()
 unique(data$PA_Varme)
 #social support, 
@@ -136,8 +140,15 @@ colnames(Summary_stats_table_qual_and_quantResults_Steps_day_qual_quant) = c("Co
                                                                                              "95% CrI", 
                                                                                              "SD")
 
+folder = paste(OUTPUT_ROOT, "stratified_by_PA_results/",  sep="")
+if (file.exists(folder)) {
+  cat("The folder already exists")
+} else {
+  dir.create(folder)
+}
 
-write.table(Summary_stats_table_qual_and_quantResults_Steps_day_qual_quant, file = paste(OUTPUT_ROOT, "_edited_Summary_stats_table_qual_and_quantResults_Steps_day_qual_quant.csv", sep=""), append = FALSE, quote = TRUE, sep = ", ",
+
+write.table(Summary_stats_table_qual_and_quantResults_Steps_day_qual_quant, file = paste(folder, "_edited_Summary_stats_table_qual_and_quantResults_Steps_day_qual_quant.csv", sep=""), append = FALSE, quote = TRUE, sep = ", ",
             eol = "\r", na = "NA", dec = ".", row.names = FALSE,
             col.names = TRUE, qmethod = c("escape", "double"),
             fileEncoding = "" )
@@ -145,7 +156,7 @@ write.table(Summary_stats_table_qual_and_quantResults_Steps_day_qual_quant, file
 
 density_by_Construct_stratified = function(data, Construct){
   index = data$Construct == Construct
-  logOddsRatio = seq(-6, 6 , length=1000)
+  logOddsRatio = seq(-6, 9 , length=1000)
   filtered_data = filter(data, Construct == data[index,]$Construct)
   
   # the results of the expert elicitation task 
@@ -353,15 +364,22 @@ Compare_distributions_plot_steps_per_day = ggplot(d, aes(x = logOddsRatio,
   theme(plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
         panel.grid.major = element_line(colour = "grey", size = 0.2),
         panel.grid.minor = element_line(colour = "grey", size = 0.1))+ 
-  xlim(-6,6) +
+  xlim(-6,9) +
 
   theme(text = element_text(size = 25))   
 
 
+folder = paste(OUTPUT_ROOT, "stratified_by_PA_results/",  sep="")
+if (file.exists(folder)) {
+  cat("The folder already exists")
+} else {
+  dir.create(folder)
+}
+
 
 print(Compare_distributions_plot_steps_per_day)
 
-ggsave(file = paste(OUTPUT_ROOT, "/Compare_distributions_plot_steps_per_day.pdf",  sep=""),Compare_distributions_plot_steps_per_day, width=4, height=3, units="in", scale=3)
+ggsave(file = paste(folder, "/Compare_distributions_plot_steps_per_day.pdf",  sep=""),Compare_distributions_plot_steps_per_day, width=4, height=3, units="in", scale=3)
 
 
 #dev.off() 

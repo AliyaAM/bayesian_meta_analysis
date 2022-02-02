@@ -1,115 +1,135 @@
 
 
+
+
+library(tidyverse)
+library(dplyr)
+library(assertthat)
+library(ggplot2)
+library(filenamer)
+library(reshape2)  
+library(tibble)
+library(compute.es)
+library(metafor)
+library(bayesplot)
+library(ggplot2)
+library(ggridges)
+library(rstan) 
+library(coda)
+library(bayestestR)
+library(HDInterval)
+library(assertthat)
+library(RColorBrewer)
+
+
+
 # Set the root directory to look for source code.
 SOURCE_ROOT = "/Users/aliya/my_docs/proj/bayesian_meta_analysis/"
 ## Set the root location on the user's local machine to save output files.
 OUTPUT_ROOT = "/Users/aliya/my_docs/proj/bayesian_meta_analysis/"
 
 
+x = read.csv(paste(SOURCE_ROOT, "input.csv", sep="")) #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately. 
+JaarsmaInternationalStudy = read.csv(paste(SOURCE_ROOT, "HyperPriorData.csv", sep="")) #data used for eliciting the hyperprior (general physical activity levels in HF estimated from a large internaitonal study (Jaarsma et al., 2013)
+ALL_extracted_data = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep=""))  #data extracted from  the quantitative studies, the file lists all data including the data that was not used for the meta-analysis. the data not included in the meta-anslysis is for the cases when insufficient data was reported in the article for it to be pooled in the meta-analysis (for example mean but no SD or variance etc)
+
 
 source(paste(SOURCE_ROOT, "BayesUpdate_Quant.R", sep="")) # function that runs Bayesian meta-analysis of quantitative evidence
-
-
 source(paste(SOURCE_ROOT, "Summary_stats_table.R", sep="")) # function that runs Bayesian meta-analysis of quantitative evidence and outputs the summary stats only as opposed to the entire distribution 
 
-## THE BAYES UPDA
-
-x = read.csv(paste(SOURCE_ROOT, "input.csv", sep="")) #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately. 
-data = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep=""))  #data extracted from  the quantitative studies, the file lists all data including the data that was not used for the meta-analysis. the data not included in the meta-anslysis is for the cases when insufficient data was reported in the article for it to be pooled in the meta-analysis (for example mean but no SD or variance etc)
-JaarsmaInternationalStudy = read.csv(paste(SOURCE_ROOT, "HyperPriorData.csv", sep="")) #data used for eliciting the hyperprior (general physical activity levels in HF estimated from a large internaitonal study (Jaarsma et al., 2013)
-
-EnergyExpend_total_data = subset(data, data$PA_Varme == "EnergyExpend_total")
-PA_Varme = "EnergyExpend_total"
+data = ALL_extracted_data %>% filter(ALL_extracted_data$PA_Varme == "EnergyExpend_total")
 
 
 
-
-unique(EnergyExpend_total_data$Construct)
+unique(data$Construct)
 Results_EnergyExpend_total = data.frame()
-unique(EnergyExpend_total_data$PA_Varme)
+unique(data$PA_Varme)
 
 
-EnergyExpend_totalSmoking = BayesUpdate_Quant(data = EnergyExpend_total_data, Construct = "Smoking")
+source(paste(SOURCE_ROOT, "ConvertEffectsizes.R", sep="")) #### convert effect sizes from individual studies  (F-value, Binary (Absolute numbers and proportions), r coeffcient and SMD) into log odds ratios. All quantitative results are converted to log OR in order to be comptable with qualitative evidence, we treated all results as binary. 
+likelihood_data =  ConvertEffectsizes(data = data)
+
+EnergyExpend_totalSmoking = BayesUpdate_Quant(data = data, Construct = "Smoking")
 Results_EnergyExpend_total = rbind(Results_EnergyExpend_total, EnergyExpend_totalSmoking)
 
 
-EnergyExpend_total_Income = BayesUpdate_Quant(data = EnergyExpend_total_data, Construct = "Income")
+EnergyExpend_total_Income = BayesUpdate_Quant(data = data, Construct = "Income")
 Results_EnergyExpend_total = rbind(Results_EnergyExpend_total, EnergyExpend_total_Income)
 
 
-EnergyExpend_total_Age = BayesUpdate_Quant(data = EnergyExpend_total_data, Construct = "Age")
+EnergyExpend_total_Age = BayesUpdate_Quant(data = data, Construct = "Age")
 Results_EnergyExpend_total = rbind(Results_EnergyExpend_total, EnergyExpend_total_Age)
 
 
 
-EnergyExpend_total_Ethnicity = BayesUpdate_Quant(data = EnergyExpend_total_data, Construct = "Ethnicity")
+EnergyExpend_total_Ethnicity = BayesUpdate_Quant(data = data, Construct = "Ethnicity")
 Results_EnergyExpend_total = rbind(Results_EnergyExpend_total, EnergyExpend_total_Ethnicity)
 
 
-EnergyExpend_total_LVAD = BayesUpdate_Quant(data = EnergyExpend_total_data, Construct = "LVAD")
+EnergyExpend_total_LVAD = BayesUpdate_Quant(data = data, Construct = "LVAD")
 Results_EnergyExpend_total = rbind(Results_EnergyExpend_total, EnergyExpend_total_LVAD)
 
 
-EnergyExpend_total_PhysicalFunctioning7 = BayesUpdate_Quant(data = EnergyExpend_total_data, Construct = "PhysicalFunctioning7")
+EnergyExpend_total_PhysicalFunctioning7 = BayesUpdate_Quant(data = data, Construct = "PhysicalFunctioning7")
 Results_EnergyExpend_total = rbind(Results_EnergyExpend_total, EnergyExpend_total_PhysicalFunctioning7)
 
 
 
-EnergyExpend_total_BMI = BayesUpdate_Quant(data = EnergyExpend_total_data, Construct = "BMI")
+EnergyExpend_total_BMI = BayesUpdate_Quant(data = data, Construct = "BMI")
 Results_EnergyExpend_total = rbind(Results_EnergyExpend_total, EnergyExpend_total_BMI)
 
 
-EnergyExpend_total_HFrEF_Yes = BayesUpdate_Quant(data = EnergyExpend_total_data, Construct = "HFrEF_Yes")
+EnergyExpend_total_HFrEF_Yes = BayesUpdate_Quant(data = data, Construct = "HFrEF_Yes")
 Results_EnergyExpend_total = rbind(Results_EnergyExpend_total, EnergyExpend_total_HFrEF_Yes)
 
 
 
-EnergyExpend_total_SelfEfficacy = BayesUpdate_Quant(data = EnergyExpend_total_data, Construct = "SelfEfficacy")
+EnergyExpend_total_SelfEfficacy = BayesUpdate_Quant(data = data, Construct = "SelfEfficacy")
 Results_EnergyExpend_total = rbind(Results_EnergyExpend_total, EnergyExpend_total_SelfEfficacy)
 
 
-EnergyExpend_total_Employment = BayesUpdate_Quant(data = EnergyExpend_total_data, Construct = "Employment")
+EnergyExpend_total_Employment = BayesUpdate_Quant(data = data, Construct = "Employment")
 Results_EnergyExpend_total = rbind(Results_EnergyExpend_total, EnergyExpend_total_Employment)
 
 
 
-EnergyExpend_total_NegativeAttitude2 = BayesUpdate_Quant(data = EnergyExpend_total_data, Construct = "NegativeAttitude2")
+EnergyExpend_total_NegativeAttitude2 = BayesUpdate_Quant(data = data, Construct = "NegativeAttitude2")
 Results_EnergyExpend_total = rbind(Results_EnergyExpend_total, EnergyExpend_total_NegativeAttitude2)
 
 
 
-EnergyExpend_total_PositiveAttitude2 = BayesUpdate_Quant(data = EnergyExpend_total_data, Construct = "PositiveAttitude2")
+EnergyExpend_total_PositiveAttitude2 = BayesUpdate_Quant(data = data, Construct = "PositiveAttitude2")
 Results_EnergyExpend_total = rbind(Results_EnergyExpend_total, EnergyExpend_total_PositiveAttitude2)
 
 
-EnergyExpend_total_Symptoms = BayesUpdate_Quant(data = EnergyExpend_total_data, Construct = "Symptoms")
+EnergyExpend_total_Symptoms = BayesUpdate_Quant(data = data, Construct = "Symptoms")
 Results_EnergyExpend_total = rbind(Results_EnergyExpend_total, EnergyExpend_total_Symptoms)
 
 
 
-EnergyExpend_total_Symptoms_distress = BayesUpdate_Quant(data = EnergyExpend_total_data, Construct = "Symptoms_distress")
+EnergyExpend_total_Symptoms_distress = BayesUpdate_Quant(data = data, Construct = "Symptoms_distress")
 Results_EnergyExpend_total = rbind(Results_EnergyExpend_total, EnergyExpend_total_Symptoms_distress)
 
 
-EnergyExpend_total_6MWT = BayesUpdate_Quant(data = EnergyExpend_total_data, Construct = "6MWT")
+EnergyExpend_total_6MWT = BayesUpdate_Quant(data = data, Construct = "6MWT")
 Results_EnergyExpend_total = rbind(Results_EnergyExpend_total, EnergyExpend_total_6MWT)
 
-EnergyExpend_total_Comorbidity = BayesUpdate_Quant(data = EnergyExpend_total_data, Construct = "Comorbidity1")
+EnergyExpend_total_Comorbidity = BayesUpdate_Quant(data = data, Construct = "Comorbidity1")
 Results_EnergyExpend_total = rbind(Results_EnergyExpend_total, EnergyExpend_total_Comorbidity)
 
 
-EnergyExpend_total_LVEF = BayesUpdate_Quant(data = EnergyExpend_total_data, Construct = "LVEF")
+EnergyExpend_total_LVEF = BayesUpdate_Quant(data = data, Construct = "LVEF")
 Results_EnergyExpend_total = rbind(Results_EnergyExpend_total, EnergyExpend_total_LVEF)
 
-EnergyExpend_total_Depression = BayesUpdate_Quant(data = EnergyExpend_total_data, Construct = "Depression2")
+EnergyExpend_total_Depression = BayesUpdate_Quant(data = data, Construct = "Depression2")
 Results_EnergyExpend_total = rbind(Results_EnergyExpend_total, EnergyExpend_total_Depression)
 #####
 
-EnergyExpend_total_Partner= BayesUpdate_Quant(data = EnergyExpend_total_data, Construct = "Partner")
+EnergyExpend_total_Partner= BayesUpdate_Quant(data = data, Construct = "Partner")
 Results_EnergyExpend_total = rbind(Results_EnergyExpend_total, EnergyExpend_total_Partner)
 
 
-EnergyExpend_total_HFDuration = BayesUpdate_Quant(data = EnergyExpend_total_data, Construct = "HFDuration")
+EnergyExpend_total_HFDuration = BayesUpdate_Quant(data = data, Construct = "HFDuration")
 Results_EnergyExpend_total = rbind(Results_EnergyExpend_total, EnergyExpend_total_HFDuration)
 
 
@@ -120,89 +140,89 @@ Summary_stats_tableResults_EnergyExpend_total = data.frame()
 
 
 
-Summary_stats_tableEnergyExpend_total_Smoking = Summary_stats_table(data = EnergyExpend_total_data, Construct = "Smoking")
+Summary_stats_tableEnergyExpend_total_Smoking = Summary_stats_table(data = data, Construct = "Smoking")
 Summary_stats_tableResults_EnergyExpend_total = rbind(Summary_stats_tableResults_EnergyExpend_total, Summary_stats_tableEnergyExpend_total_Smoking)
 
 
-Summary_stats_tableEnergyExpend_total_Income = Summary_stats_table(data = EnergyExpend_total_data, Construct = "Income")
+Summary_stats_tableEnergyExpend_total_Income = Summary_stats_table(data = data, Construct = "Income")
 Summary_stats_tableResults_EnergyExpend_total = rbind(Summary_stats_tableResults_EnergyExpend_total, Summary_stats_tableEnergyExpend_total_Income)
 
 
 
 
-Summary_stats_tableEnergyExpend_total_Age = Summary_stats_table(data = EnergyExpend_total_data, Construct = "Age")
+Summary_stats_tableEnergyExpend_total_Age = Summary_stats_table(data = data, Construct = "Age")
 Summary_stats_tableResults_EnergyExpend_total = rbind(Summary_stats_tableResults_EnergyExpend_total, Summary_stats_tableEnergyExpend_total_Age)
 
 
-Summary_stats_tableEnergyExpend_total_Comorbidity = Summary_stats_table(data = EnergyExpend_total_data, Construct = "Comorbidity1")
+Summary_stats_tableEnergyExpend_total_Comorbidity = Summary_stats_table(data = data, Construct = "Comorbidity1")
 Summary_stats_tableResults_EnergyExpend_total = rbind(Summary_stats_tableResults_EnergyExpend_total, Summary_stats_tableEnergyExpend_total_Comorbidity)
 
-Summary_stats_tableEnergyExpend_total_6MWT = Summary_stats_table(data = EnergyExpend_total_data, Construct = "6MWT")
+Summary_stats_tableEnergyExpend_total_6MWT = Summary_stats_table(data = data, Construct = "6MWT")
 Summary_stats_tableResults_EnergyExpend_total = rbind(Summary_stats_tableResults_EnergyExpend_total, Summary_stats_tableEnergyExpend_total_6MWT)
 
-Summary_stats_tableEnergyExpend_total_LVEF = Summary_stats_table(data = EnergyExpend_total_data, Construct = "LVEF")
+Summary_stats_tableEnergyExpend_total_LVEF = Summary_stats_table(data = data, Construct = "LVEF")
 Summary_stats_tableResults_EnergyExpend_total = rbind(Summary_stats_tableResults_EnergyExpend_total, Summary_stats_tableEnergyExpend_total_LVEF)
 
 
-Summary_stats_tableEnergyExpend_total_Depression = Summary_stats_table(data = EnergyExpend_total_data, Construct = "Depression2")
+Summary_stats_tableEnergyExpend_total_Depression = Summary_stats_table(data = data, Construct = "Depression2")
 Summary_stats_tableResults_EnergyExpend_total = rbind(Summary_stats_tableResults_EnergyExpend_total, Summary_stats_tableEnergyExpend_total_Depression)
 
 
 
-Summary_stats_tableEnergyExpend_total_Partner = Summary_stats_table(data = EnergyExpend_total_data, Construct = "Partner")
+Summary_stats_tableEnergyExpend_total_Partner = Summary_stats_table(data = data, Construct = "Partner")
 Summary_stats_tableResults_EnergyExpend_total = rbind(Summary_stats_tableResults_EnergyExpend_total, Summary_stats_tableEnergyExpend_total_Partner)
 
 
 
-Summary_stats_tableEnergyExpend_total_HFDuration = Summary_stats_table(data = EnergyExpend_total_data, Construct = "HFDuration")
+Summary_stats_tableEnergyExpend_total_HFDuration = Summary_stats_table(data = data, Construct = "HFDuration")
 Summary_stats_tableResults_EnergyExpend_total = rbind(Summary_stats_tableResults_EnergyExpend_total, Summary_stats_tableEnergyExpend_total_HFDuration)
 
 
-Summary_stats_tableEnergyExpend_total_Ethnicity  = Summary_stats_table(data = EnergyExpend_total_data, Construct = "Ethnicity")
+Summary_stats_tableEnergyExpend_total_Ethnicity  = Summary_stats_table(data = data, Construct = "Ethnicity")
 Summary_stats_tableResults_EnergyExpend_total = rbind(Summary_stats_tableResults_EnergyExpend_total, Summary_stats_tableEnergyExpend_total_Ethnicity)
 
 
-Summary_stats_tableEnergyExpend_total_LVAD  = Summary_stats_table(data = EnergyExpend_total_data, Construct = "LVAD")
+Summary_stats_tableEnergyExpend_total_LVAD  = Summary_stats_table(data = data, Construct = "LVAD")
 Summary_stats_tableResults_EnergyExpend_total = rbind(Summary_stats_tableResults_EnergyExpend_total, Summary_stats_tableEnergyExpend_total_LVAD)
 
 
-Summary_stats_tableEnergyExpend_total_PhysicalFunctioning7  = Summary_stats_table(data = EnergyExpend_total_data, Construct = "PhysicalFunctioning7")
+Summary_stats_tableEnergyExpend_total_PhysicalFunctioning7  = Summary_stats_table(data = data, Construct = "PhysicalFunctioning7")
 Summary_stats_tableResults_EnergyExpend_total = rbind(Summary_stats_tableResults_EnergyExpend_total, Summary_stats_tableEnergyExpend_total_PhysicalFunctioning7)
 
 
-Summary_stats_tableEnergyExpend_total_BMI = Summary_stats_table(data = EnergyExpend_total_data, Construct = "BMI")
+Summary_stats_tableEnergyExpend_total_BMI = Summary_stats_table(data = data, Construct = "BMI")
 Summary_stats_tableResults_EnergyExpend_total = rbind(Summary_stats_tableResults_EnergyExpend_total, Summary_stats_tableEnergyExpend_total_BMI)
 
 
 
-Summary_stats_tableEnergyExpend_total_HFrEF_Yes  = Summary_stats_table(data = EnergyExpend_total_data, Construct = "HFrEF_Yes")
+Summary_stats_tableEnergyExpend_total_HFrEF_Yes  = Summary_stats_table(data = data, Construct = "HFrEF_Yes")
 Summary_stats_tableResults_EnergyExpend_total = rbind(Summary_stats_tableResults_EnergyExpend_total, Summary_stats_tableEnergyExpend_total_HFrEF_Yes)
 
 
-Summary_stats_tableEnergyExpend_total_SelfEfficacy  = Summary_stats_table(data = EnergyExpend_total_data, Construct = "SelfEfficacy")
+Summary_stats_tableEnergyExpend_total_SelfEfficacy  = Summary_stats_table(data = data, Construct = "SelfEfficacy")
 Summary_stats_tableResults_EnergyExpend_total = rbind(Summary_stats_tableResults_EnergyExpend_total, Summary_stats_tableEnergyExpend_total_SelfEfficacy)
 
 
 
-Summary_stats_tableEnergyExpend_total_Employment  = Summary_stats_table(data = EnergyExpend_total_data, Construct = "Employment")
+Summary_stats_tableEnergyExpend_total_Employment  = Summary_stats_table(data = data, Construct = "Employment")
 Summary_stats_tableResults_EnergyExpend_total = rbind(Summary_stats_tableResults_EnergyExpend_total, Summary_stats_tableEnergyExpend_total_Employment)
 
 
-Summary_stats_tableEnergyExpend_total_NegativeAttitude2  = Summary_stats_table(data = EnergyExpend_total_data, Construct = "NegativeAttitude2")
+Summary_stats_tableEnergyExpend_total_NegativeAttitude2  = Summary_stats_table(data = data, Construct = "NegativeAttitude2")
 Summary_stats_tableResults_EnergyExpend_total = rbind(Summary_stats_tableResults_EnergyExpend_total, Summary_stats_tableEnergyExpend_total_NegativeAttitude2)
 
 
-Summary_stats_tableEnergyExpend_total_PositiveAttitude2  = Summary_stats_table(data = EnergyExpend_total_data, Construct = "PositiveAttitude2")
+Summary_stats_tableEnergyExpend_total_PositiveAttitude2  = Summary_stats_table(data = data, Construct = "PositiveAttitude2")
 Summary_stats_tableResults_EnergyExpend_total = rbind(Summary_stats_tableResults_EnergyExpend_total, Summary_stats_tableEnergyExpend_total_PositiveAttitude2)
 
 
 
-Summary_stats_tableEnergyExpend_total_Symptoms  = Summary_stats_table(data = EnergyExpend_total_data, Construct = "Symptoms")
+Summary_stats_tableEnergyExpend_total_Symptoms  = Summary_stats_table(data = data, Construct = "Symptoms")
 Summary_stats_tableResults_EnergyExpend_total = rbind(Summary_stats_tableResults_EnergyExpend_total, Summary_stats_tableEnergyExpend_total_Symptoms)
 
 
 
-Summary_stats_tableEnergyExpend_total_Symptoms_distress  = Summary_stats_table(data = EnergyExpend_total_data, Construct = "Symptoms_distress")
+Summary_stats_tableEnergyExpend_total_Symptoms_distress  = Summary_stats_table(data = data, Construct = "Symptoms_distress")
 Summary_stats_tableResults_EnergyExpend_total = rbind(Summary_stats_tableResults_EnergyExpend_total, Summary_stats_tableEnergyExpend_total_Symptoms_distress)
 
 
@@ -252,7 +272,18 @@ colnames(Summary_stats_tableResults_EnergyExpend_total) = c("Construct",
                                                           "SD")
 
 
-write.table(Summary_stats_tableResults_EnergyExpend_total, file = paste(OUTPUT_ROOT, "_edited_Summary_stats_tableResults_EnergyExpend_total_QUANT.csv", sep=""), append = FALSE, quote = TRUE, sep = ", ",
+
+
+folder = paste(OUTPUT_ROOT, "stratified_by_PA_results/",  sep="")
+if (file.exists(folder)) {
+  cat("The folder already exists")
+} else {
+  dir.create(folder)
+}
+
+
+
+write.table(Summary_stats_tableResults_EnergyExpend_total, file = paste(folder, "_edited_Summary_stats_tableResults_EnergyExpend_total_QUANT.csv", sep=""), append = FALSE, quote = TRUE, sep = ", ",
             eol = "\r", na = "NA", dec = ".", row.names = FALSE,
             col.names = TRUE, qmethod = c("escape", "double"),
             fileEncoding = "" )
@@ -261,9 +292,9 @@ write.table(Summary_stats_tableResults_EnergyExpend_total, file = paste(OUTPUT_R
 
 
 density_by_Construct_stratified = function(data, Construct){
-  index = EnergyExpend_total_data$Construct == Construct
+  index = data$Construct == Construct
   logOddsRatio = seq( -3, 4 , length=1000)
-  filtered_data = filter(data, Construct == EnergyExpend_total_data[index,]$Construct)
+  filtered_data = filter(data, Construct == data[index,]$Construct)
   
   
   # likelihood (quantitative evidence only)
@@ -376,9 +407,9 @@ density_ALL_Construct_quant_stratified = cbind(density_ALL_Construct_quant_strat
 
 
 #plotting likelihood (quantitative evidence only)
-Plot_Likelihood_stratified = ggplot(density_ALL_Construct_quant_stratified, aes(x = logOddsRatio, y = Construct, height=Likelihood, group = Construct)) +
+Plot_Likelihood_stratified_EE = ggplot(density_ALL_Construct_quant_stratified, aes(x = logOddsRatio, y = Construct, height=Likelihood, group = Construct)) +
   geom_density_ridges(stat = "identity", scale = 1) +
-  xlim(-3, 4  ) +
+  xlim(-3,3) +
   
   # in the meta-analysis not stratified by the PA type, when a study included multiple PA outcomes we chose accelerometer units above energy expenditure and energy expenditure above self-report, 
   #self-report above a binary data, 
@@ -410,4 +441,15 @@ Plot_Likelihood_stratified = ggplot(density_ALL_Construct_quant_stratified, aes(
                                     
 
 print(Plot_Likelihood_stratified)
+
+
+folder = paste(OUTPUT_ROOT, "stratified_by_PA_results/",  sep="")
+if (file.exists(folder)) {
+  cat("The folder already exists")
+} else {
+  dir.create(folder)
+}
+
+
+ggsave(file = paste(folder, "Plot_Likelihood_stratified_EE.pdf",  sep=""),Plot_Likelihood_stratified_EE, width=4, height=3, units="in", scale=3)
 

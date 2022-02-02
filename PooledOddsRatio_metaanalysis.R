@@ -2,7 +2,6 @@
 library(dplyr)
 library(metafor)
 
-x = read.csv(paste(SOURCE_ROOT, "input.csv", sep=""))  # requires this data for all indexed functions that read information for each construct across studies 
 
 
 source(paste(SOURCE_ROOT, "ConvertEffectsizes.R", sep=""))

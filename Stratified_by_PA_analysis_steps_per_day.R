@@ -15,10 +15,10 @@ source(paste(SOURCE_ROOT, "Summary_stats_table.R", sep="")) # function that runs
 ## THE BAYES UPDA
 
 x = read.csv(paste(SOURCE_ROOT, "input.csv", sep="")) #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately. 
-data = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep=""))  #data extracted from  the quantitative studies, the file lists all data including the data that was not used for the meta-analysis. the data not included in the meta-anslysis is for the cases when insufficient data was reported in the article for it to be pooled in the meta-analysis (for example mean but no SD or variance etc)
+All_extracted_data  = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_20March2020.csv", sep=""))  #data extracted from  the quantitative studies, the file lists all data including the data that was not used for the meta-analysis. the data not included in the meta-anslysis is for the cases when insufficient data was reported in the article for it to be pooled in the meta-analysis (for example mean but no SD or variance etc)
 JaarsmaInternationalStudy = read.csv(paste(SOURCE_ROOT, "HyperPriorData.csv", sep="")) #data used for eliciting the hyperprior (general physical activity levels in HF estimated from a large internaitonal study (Jaarsma et al., 2013)
 
-Steps_day_data = subset(data, data$PA_Varme == "Steps/d_total")
+data = subset(All_extracted_data, All_extracted_data$PA_Varme == "Steps/d_total")
 PA_Varme = "Steps_day"
 #PhysicalFunctioning
 #6MWT
@@ -29,55 +29,50 @@ PA_Varme = "Steps_day"
 #Depression
 #SelfEfficacy
 
-unique(Steps_day_data$Construct)
+unique(data$Construct)
 Results_Steps_day = data.frame()
-unique(Steps_day_data$PA_Varme)
+unique(data$PA_Varme)
 
-Steps_day_Age = BayesUpdate_Quant(data = Steps_day_data, Construct = "Age")
-Results_Steps_day = rbind(Results_Steps_day, Steps_day_Age)
-Steps_day_6MWT = BayesUpdate_Quant(data = Steps_day_data, Construct = "6MWT")
+
+
+
+source(paste(SOURCE_ROOT, "ConvertEffectsizes.R", sep="")) #### convert effect sizes from individual studies  (F-value, Binary (Absolute numbers and proportions), r coeffcient and SMD) into log odds ratios. All quantitative results are converted to log OR in order to be comptable with qualitative evidence, we treated all results as binary. 
+likelihood_data =  ConvertEffectsizes(data = data)
+
+
+Steps_day_6MWT = BayesUpdate_Quant(data = data, Construct = "6MWT")
 Results_Steps_day = rbind(Results_Steps_day, Steps_day_6MWT)
-Steps_day_LVEF = BayesUpdate_Quant(data = Steps_day_data, Construct = "LVEF")
+Steps_day_LVEF = BayesUpdate_Quant(data = data, Construct = "LVEF")
 Results_Steps_day = rbind(Results_Steps_day, Steps_day_LVEF)
-Steps_day_PeakVO2 = BayesUpdate_Quant(data = Steps_day_data, Construct = "PeakVO2")
+Steps_day_PeakVO2 = BayesUpdate_Quant(data = data, Construct = "PeakVO2")
 Results_Steps_day = rbind(Results_Steps_day, Steps_day_PeakVO2)
-Steps_day_proBNP = BayesUpdate_Quant(data = Steps_day_data, Construct = "proBNP")
+Steps_day_proBNP = BayesUpdate_Quant(data = data, Construct = "proBNP")
 Results_Steps_day = rbind(Results_Steps_day, Steps_day_proBNP)
-Steps_day_Depression = BayesUpdate_Quant(data = Steps_day_data, Construct = "Depression")
-Results_Steps_day = rbind(Results_Steps_day, Steps_day_Depression)
-Steps_day_SelfEfficacy = BayesUpdate_Quant(data = Steps_day_data, Construct = "SelfEfficacy")
-Results_Steps_day = rbind(Results_Steps_day, Steps_day_SelfEfficacy)
 
 
-Steps_day_PhysicalFunctioning = BayesUpdate_Quant(data = Steps_day_data, Construct = "PhysicalFunctioning")
+Steps_day_PhysicalFunctioning = BayesUpdate_Quant(data = data, Construct = "PhysicalFunctioning")
 Results_Steps_day = rbind(Results_Steps_day, Steps_day_PhysicalFunctioning)
 
 
 
 Summary_stats_tableResults_Steps_day = data.frame()
-Summary_stats_tableSteps_day_Age = Summary_stats_table(data = Steps_day_data, Construct = "Age")
-Summary_stats_tableResults_Steps_day = rbind(Summary_stats_tableResults_Steps_day, Summary_stats_tableSteps_day_Age)
 
-Summary_stats_tableSteps_day_6MWT = Summary_stats_table(data = Steps_day_data, Construct = "6MWT")
+Summary_stats_tableSteps_day_6MWT = Summary_stats_table(data = data, Construct = "6MWT")
 Summary_stats_tableResults_Steps_day = rbind(Summary_stats_tableResults_Steps_day, Summary_stats_tableSteps_day_6MWT)
 
-Summary_stats_tableSteps_day_LVEF = Summary_stats_table(data = Steps_day_data, Construct = "LVEF")
+Summary_stats_tableSteps_day_LVEF = Summary_stats_table(data = data, Construct = "LVEF")
 Summary_stats_tableResults_Steps_day = rbind(Summary_stats_tableResults_Steps_day, Summary_stats_tableSteps_day_LVEF)
 
-Summary_stats_tableSteps_day_PeakVO2 = Summary_stats_table(data = Steps_day_data, Construct = "PeakVO2")
+Summary_stats_tableSteps_day_PeakVO2 = Summary_stats_table(data = data, Construct = "PeakVO2")
 Summary_stats_tableResults_Steps_day = rbind(Summary_stats_tableResults_Steps_day, Summary_stats_tableSteps_day_PeakVO2)
 
-Summary_stats_tableSteps_day_proBNP = Summary_stats_table(data = Steps_day_data, Construct = "proBNP")
+Summary_stats_tableSteps_day_proBNP = Summary_stats_table(data = data, Construct = "proBNP")
 Summary_stats_tableResults_Steps_day = rbind(Summary_stats_tableResults_Steps_day, Summary_stats_tableSteps_day_proBNP)
 
-Summary_stats_tableSteps_day_Depression = Summary_stats_table(data = Steps_day_data, Construct = "Depression")
-Summary_stats_tableResults_Steps_day = rbind(Summary_stats_tableResults_Steps_day, Summary_stats_tableSteps_day_Depression)
-
-Summary_stats_tableSteps_day_SelfEfficacy = Summary_stats_table(data = Steps_day_data, Construct = "SelfEfficacy")
-Summary_stats_tableResults_Steps_day = rbind(Summary_stats_tableResults_Steps_day, Summary_stats_tableSteps_day_SelfEfficacy)
 
 
-Summary_stats_tableSteps_day_PhysicalFunctioning = Summary_stats_table(data = Steps_day_data, Construct = "PhysicalFunctioning")
+
+Summary_stats_tableSteps_day_PhysicalFunctioning = Summary_stats_table(data = data, Construct = "PhysicalFunctioning")
 Summary_stats_tableResults_Steps_day = rbind(Summary_stats_tableResults_Steps_day, Summary_stats_tableSteps_day_PhysicalFunctioning)
 
 
@@ -122,17 +117,23 @@ colnames(Summary_stats_tableResults_Steps_day) = c("Construct",
                                                             "95% CrI", 
                                                             "SD")
 
+folder = paste(OUTPUT_ROOT, "stratified_by_PA_results/",  sep="")
+if (file.exists(folder)) {
+  cat("The folder already exists")
+} else {
+  dir.create(folder)
+}
 
-write.table(Summary_stats_tableResults_Steps_day, file = paste(OUTPUT_ROOT, "_edited_Summary_stats_tableResults_Steps_day_QUANT.csv", sep=""), append = FALSE, quote = TRUE, sep = ", ",
+write.table(Summary_stats_tableResults_Steps_day, file = paste(folder, "_edited_Summary_stats_tableResults_Steps_day_QUANT.csv", sep=""), append = FALSE, quote = TRUE, sep = ", ",
             eol = "\r", na = "NA", dec = ".", row.names = FALSE,
             col.names = TRUE, qmethod = c("escape", "double"),
             fileEncoding = "" )
 
 
 density_by_Construct_stratified = function(data, Construct){
-  index = Steps_day_data$Construct == Construct
-  logOddsRatio = seq( -3, 4 , length=1000)
-  filtered_data = filter(data, Construct == Steps_day_data[index,]$Construct)
+  index = data$Construct == Construct
+  logOddsRatio = seq( -6, 9 , length=1000)
+  filtered_data = filter(data, Construct == data[index,]$Construct)
   
   
   # likelihood (quantitative evidence only)
@@ -153,12 +154,9 @@ density_by_Construct_stratified = function(data, Construct){
 
 data = Results_Steps_day
 
-Age_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "Age")
 SixMWT_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "6MWT")
 PhysicalFunctioning_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "PhysicalFunctioning")
 LVEF_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "LVEF")
-SelfEfficacy_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "SelfEfficacy")
-Depression_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "Depression")
 highproBNP_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "proBNP")
 PeakVO2_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "PeakVO2")
 
@@ -168,18 +166,12 @@ height = c(rep(1, 1000),
            rep(2, 1000), 
            rep(3, 1000), 
            rep(4, 1000), 
-           rep(5, 1000), 
-           rep(6, 1000), 
-           rep(7, 1000), 
-           rep(8, 1000))
+           rep(5, 1000))
 
 length(height)
-density_ALL_Construct_quant_stratified = rbind(Age_density_by_Construct_stratified,
-                                               SixMWT_density_by_Construct_stratified, 
+density_ALL_Construct_quant_stratified = rbind(SixMWT_density_by_Construct_stratified, 
                                                PhysicalFunctioning_density_by_Construct_stratified,
                                                LVEF_density_by_Construct_stratified, 
-                                               SelfEfficacy_density_by_Construct_stratified,
-                                               Depression_density_by_Construct_stratified,
                                                highproBNP_density_by_Construct_stratified,
                                                
                                                PeakVO2_density_by_Construct_stratified)
@@ -196,18 +188,22 @@ density_ALL_Construct_quant_stratified = cbind(density_ALL_Construct_quant_strat
 #plotting likelihood (quantitative evidence only)
 Plot_Likelihood_stratified = ggplot(density_ALL_Construct_quant_stratified, aes(x = logOddsRatio, y = Construct, height=Likelihood, group = Construct)) +
   geom_density_ridges(stat = "identity", scale = 1) +
-  xlim(-3, 4  )
+  xlim(-6, 9)+
+  theme(text = element_text(size = 25))   
+
+
+
 print(Plot_Likelihood_stratified)
 
 
-plots.dir.path <- list.files(tempdir(), pattern="rs-graphics", full.names = TRUE); 
-plots.png.paths <- list.files(plots.dir.path, pattern=".png", full.names = TRUE)
+folder = paste(OUTPUT_ROOT, "stratified_by_PA_results/",  sep="")
+if (file.exists(folder)) {
+  cat("The folder already exists")
+} else {
+  dir.create(folder)
+}
+ggsave(file = paste(folder, "/Plot_Likelihood_stratified_steps_per_day.pdf",  sep=""),Plot_Likelihood_stratified, width=4, height=3, units="in", scale=3)
 
-
-x_directory_quant <- file.path(paste(c(OUTPUT_ROOT, PA_Varme), "/PLOTS_QUANT_stratified_by_PA", sep=""))
-
-dir.create(x_directory_quant)
-file.copy(from=plots.png.paths, to=x_directory_quant)
 
 
 #IPAQ_scale = PA_type_stratified(data = data, PA_Varme = "IPAQ_scale")

@@ -30,8 +30,9 @@ unique(data$Construct)
 Results_Exercise_complient_Binary_qual_quant = data.frame()
 unique(data$PA_Varme)
 
-#Age, 6MWT, symptoms, LVEF, selfefficacy, social support, comorbidity, negative attitude, positive attitude, physical functioning 
 
+source(paste(SOURCE_ROOT, "ConvertEffectsizes.R", sep="")) #### convert effect sizes from individual studies  (F-value, Binary (Absolute numbers and proportions), r coeffcient and SMD) into log odds ratios. All quantitative results are converted to log OR in order to be comptable with qualitative evidence, we treated all results as binary. 
+likelihood_data =  ConvertEffectsizes(data = data)
 
 
 Exercise_complient_Binary_6MWT = BayesUpdateStepByStep(x = x, Construct = "6MWT")
@@ -106,7 +107,19 @@ colnames(Summary_stats_table_qual_and_quantResults_Exercise_complient_Binary_qua
                                                                               "SD")
 
 
-write.table(Summary_stats_table_qual_and_quantResults_Exercise_complient_Binary_qual_quant, file = paste(OUTPUT_ROOT, "_edited_Summary_stats_table_qual_and_quantResults_Exercise_complient_Binary_qual_quant.csv", sep=""), append = FALSE, quote = TRUE, sep = ", ",
+
+
+
+folder = paste(OUTPUT_ROOT, "stratified_by_PA_results/",  sep="")
+if (file.exists(folder)) {
+  cat("The folder already exists")
+} else {
+  dir.create(folder)
+}
+
+
+
+write.table(Summary_stats_table_qual_and_quantResults_Exercise_complient_Binary_qual_quant, file = paste(folder, "_edited_Summary_stats_table_qual_and_quantResults_Exercise_complient_Binary_qual_quant.csv", sep=""), append = FALSE, quote = TRUE, sep = ", ",
             eol = "\r", na = "NA", dec = ".", row.names = FALSE,
             col.names = TRUE, qmethod = c("escape", "double"),
             fileEncoding = "" )
@@ -153,14 +166,12 @@ density_by_Construct_stratified = function(data, Construct){
 SixMWT_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_Exercise_complient_Binary_qual_quant, Construct = "6MWT")
 Comorbidity_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_Exercise_complient_Binary_qual_quant, Construct = "Comorbidity")
 
-LVEF_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_Exercise_complient_Binary_qual_quant, Construct = "LVEF")
 
 
 
 
 height = c(rep(1, 1000),
-           rep(2, 1000), 
-           rep(3, 1000))
+           rep(2, 1000))
 
 length(height)
 density_ALL_Construct_quant_stratified = rbind(SixMWT_density_by_Construct_stratified, 
@@ -236,8 +247,8 @@ posterior_name = rep("Posterior (Qual + QUANT)", times = 1000)
 distribution = c(prior_name, likelihood_name, posterior_name)
 
 
-height = c(rep(10, 1000),
-           rep(20, 1000))
+height = c(rep(1, 1000),
+           rep(2, 1000))
 
 
 
@@ -304,12 +315,21 @@ Compare_distributions_plot = ggplot(d, aes(x = logOddsRatio,
   theme(plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
         panel.grid.major = element_line(colour = "grey", size = 0.2),
         panel.grid.minor = element_line(colour = "grey", size = 0.1))+ 
-  xlim(-6,6) +
+  xlim(-3,3) +
   
   theme(text = element_text(size = 25))   
 
 print(Compare_distributions_plot)
 
-ggsave(file = paste(OUTPUT_ROOT, "/Compare_distributions_plot_exercise_compl.pdf",  sep=""),Compare_distributions_plot, width=4, height=3, units="in", scale=3)
+
+
+folder = paste(OUTPUT_ROOT, "stratified_by_PA_results/",  sep="")
+if (file.exists(folder)) {
+  cat("The folder already exists")
+} else {
+  dir.create(folder)
+}
+
+ggsave(file = paste(folder, "/Compare_distributions_plot_exercise_compl.pdf",  sep=""),Compare_distributions_plot, width=4, height=3, units="in", scale=3)
 
 
