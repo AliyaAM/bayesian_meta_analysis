@@ -79,6 +79,10 @@ EnergyExpend_total_BMI = BayesUpdate_Quant(data = data, Construct = "BMI")
 Results_EnergyExpend_total = rbind(Results_EnergyExpend_total, EnergyExpend_total_BMI)
 
 
+EnergyExpend_total_QoL = BayesUpdate_Quant(data = data, Construct = "QoL")
+Results_EnergyExpend_total = rbind(Results_EnergyExpend_total, EnergyExpend_total_QoL)
+
+
 EnergyExpend_total_HFrEF_Yes = BayesUpdate_Quant(data = data, Construct = "HFrEF_Yes")
 Results_EnergyExpend_total = rbind(Results_EnergyExpend_total, EnergyExpend_total_HFrEF_Yes)
 
@@ -166,6 +170,10 @@ Summary_stats_tableResults_EnergyExpend_total = rbind(Summary_stats_tableResults
 
 Summary_stats_tableEnergyExpend_total_Depression = Summary_stats_table(data = data, Construct = "Depression2")
 Summary_stats_tableResults_EnergyExpend_total = rbind(Summary_stats_tableResults_EnergyExpend_total, Summary_stats_tableEnergyExpend_total_Depression)
+
+
+Summary_stats_tableEnergyExpend_total_QoL = Summary_stats_table(data = data, Construct = "QoL")
+Summary_stats_tableResults_EnergyExpend_total = rbind(Summary_stats_tableResults_EnergyExpend_total, Summary_stats_tableEnergyExpend_total_QoL)
 
 
 
@@ -338,6 +346,7 @@ Ethnicity_density_by_Construct_stratified = density_by_Construct_stratified(data
 LVAD_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "LVAD")
 PhysicalFunctioning7_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "PhysicalFunctioning7")
 BMI_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "BMI")
+QoL_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "QoL")
 
 HFrEF_Yes_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "HFrEF_Yes")
 SelfEfficacy_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "SelfEfficacy")
@@ -371,7 +380,8 @@ height = c(rep(1, 1000),
            rep(17, 1000), 
            rep(18, 1000), 
            rep(19, 1000), 
-           rep(20, 1000))
+           rep(20, 1000), 
+           rep(21, 1000))
 
 length(height)
 density_ALL_Construct_quant_stratified = rbind(Age_density_by_Construct_stratified,
@@ -395,7 +405,8 @@ density_ALL_Construct_quant_stratified = rbind(Age_density_by_Construct_stratifi
                                                NegativeAttitude2_density_by_Construct_stratified, 
                                                PositiveAttitude2_density_by_Construct_stratified, 
                                                Symptoms_density_by_Construct_stratified, 
-                                               Symptoms_distress_density_by_Construct_stratified)
+                                               Symptoms_distress_density_by_Construct_stratified,
+                                               QoL_density_by_Construct_stratified)
 
 density_ALL_Construct_quant_stratified = cbind(density_ALL_Construct_quant_stratified, height)
 
@@ -423,24 +434,25 @@ Plot_Likelihood_stratified_EE = ggplot(density_ALL_Construct_quant_stratified, a
                             "Employment"   =        "Employment",
                             "Ethnicity"   =   "Ethnicity", 
                             
-                            "PhysicalFunctioning7" = "PhysicalFunctioning", 
-                            "HFrEF_Yes"     =   "HFrEF_Yes",    
+                            "PhysicalFunctioning7" = "Physical Functioning", 
+                            "HFrEF_Yes"     =   "HFrEF",    
                             "LVEF"    =         "LVEF",    
                                       
-                            "NegativeAttitude2" = "NegativeAttitude", 
-                            "PositiveAttitude2"  = "PositiveAttitude", 
-                            "SelfEfficacy"    =     "SelfEfficacy", 
+                            "NegativeAttitude2" = "Negative Attitude", 
+                            "PositiveAttitude2"  = "Positive Attitude", 
+                            "SelfEfficacy"    =     "Self-efficacy", 
                             "Symptoms" =   "Symptoms", 
-                            "HFDuration"    =  "HFDuration",       
+                            "HFDuration"    =  "HF Duration",       
                             "Income"     =          "Income",   
                             "Smoking" =  "Smoking", 
                             
                             "Partner"   =  "Partner", 
-                            "Symptoms_distress"    =  "Symptoms_distress" , 
-                           "LVAD"   =  "LVAD"))   
+                            "Symptoms_distress"    =  "Symptoms Distress" , 
+                           "LVAD"   =  "LVAD",
+                           "QoL" = "QoL"))   
                                     
 
-print(Plot_Likelihood_stratified)
+print(Plot_Likelihood_stratified_EE)
 
 
 folder = paste(OUTPUT_ROOT, "stratified_by_PA_results/",  sep="")

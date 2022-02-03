@@ -279,12 +279,12 @@ Plot_Likelihood_stratified = ggplot(density_ALL_Construct_quant_stratified, aes(
                             "Age"       =      "Age",
                             "Comorbidity1"   =  "Comorbidity",
                             
-                            "PhysicalFunctioning7" = "PhysicalFunctioning", 
+                            "PhysicalFunctioning7" = "Physical Functioning", 
                             "LVEF"    =         "LVEF",    
                             
-                            "NegativeAttitude2" = "NegativeAttitude", 
-                            "PositiveAttitude2"  = "PositiveAttitude", 
-                            "SelfEfficacy"    =     "SelfEfficacy", 
+                            "NegativeAttitude2" = "Negative Attitude", 
+                            "PositiveAttitude2"  = "Positive Attitude", 
+                            "SelfEfficacy"    =     "Self-efficacy", 
                             "Symptoms" =   "Symptoms"))   
 print(Plot_Likelihood_stratified)
 
@@ -297,15 +297,14 @@ Plot_posterior_QualplusQuant = ggplot(density_ALL_Construct_quant_stratified, ae
   scale_y_discrete(labels=c("6MWT"  =     "6MWT" ,
                             "Age"       =      "Age",
                             "Comorbidity1"   =  "Comorbidity",
-
-                            "PhysicalFunctioning7" = "PhysicalFunctioning", 
+                            
+                            "PhysicalFunctioning7" = "Physical Functioning", 
                             "LVEF"    =         "LVEF",    
                             
-                            "NegativeAttitude2" = "NegativeAttitude", 
-                            "PositiveAttitude2"  = "PositiveAttitude", 
-                            "SelfEfficacy"    =     "SelfEfficacy", 
+                            "NegativeAttitude2" = "Negative Attitude", 
+                            "PositiveAttitude2"  = "Positive Attitude", 
+                            "SelfEfficacy"    =     "Self-efficacy", 
                             "Symptoms" =   "Symptoms"))   
-
 
 print(Plot_posterior_QualplusQuant)
 
@@ -558,7 +557,18 @@ Compare_distributions_plot = ggplot(d, aes(x = logOddsRatio,
         panel.grid.major = element_line(colour = "grey", size = 0.2),
         panel.grid.minor = element_line(colour = "grey", size = 0.1))+ 
   xlim(-3,3) +
-  
+  scale_y_discrete(labels=c("6MWT"  =     "6MWT" ,
+                            "Age"       =      "Age",
+                            "Comorbidity1"   =  "Comorbidity",
+                            
+                            "PhysicalFunctioning7" = "Physical Functioning", 
+                            "LVEF"    =         "LVEF",    
+                            
+                            "NegativeAttitude2" = "Negative Attitude", 
+                            "PositiveAttitude2"  = "Positive Attitude", 
+                            "SelfEfficacy"    =     "Self-efficacy", 
+                            "Symptoms" =   "Symptoms"))   + 
+
   theme(text = element_text(size = 25))   
 
 print(Compare_distributions_plot)

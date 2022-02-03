@@ -173,7 +173,6 @@ density_ALL_Construct_quant_stratified = rbind(SixMWT_density_by_Construct_strat
                                                PhysicalFunctioning_density_by_Construct_stratified,
                                                LVEF_density_by_Construct_stratified, 
                                                highproBNP_density_by_Construct_stratified,
-                                               
                                                PeakVO2_density_by_Construct_stratified)
 
 density_ALL_Construct_quant_stratified = cbind(density_ALL_Construct_quant_stratified, height)
@@ -189,6 +188,12 @@ density_ALL_Construct_quant_stratified = cbind(density_ALL_Construct_quant_strat
 Plot_Likelihood_stratified = ggplot(density_ALL_Construct_quant_stratified, aes(x = logOddsRatio, y = Construct, height=Likelihood, group = Construct)) +
   geom_density_ridges(stat = "identity", scale = 1) +
   xlim(-6, 9)+
+  scale_y_discrete(labels=c("6MWT"  =     "6MWT" ,
+                            "PhysicalFunctioning" = "Physical Functioning", 
+                            "LVEF"    =         "LVEF",    
+                            "proBNP" =  "proBNP", 
+                            "PeakVO2" = "Peak VO2"))   + 
+
   theme(text = element_text(size = 25))   
 
 

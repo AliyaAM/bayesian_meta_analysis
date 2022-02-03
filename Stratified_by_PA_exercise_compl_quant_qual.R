@@ -317,6 +317,9 @@ Compare_distributions_plot = ggplot(d, aes(x = logOddsRatio,
         panel.grid.minor = element_line(colour = "grey", size = 0.1))+ 
   xlim(-3,3) +
   
+  scale_y_discrete(labels=c("6MWT"  =     "6MWT" ,
+                            "Comorbidity" = "Comorbidity"))   + 
+  
   theme(text = element_text(size = 25))   
 
 print(Compare_distributions_plot)

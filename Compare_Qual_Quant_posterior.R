@@ -226,6 +226,18 @@ Compare_distributions_plot = ggplot(d, aes(x = logOddsRatio,
   
   xlim(-3,3) +
   
+  scale_y_discrete(labels=c("Age" =  "Age",
+                            "Comorbidity" =  "Comorbidity",
+                            "SocialSupport"=  "Social Support",
+                            "NegativeAttitude"=  "Negative Attitude",
+                            "PositiveAttitude"=  "Positive Attitude",
+                            "6MWT"= "6MWT",
+                            "PhysicalFunctioning"="Physical Functioning",
+                            "Symptoms"= "Perceived Symptoms",
+                            "LVEF"="LVEF",
+                            "SelfEfficacy"="Self-efficacy"))   + 
+  
+  
   theme(plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
         panel.grid.major = element_line(colour = "grey", size = 0.2),
         panel.grid.minor = element_line(colour = "grey", size = 0.1))+

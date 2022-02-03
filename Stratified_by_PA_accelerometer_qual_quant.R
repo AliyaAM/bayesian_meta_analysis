@@ -357,8 +357,8 @@ Compare_distributions_plot = ggplot(d, aes(x = logOddsRatio,
                       scale = 1) +
   
   scale_y_discrete(labels=c(  "6MWT"  =     "6MWT" ,
-                              "PhysicalFunctioning5" = "PhysicalFunctioning", 
-                              "PositiveAttitude"  = "PositiveAttitude"))+
+                              "PhysicalFunctioning5" = "Physical Functioning", 
+                              "PositiveAttitude"  = "Positive Attitude"))+
   
   #scale_fill_brewer(palette = "Set2")+
   #scale_color_brewer(palette = "Set2")+

@@ -56,6 +56,11 @@ Duration_dayMins_BMI = BayesUpdate_Quant(data = data, Construct = "BMI")
 Results_Duration_dayMins = rbind(Results_Duration_dayMins, Duration_dayMins_BMI)
 
 
+
+Duration_dayMins_QoL = BayesUpdate_Quant(data = data, Construct = "QoL")
+Results_Duration_dayMins = rbind(Results_Duration_dayMins, Duration_dayMins_QoL)
+
+
 Duration_dayMins_HFrEF_Yes = BayesUpdate_Quant(data = data, Construct = "HFrEF_Yes2")
 Results_Duration_dayMins = rbind(Results_Duration_dayMins, Duration_dayMins_HFrEF_Yes)
 
@@ -92,9 +97,6 @@ Duration_dayMins_Comorbidity = BayesUpdate_Quant(data = data, Construct = "Comor
 Results_Duration_dayMins = rbind(Results_Duration_dayMins, Duration_dayMins_Comorbidity)
 
 
-Duration_dayMins_LVEF = BayesUpdate_Quant(data = data, Construct = "LVEF5")
-Results_Duration_dayMins = rbind(Results_Duration_dayMins, Duration_dayMins_LVEF)
-
 Duration_dayMins_Depression = BayesUpdate_Quant(data = data, Construct = "Depression")
 Results_Duration_dayMins = rbind(Results_Duration_dayMins, Duration_dayMins_Depression)
 #####
@@ -120,9 +122,6 @@ Summary_stats_tableResults_Duration_dayMins = rbind(Summary_stats_tableResults_D
 Summary_stats_tableDuration_dayMins_6MWT = Summary_stats_table(data = data, Construct = "6MWT")
 Summary_stats_tableResults_Duration_dayMins = rbind(Summary_stats_tableResults_Duration_dayMins, Summary_stats_tableDuration_dayMins_6MWT)
 
-Summary_stats_tableDuration_dayMins_LVEF = Summary_stats_table(data = data, Construct = "LVEF5")
-Summary_stats_tableResults_Duration_dayMins = rbind(Summary_stats_tableResults_Duration_dayMins, Summary_stats_tableDuration_dayMins_LVEF)
-
 
 Summary_stats_tableDuration_dayMins_Depression = Summary_stats_table(data = data, Construct = "Depression")
 Summary_stats_tableResults_Duration_dayMins = rbind(Summary_stats_tableResults_Duration_dayMins, Summary_stats_tableDuration_dayMins_Depression)
@@ -141,6 +140,10 @@ Summary_stats_tableResults_Duration_dayMins = rbind(Summary_stats_tableResults_D
 Summary_stats_tableDuration_dayMins_BMI = Summary_stats_table(data = data, Construct = "BMI")
 Summary_stats_tableResults_Duration_dayMins = rbind(Summary_stats_tableResults_Duration_dayMins, Summary_stats_tableDuration_dayMins_BMI)
 
+
+
+Summary_stats_tableDuration_dayMins_QoL = Summary_stats_table(data = data, Construct = "QoL")
+Summary_stats_tableResults_Duration_dayMins = rbind(Summary_stats_tableResults_Duration_dayMins, Summary_stats_tableDuration_dayMins_QoL)
 
 
 Summary_stats_tableDuration_dayMins_HFrEF_Yes  = Summary_stats_table(data = data, Construct = "HFrEF_Yes2")
@@ -260,16 +263,12 @@ SixMWT_density_by_Construct_stratified = density_by_Construct_stratified(data = 
 
 Comorbidity_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "Comorbidity")
 
-LVEF_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "LVEF5")
-Depression_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "Depression")
-
-
-
 
 Ethnicity_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "Ethnicity")
 
 PhysicalFunctioning7_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "PhysicalFunctioning")
 BMI_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "BMI")
+QoL_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "QoL")
 
 HFrEF_Yes_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "HFrEF_Yes2")
 SelfEfficacy_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "SelfEfficacy")
@@ -277,6 +276,7 @@ Employment_density_by_Construct_stratified = density_by_Construct_stratified(dat
 NegativeAttitude2_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "NegativeAttitude")
 PositiveAttitude2_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "PositiveAttitude")
 Symptoms_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "Symptoms")
+Depression_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "Depression")
 
 
 
@@ -293,7 +293,7 @@ height = c(rep(1, 1000),
            rep(10, 1000), 
            rep(11, 1000), 
            rep(12, 1000), 
-           rep(13, 1000), 
+           rep(13, 1000),
            rep(14, 1000))
 
 length(height)
@@ -301,7 +301,6 @@ density_ALL_Construct_quant_stratified = rbind(Age_density_by_Construct_stratifi
                                              
                                                SixMWT_density_by_Construct_stratified, 
                                                Comorbidity_density_by_Construct_stratified,
-                                               LVEF_density_by_Construct_stratified, 
                                                Depression_density_by_Construct_stratified,
                                              
                                                Ethnicity_density_by_Construct_stratified, 
@@ -313,7 +312,8 @@ density_ALL_Construct_quant_stratified = rbind(Age_density_by_Construct_stratifi
                                                Employment_density_by_Construct_stratified, 
                                                NegativeAttitude2_density_by_Construct_stratified, 
                                                PositiveAttitude2_density_by_Construct_stratified, 
-                                               Symptoms_density_by_Construct_stratified)
+                                               Symptoms_density_by_Construct_stratified,
+                                               QoL_density_by_Construct_stratified)
 
 density_ALL_Construct_quant_stratified = cbind(density_ALL_Construct_quant_stratified, height)
 
@@ -341,13 +341,13 @@ Plot_Likelihood_stratified = ggplot(density_ALL_Construct_quant_stratified, aes(
                             "Employment2"   =        "Employment",
                             "Ethnicity"   =   "Ethnicity", 
                             
-                            "PhysicalFunctioning" = "PhysicalFunctioning", 
-                            "HFrEF_Yes2"     =   "HFrEF_Yes",    
-                            "LVEF5"    =         "LVEF",    
-                            
-                            "NegativeAttitude" = "NegativeAttitude", 
-                            "PositiveAttitude"  = "PositiveAttitude", 
-                            "SelfEfficacy"    =     "SelfEfficacy", 
+                            "PhysicalFunctioning" = "Physical Functioning", 
+                            "HFrEF_Yes2"     =   "HFrEF",    
+                             
+                            "QoL" = "QoL", 
+                            "NegativeAttitude" = "Negative Attitude", 
+                            "PositiveAttitude"  = "Positive Attitude", 
+                            "SelfEfficacy"    =     "Self-efficacy", 
                             "Symptoms" =   "Symptoms"))   
 
 

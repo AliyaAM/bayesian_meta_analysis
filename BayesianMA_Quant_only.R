@@ -484,6 +484,39 @@ print(plot5)
 Plot_Likelihood = ggplot(density_ALL_Construct_quant_only, aes(x = logOddsRatio, y = Construct, height=Likelihood, group = Construct)) +
   geom_density_ridges(stat = "identity", scale = 3) +  geom_density_ridges(stat = "identity", scale = 1) +
   xlim(-2,3) +
+  scale_y_discrete(labels=c("Age" =  "Age",
+                            "Comorbidity" =  "Comorbidity",
+                            "SocialSupport"=  "Social Support",
+                            "NegativeAttitude"=  "Negative Attitude",
+                            "PositiveAttitude"=  "Positive Attitude",
+                            "6MWT"= "6MWT",
+                            "PhysicalFunctioning"="Physical Functioning",
+                            "Symptoms"= "Perceived Symptoms",
+                            "LVEF"="LVEF",
+                            "SelfEfficacy"="Self-efficacy",
+                            "Depression"="Depression",
+                            "Digoxin"= "Digoxin",
+                            "Doppler"=  "Doppler",
+                            "Dysphoria"="Dysphoria",
+                            "Employment"=  "Employment",
+                            "Ethnicity"=  "Ethnicity",
+                            "HFDuration"=  "HF Duration",
+                            "HFrEF_Yes"=  "HFrEF",
+                            "highproBNP"="high proBNP",
+                            "Hostility"= "Hostility",
+                            "Income"= "Income",
+                            "LAV"= "LAV",
+                            "LVAD"=  "LVAD",
+                            "LVR"=  "LVR",
+                            "Partner"= "Partner",
+                            "PeakVO2"= "Peak VO2",
+                            "PerceivedExertion"= "Perceived Exertion",
+                            "QoL"= "QoL",
+                            "RenalFunction"=  "Renal Function",
+                            "Smoking"=  "Smoking",
+                            "Symptoms_distress"= "Symptoms Distress"))   + 
+  
+  
   theme(plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
         panel.grid.major = element_line(colour = "grey", size = 0.2),
         panel.grid.minor = element_line(colour = "grey", size = 0.1))+
@@ -491,7 +524,7 @@ Plot_Likelihood = ggplot(density_ALL_Construct_quant_only, aes(x = logOddsRatio,
 
 ggsave(file = paste(OUTPUT_ROOT, "/Plot_Likelihood.pdf",  sep=""),Plot_Likelihood, width=4, height=3, units="in", scale=3)
 
-
+print(Plot_Likelihood)
 #plotting the posterior resulted from updating prior with likelihood 
 Plot_posterior_Quant = ggplot(density_ALL_Construct_quant_only, aes(x = logOddsRatio, y = Construct, height=posterior_Quant, group = Construct)) +
   geom_density_ridges(stat = "identity", scale = 1) +

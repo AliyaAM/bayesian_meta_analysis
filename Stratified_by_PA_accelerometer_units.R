@@ -105,6 +105,9 @@ Results_AccelerometerUnits = rbind(Results_AccelerometerUnits, AccelerometerUnit
 
 
 
+AccelerometerUnits_QoL = BayesUpdate_Quant(data = data, Construct = "QoL")
+Results_AccelerometerUnits = rbind(Results_AccelerometerUnits, AccelerometerUnits_QoL)
+
 
 Summary_stats_tableResults_AccelerometerUnits = data.frame()
 
@@ -159,6 +162,11 @@ Summary_stats_tableResults_AccelerometerUnits = rbind(Summary_stats_tableResults
 Summary_stats_tableAccelerometerUnits_Doppler  = Summary_stats_table(data = data, Construct = "Doppler")
 Summary_stats_tableResults_AccelerometerUnits = rbind(Summary_stats_tableResults_AccelerometerUnits, Summary_stats_tableAccelerometerUnits_Doppler)
 
+
+
+
+Summary_stats_tableAccelerometerUnits_QoL  = Summary_stats_table(data = data, Construct = "QoL")
+Summary_stats_tableResults_AccelerometerUnits = rbind(Summary_stats_tableResults_AccelerometerUnits, Summary_stats_tableAccelerometerUnits_QoL)
 
 
 
@@ -265,6 +273,7 @@ Digoxin_density_by_Construct_stratified = density_by_Construct_stratified(data =
 Doppler_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "Doppler")
 
 
+QoL_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "QoL")
 
 
 
@@ -279,7 +288,8 @@ height = c(rep(1, 1000),
            rep(8, 1000), 
            rep(9, 1000),
            rep(10, 1000), 
-           rep(11, 1000))
+           rep(11, 1000),
+           rep(12, 1000))
 
 length(height)
 density_ALL_Construct_quant_stratified = rbind(SixMWT_density_by_Construct_stratified, 
@@ -292,7 +302,8 @@ density_ALL_Construct_quant_stratified = rbind(SixMWT_density_by_Construct_strat
                                                LAV_density_by_Construct_stratified, 
                                                LVR_density_by_Construct_stratified, 
                                                Digoxin_density_by_Construct_stratified, 
-                                               Doppler_density_by_Construct_stratified)
+                                               Doppler_density_by_Construct_stratified,
+                                               QoL_density_by_Construct_stratified)
 
 density_ALL_Construct_quant_stratified = cbind(density_ALL_Construct_quant_stratified, height)
 
@@ -310,14 +321,15 @@ Plot_Likelihood_stratified = ggplot(density_ALL_Construct_quant_stratified, aes(
   scale_y_discrete(labels=c(  "6MWT"  =     "6MWT" ,
                               "Depression2"    =  "Depression",
                               "Ethnicity"   =   "Ethnicity", 
-                              "PhysicalFunctioning5" = "PhysicalFunctioning", 
-                              "PositiveAttitude"  = "PositiveAttitude", 
-                              "RenalFunction" = "RenalFunction", 
-                              "highproBNP" =  "highproBNP", 
+                              "PhysicalFunctioning5" = "Physical Functioning", 
+                              "PositiveAttitude"  = "Positive Attitude", 
+                              "RenalFunction" = "Renal Function", 
+                              "highproBNP" =  "proBNP", 
                               "LAV" =   "LAV", 
                               "LVR" = "LVR", 
                               "Digoxin" =    "Digoxin", 
-                              "Doppler" ="Doppler"))+ 
+                              "Doppler" ="Doppler", 
+                              "QoL"= "QoL"))+ 
  theme(plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
         panel.grid.major = element_line(colour = "grey", size = 0.2),
         panel.grid.minor = element_line(colour = "grey", size = 0.1))+ 

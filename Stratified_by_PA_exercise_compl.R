@@ -43,9 +43,6 @@ source(paste(SOURCE_ROOT, "ConvertEffectsizes.R", sep="")) #### convert effect s
 likelihood_data =  ConvertEffectsizes(data = data)
 
 
-likelihood_data = likelihood_data[!(likelihood_data$varLOR==0),]
-
-
 
 unique(data$Construct)
 Results_Exercise_complient_Binary = data.frame()
@@ -71,18 +68,25 @@ Exercise_complient_Binary_Comorbidity = BayesUpdate_Quant(data = data, Construct
 Results_Exercise_complient_Binary = rbind(Results_Exercise_complient_Binary, Exercise_complient_Binary_Comorbidity)
 
 
-#Exercise_complient_Binary_PeakVO2 = BayesUpdate_Quant(data = data, Construct = "PeakVO2")
-#Results_Exercise_complient_Binary = rbind(Results_Exercise_complient_Binary, Exercise_complient_Binary_PeakVO2)
-#Exercise_complient_Binary_Depression = BayesUpdate_Quant(data = data, Construct = "Depression")
-#Results_Exercise_complient_Binary = rbind(Results_Exercise_complient_Binary, Exercise_complient_Binary_Depression)
+Exercise_complient_Binary_PeakVO2 = BayesUpdate_Quant(data = data, Construct = "PeakVO2")
+Results_Exercise_complient_Binary = rbind(Results_Exercise_complient_Binary, Exercise_complient_Binary_PeakVO2)
+Exercise_complient_Binary_Depression = BayesUpdate_Quant(data = data, Construct = "Depression")
+Results_Exercise_complient_Binary = rbind(Results_Exercise_complient_Binary, Exercise_complient_Binary_Depression)
 #####
-#Exercise_complient_Binary_Dysphoria = BayesUpdate_Quant(data = data, Construct = "Dysphoria")
-#Results_Exercise_complient_Binary = rbind(Results_Exercise_complient_Binary, Exercise_complient_Binary_Dysphoria)
+Exercise_complient_Binary_Dysphoria = BayesUpdate_Quant(data = data, Construct = "Dysphoria")
+Results_Exercise_complient_Binary = rbind(Results_Exercise_complient_Binary, Exercise_complient_Binary_Dysphoria)
 
-#Exercise_complient_Binary_HFDuration = BayesUpdate_Quant(data = data, Construct = "HFDuration")
-#Results_Exercise_complient_Binary = rbind(Results_Exercise_complient_Binary, Exercise_complient_Binary_HFDuration)
+Exercise_complient_Binary_HFDuration = BayesUpdate_Quant(data = data, Construct = "HFDuration")
+Results_Exercise_complient_Binary = rbind(Results_Exercise_complient_Binary, Exercise_complient_Binary_HFDuration)
 
 
+
+Exercise_complient_Binary_Hostility = BayesUpdate_Quant(data = data, Construct = "Hostility")
+Results_Exercise_complient_Binary = rbind(Results_Exercise_complient_Binary, Exercise_complient_Binary_Hostility)
+
+
+Exercise_complient_Binary_Partner = BayesUpdate_Quant(data = data, Construct = "Partner")
+Results_Exercise_complient_Binary = rbind(Results_Exercise_complient_Binary, Exercise_complient_Binary_Partner)
 
 
 
@@ -105,23 +109,30 @@ Summary_stats_tableResults_Exercise_complient_Binary = rbind(Summary_stats_table
 Summary_stats_tableExercise_complient_Binary_6MWT = Summary_stats_table(data = data, Construct = "6MWT")
 Summary_stats_tableResults_Exercise_complient_Binary = rbind(Summary_stats_tableResults_Exercise_complient_Binary, Summary_stats_tableExercise_complient_Binary_6MWT)
 
-#Summary_stats_tableExercise_complient_Binary_PeakVO2 = Summary_stats_table(data = data, Construct = "PeakVO2")
-#Summary_stats_tableResults_Exercise_complient_Binary = rbind(Summary_stats_tableResults_Exercise_complient_Binary, Summary_stats_tableExercise_complient_Binary_PeakVO2)
+Summary_stats_tableExercise_complient_Binary_PeakVO2 = Summary_stats_table(data = data, Construct = "PeakVO2")
+Summary_stats_tableResults_Exercise_complient_Binary = rbind(Summary_stats_tableResults_Exercise_complient_Binary, Summary_stats_tableExercise_complient_Binary_PeakVO2)
 
 
-#Summary_stats_tableExercise_complient_Binary_Depression = Summary_stats_table(data = data, Construct = "Depression")
-#Summary_stats_tableResults_Exercise_complient_Binary = rbind(Summary_stats_tableResults_Exercise_complient_Binary, Summary_stats_tableExercise_complient_Binary_Depression)
+Summary_stats_tableExercise_complient_Binary_Depression = Summary_stats_table(data = data, Construct = "Depression")
+Summary_stats_tableResults_Exercise_complient_Binary = rbind(Summary_stats_tableResults_Exercise_complient_Binary, Summary_stats_tableExercise_complient_Binary_Depression)
 
 
-#Summary_stats_tableExercise_complient_Binary_Dysphoria = Summary_stats_table(data = data, Construct = "Dysphoria")
-#Summary_stats_tableResults_Exercise_complient_Binary = rbind(Summary_stats_tableResults_Exercise_complient_Binary, Summary_stats_tableExercise_complient_Binary_Dysphoria)
+Summary_stats_tableExercise_complient_Binary_Dysphoria = Summary_stats_table(data = data, Construct = "Dysphoria")
+Summary_stats_tableResults_Exercise_complient_Binary = rbind(Summary_stats_tableResults_Exercise_complient_Binary, Summary_stats_tableExercise_complient_Binary_Dysphoria)
 
 
-#Summary_stats_tableExercise_complient_Binary_HFDuration = Summary_stats_table(data = data, Construct = "HFDuration")
-#Summary_stats_tableResults_Exercise_complient_Binary = rbind(Summary_stats_tableResults_Exercise_complient_Binary, Summary_stats_tableExercise_complient_Binary_HFDuration)
+Summary_stats_tableExercise_complient_Binary_HFDuration = Summary_stats_table(data = data, Construct = "HFDuration")
+Summary_stats_tableResults_Exercise_complient_Binary = rbind(Summary_stats_tableResults_Exercise_complient_Binary, Summary_stats_tableExercise_complient_Binary_HFDuration)
 
 
 
+Summary_stats_tableExercise_complient_Binary_Hostility = Summary_stats_table(data = data, Construct = "Hostility")
+Summary_stats_tableResults_Exercise_complient_Binary = rbind(Summary_stats_tableResults_Exercise_complient_Binary, Summary_stats_tableExercise_complient_Binary_Hostility)
+
+
+
+#Summary_stats_tableExercise_complient_Binary_Partner = Summary_stats_table(data = data, Construct = "Partner")
+#Summary_stats_tableResults_Exercise_complient_Binary = rbind(Summary_stats_tableResults_Exercise_complient_Binary, Summary_stats_tableExercise_complient_Binary_Partner)
 
 
 
@@ -221,31 +232,40 @@ data = Results_Exercise_complient_Binary
 SixMWT_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "6MWT")
 Comorbidity_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "Comorbidity")
 
-#Depression_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "Depression")
+Depression_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "Depression")
 
-#PeakVO2_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "PeakVO2")
+PeakVO2_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "PeakVO2")
 
-#Dysphoria_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "Dysphoria")
-
-
-#HFDuration_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "HFDuration")
+Dysphoria_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "Dysphoria")
 
 
+HFDuration_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "HFDuration")
+
+Hostility_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "Hostility")
+
+#Partner_density_by_Construct_stratified = density_by_Construct_stratified(data = data, Construct = "Partner")
 
 
 height = c(rep(1, 1000),
-           rep(2, 1000))
+           rep(2, 1000),
+           rep(3, 1000),
+           rep(4, 1000),
+           rep(5, 1000),
+           rep(6, 1000),
+           rep(7, 1000))
 
 length(height)
 density_ALL_Construct_quant_stratified = rbind(#Age_density_by_Construct_stratified, 
                                                #BMI_density_by_Construct_stratified, 
                                                SixMWT_density_by_Construct_stratified, 
                                               # LVEF_density_by_Construct_stratified, 
-                                               Comorbidity_density_by_Construct_stratified)
-                                               #Depression_density_by_Construct_stratified,
-                                               #HFDuration_density_by_Construct_stratified)
-                                               #Dysphoria_density_by_Construct_stratified)
-                                               #PeakVO2_density_by_Construct_stratified)
+                                               Comorbidity_density_by_Construct_stratified, 
+                                               Depression_density_by_Construct_stratified,
+                                               HFDuration_density_by_Construct_stratified,
+                                               Dysphoria_density_by_Construct_stratified,
+                                               PeakVO2_density_by_Construct_stratified,
+                                               #Partner_density_by_Construct_stratified,
+                                               Hostility_density_by_Construct_stratified)
 
 density_ALL_Construct_quant_stratified = cbind(density_ALL_Construct_quant_stratified, height)
 
@@ -260,6 +280,12 @@ density_ALL_Construct_quant_stratified = cbind(density_ALL_Construct_quant_strat
 Plot_Likelihood_stratified = ggplot(density_ALL_Construct_quant_stratified, aes(x = logOddsRatio, y = Construct, height=Likelihood, group = Construct)) +
   geom_density_ridges(stat = "identity", scale = 1) +
   xlim(-3,3) +
+  scale_y_discrete(labels=c("6MWT"  =     "6MWT" ,
+                            "Comorbidity" = "Comorbidity",
+                            "Hostility" = "Hostility",
+                            "HFDuration" = "HF Duration", 
+                            "Dysphoria" = "Dysphoria", 
+                            "Depression" = "Depression"))   + 
   theme(text = element_text(size = 40))   
 
 

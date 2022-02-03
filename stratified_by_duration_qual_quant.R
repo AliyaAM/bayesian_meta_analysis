@@ -58,10 +58,6 @@ Duration_dayMins_Comorbidity1 = BayesUpdateStepByStep(x = x, Construct = "Comorb
 Results_Duration_dayMins_qual_quant = rbind(Results_Duration_dayMins_qual_quant, Duration_dayMins_Comorbidity1)
 
 
-Duration_dayMins_LVEF = BayesUpdateStepByStep(x = x, Construct = "LVEF5")
-Results_Duration_dayMins_qual_quant = rbind(Results_Duration_dayMins_qual_quant, Duration_dayMins_LVEF)
-
-
 Duration_dayMins_Symptoms = BayesUpdateStepByStep(x = x, Construct = "Symptoms")
 Results_Duration_dayMins_qual_quant = rbind(Results_Duration_dayMins_qual_quant, Duration_dayMins_Symptoms)
 
@@ -98,11 +94,6 @@ Summary_stats_table_qual_and_quantResults_Duration_dayMins_qual_quant = rbind(Su
 
 Summary_stats_table_qual_and_quantDuration_dayMins_6MWT = Summary_stats_table_qual_and_quant(x = x, Construct = "6MWT")
 Summary_stats_table_qual_and_quantResults_Duration_dayMins_qual_quant = rbind(Summary_stats_table_qual_and_quantResults_Duration_dayMins_qual_quant, Summary_stats_table_qual_and_quantDuration_dayMins_6MWT)
-
-Summary_stats_table_qual_and_quantDuration_dayMins_LVEF = Summary_stats_table_qual_and_quant(x = x, Construct = "LVEF5")
-Summary_stats_table_qual_and_quantResults_Duration_dayMins_qual_quant = rbind(Summary_stats_table_qual_and_quantResults_Duration_dayMins_qual_quant, Summary_stats_table_qual_and_quantDuration_dayMins_LVEF)
-
-
 
 Summary_stats_table_qual_and_quantDuration_dayMins_PhysicalFunctioning7  = Summary_stats_table_qual_and_quant(x = x, Construct = "PhysicalFunctioning")
 Summary_stats_table_qual_and_quantResults_Duration_dayMins_qual_quant = rbind(Summary_stats_table_qual_and_quantResults_Duration_dayMins_qual_quant, Summary_stats_table_qual_and_quantDuration_dayMins_PhysicalFunctioning7)
@@ -231,8 +222,6 @@ Age_density_by_Construct_stratified = density_by_Construct_stratified(data = Res
 SixMWT_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_Duration_dayMins_qual_quant, Construct = "6MWT")
 Comorbidity1_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_Duration_dayMins_qual_quant, Construct = "Comorbidity")
 
-LVEF_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_Duration_dayMins_qual_quant, Construct = "LVEF5")
-
 Symptoms_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_Duration_dayMins_qual_quant, Construct = "Symptoms")
 
 SelfEfficacy_density_by_Construct_stratified = density_by_Construct_stratified(data = Results_Duration_dayMins_qual_quant, Construct = "SelfEfficacy")
@@ -250,15 +239,13 @@ height = c(rep(1, 1000),
            rep(5, 1000), 
            rep(6, 1000), 
            rep(7, 1000), 
-           rep(8, 1000), 
-           rep(9, 1000))
+           rep(8, 1000))
 
 length(height)
 density_ALL_Construct_quant_stratified = rbind(Age_density_by_Construct_stratified,
                                                SixMWT_density_by_Construct_stratified, 
                                                Comorbidity1_density_by_Construct_stratified,
                                                Symptoms_density_by_Construct_stratified,
-                                               LVEF_density_by_Construct_stratified,
                                                SelfEfficacy_density_by_Construct_stratified,
                                                PhysicalFunctioning7_density_by_Construct_stratified, 
                                                
@@ -287,13 +274,10 @@ Plot_Likelihood_stratified = ggplot(density_ALL_Construct_quant_stratified, aes(
   scale_y_discrete(labels=c("6MWT"  =     "6MWT" ,
                             "Age"       =      "Age",
                             "Comorbidity"   =  "Comorbidity",
-                            
-                            "PhysicalFunctioning" = "PhysicalFunctioning", 
-                            "LVEF5"    =         "LVEF",    
-                            
-                            "NegativeAttitude" = "NegativeAttitude", 
-                            "PositiveAttitude"  = "PositiveAttitude", 
-                            "SelfEfficacy"    =     "SelfEfficacy", 
+                            "PhysicalFunctioning" = "Physical Functioning", 
+                            "NegativeAttitude" = "Negative Attitude", 
+                            "PositiveAttitude"  = "Positive Attitude", 
+                            "SelfEfficacy"    =     "Self-efficacy", 
                             "Symptoms" =   "Symptoms"))   
 print(Plot_Likelihood_stratified)
 
@@ -302,18 +286,14 @@ print(Plot_Likelihood_stratified)
 Plot_posterior_QualplusQuant = ggplot(density_ALL_Construct_quant_stratified, aes(x = logOddsRatio, y = Construct, height=posterior_QualplusQuant, group = Construct)) +
   geom_density_ridges(stat = "identity", scale = 1) +
   xlim(-3, 4  ) + 
-  
   scale_y_discrete(labels=c("6MWT"  =     "6MWT" ,
                             "Age"       =      "Age",
                             "Comorbidity"   =  "Comorbidity",
-                            
-                            "PhysicalFunctioning" = "PhysicalFunctioning", 
-                            "LVEF5"    =         "LVEF",    
-                            
-                            "NegativeAttitude" = "NegativeAttitude", 
-                            "PositiveAttitude"  = "PositiveAttitude", 
-                            "SelfEfficacy"    =     "SelfEfficacy", 
-                            "Symptoms" =   "Symptoms"))   
+                            "PhysicalFunctioning" = "Physical Functioning", 
+                            "NegativeAttitude" = "Negative Attitude", 
+                            "PositiveAttitude"  = "Positive Attitude", 
+                            "SelfEfficacy"    =     "Self-efficacy", 
+                            "Symptoms" =   "Symptoms"))     
 
 
 print(Plot_posterior_QualplusQuant)
@@ -347,7 +327,6 @@ PositiveAttitude_density_prior = All_constructs_prior  %>% filter(Construct == "
 SixMWT_density_prior = All_constructs_prior  %>% filter(Construct == "6MWT")
 PhysicalFunctioning_density_prior = All_constructs_prior  %>% filter(Construct == "PhysicalFunctioning")
 Symptoms_density_prior = All_constructs_prior  %>% filter(Construct== "Symptoms")
-LVEF_density_prior = All_constructs_prior  %>% filter(Construct == "LVEF5")
 SelfEfficacy_density_prior = All_constructs_prior  %>% filter(Construct == "SelfEfficacy")
 
 
@@ -359,7 +338,6 @@ PositiveAttitude_density_likelihood = All_constructs_likelihood  %>% filter(Cons
 SixMWT_density_likelihood = All_constructs_likelihood  %>% filter(Construct  == "6MWT")
 PhysicalFunctioning_density_likelihood = All_constructs_likelihood  %>% filter(Construct  == "PhysicalFunctioning")
 Symptoms_density_likelihood = All_constructs_likelihood  %>% filter(Construct  == "Symptoms")
-LVEF_density_likelihood = All_constructs_likelihood  %>% filter(Construct  == "LVEF5")
 SelfEfficacy_density_likelihood = All_constructs_likelihood  %>% filter(Construct  == "SelfEfficacy")
 
 
@@ -370,7 +348,6 @@ PositiveAttitude_density_posterior = All_constructs_posterior  %>% filter(Constr
 SixMWT_density_posterior = All_constructs_posterior  %>% filter(Construct == "6MWT")
 PhysicalFunctioning_density_posterior = All_constructs_posterior  %>% filter(Construct  == "PhysicalFunctioning")
 Symptoms_density_posterior =All_constructs_posterior  %>% filter(Construct  == "Symptoms")
-LVEF_density_posterior = All_constructs_posterior  %>% filter(Construct == "LVEF5")
 SelfEfficacy_density_posterior = All_constructs_posterior  %>% filter(Construct  == "SelfEfficacy")
 
 
@@ -533,6 +510,15 @@ Compare_distributions_plot = ggplot(d, aes(x = logOddsRatio,
       panel.grid.major = element_line(colour = "grey", size = 0.2),
       panel.grid.minor = element_line(colour = "grey", size = 0.1))+ 
   xlim(-3,3) +
+  + 
+  scale_y_discrete(labels=c("6MWT"  =     "6MWT" ,
+                            "Age"       =      "Age",
+                            "Comorbidity"   =  "Comorbidity",
+                            "PhysicalFunctioning" = "Physical Functioning", 
+                            "NegativeAttitude" = "Negative Attitude", 
+                            "PositiveAttitude"  = "Positive Attitude", 
+                            "SelfEfficacy"    =     "Self-efficacy", 
+                            "Symptoms" =   "Symptoms"))    +
   
   theme(text = element_text(size = 25))   
 

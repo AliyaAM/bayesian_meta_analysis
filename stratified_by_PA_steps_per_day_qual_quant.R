@@ -37,15 +37,14 @@ All_data_extracted = read.csv(paste(SOURCE_ROOT, "QuantData_CheckedForAccuracy_2
 JaarsmaInternationalStudy = read.csv(paste(SOURCE_ROOT, "HyperPriorData.csv", sep="")) #data used for eliciting the hyperprior (general physical activity levels in HF estimated from a large internaitonal study (Jaarsma et al., 2013)
 
 unique(data$Construct)
-data = All_data_extracted %>% filter(All_data_extracted$PA_Varme == "Steps/d_total")
-data = data
-PA_Varme = "Steps_day"
+data = filter(All_data_extracted, All_data_extracted$PA_Varme == "Steps/d_total")
 
 
 
 
 source(paste(SOURCE_ROOT, "ConvertEffectsizes.R", sep="")) #### convert effect sizes from individual studies  (F-value, Binary (Absolute numbers and proportions), r coeffcient and SMD) into log odds ratios. All quantitative results are converted to log OR in order to be comptable with qualitative evidence, we treated all results as binary. 
 likelihood_data =  ConvertEffectsizes(data = data)
+
 
 Results_Steps_day_qual_quant = data.frame()
 unique(data$PA_Varme)
@@ -65,13 +64,6 @@ Results_Steps_day_qual_quant = rbind(Results_Steps_day_qual_quant, Steps_day_Phy
 
 Steps_day_LVEF = BayesUpdateStepByStep(x = x, Construct = "LVEF")
 Results_Steps_day_qual_quant = rbind(Results_Steps_day_qual_quant, Steps_day_LVEF)
-
-
-
-
-
-
-
 
 
 
@@ -365,6 +357,9 @@ Compare_distributions_plot_steps_per_day = ggplot(d, aes(x = logOddsRatio,
         panel.grid.major = element_line(colour = "grey", size = 0.2),
         panel.grid.minor = element_line(colour = "grey", size = 0.1))+ 
   xlim(-6,9) +
+  scale_y_discrete(labels=c("6MWT"  =     "6MWT" ,
+                            "PhysicalFunctioning" = "Physical Functioning", 
+                            "LVEF"    =         "LVEF"))   + 
 
   theme(text = element_text(size = 25))   
 

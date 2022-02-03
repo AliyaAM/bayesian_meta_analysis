@@ -166,6 +166,8 @@ density_ALL_Construct_quant_stratified = cbind(density_ALL_Construct_quant_strat
 Plot_Likelihood_stratified_IPAQ = ggplot(density_ALL_Construct_quant_stratified, aes(x = logOddsRatio, y = Construct, height=Likelihood, group = Construct)) +
   geom_density_ridges(stat = "identity", scale = 1) +
   xlim(-3, 3)+
+  scale_y_discrete(labels=c("PerceivedExertion"  =     "Perceived Exertion" ,
+                            "SelfEfficacy" = "Self-efficacy"))   + 
   
   theme(text = element_text(size = 25))   
 print(Plot_Likelihood_stratified_IPAQ)
