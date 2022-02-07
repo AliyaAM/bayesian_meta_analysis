@@ -1,5 +1,25 @@
 
 
+library(tidyverse)
+library(dplyr)
+library(assertthat)
+library(ggplot2)
+library(filenamer)
+library(reshape2)  
+library(tibble)
+library(compute.es)
+library(metafor)
+library(bayesplot)
+library(ggplot2)
+library(ggridges)
+library(rstan) 
+library(coda)
+library(bayestestR)
+library(HDInterval)
+library(assertthat)
+library(RColorBrewer)
+
+
 # Set the root directory to look for source code.
 SOURCE_ROOT = "/Users/aliya/my_docs/proj/bayesian_meta_analysis/"
 ## Set the root location on the user's local machine to save output files.
@@ -384,10 +404,7 @@ height = c(rep(10, 1000),
            rep(210, 1000),
            rep(220, 1000), 
            rep(230, 1000), 
-           rep(240, 1000), 
-           rep(250, 1000), 
-           rep(260, 1000), 
-           rep(270, 1000))
+           rep(240, 1000))
 
 
 
@@ -424,9 +441,6 @@ d <- data.frame(
                 Symptoms_density_likelihood$Construct,
                 Symptoms_density_posterior$Construct,
                 
-                LVEF_density_prior$Construct, 
-                LVEF_density_likelihood$Construct,
-                LVEF_density_posterior$Construct,
                 
                 SelfEfficacy_density_prior$Construct,
                 SelfEfficacy_density_likelihood$Construct,
@@ -464,9 +478,6 @@ d <- data.frame(
         Symptoms_density_likelihood$Likelihood,
         Symptoms_density_posterior$posterior_QualplusQuant,
         
-        LVEF_density_prior$Prior_qual_density, 
-        LVEF_density_likelihood$Likelihood,
-        LVEF_density_posterior$posterior_QualplusQuant,
         
         SelfEfficacy_density_prior$Prior_qual_density,
         SelfEfficacy_density_likelihood$Likelihood,
@@ -510,7 +521,6 @@ Compare_distributions_plot = ggplot(d, aes(x = logOddsRatio,
       panel.grid.major = element_line(colour = "grey", size = 0.2),
       panel.grid.minor = element_line(colour = "grey", size = 0.1))+ 
   xlim(-3,3) +
-  + 
   scale_y_discrete(labels=c("6MWT"  =     "6MWT" ,
                             "Age"       =      "Age",
                             "Comorbidity"   =  "Comorbidity",

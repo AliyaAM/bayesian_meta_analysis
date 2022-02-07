@@ -38,7 +38,6 @@ JaarsmaInternationalStudy = read.csv(paste(SOURCE_ROOT, "HyperPriorData.csv", se
 data = ALL_extracted_data %>% filter(ALL_extracted_data$PA_Varme == "Exercise_complient_Binary")
 
 
-
 source(paste(SOURCE_ROOT, "ConvertEffectsizes.R", sep="")) #### convert effect sizes from individual studies  (F-value, Binary (Absolute numbers and proportions), r coeffcient and SMD) into log odds ratios. All quantitative results are converted to log OR in order to be comptable with qualitative evidence, we treated all results as binary. 
 likelihood_data =  ConvertEffectsizes(data = data)
 
@@ -66,7 +65,6 @@ Results_Exercise_complient_Binary = rbind(Results_Exercise_complient_Binary, Exe
 
 Exercise_complient_Binary_Comorbidity = BayesUpdate_Quant(data = data, Construct = "Comorbidity")
 Results_Exercise_complient_Binary = rbind(Results_Exercise_complient_Binary, Exercise_complient_Binary_Comorbidity)
-
 
 Exercise_complient_Binary_PeakVO2 = BayesUpdate_Quant(data = data, Construct = "PeakVO2")
 Results_Exercise_complient_Binary = rbind(Results_Exercise_complient_Binary, Exercise_complient_Binary_PeakVO2)
