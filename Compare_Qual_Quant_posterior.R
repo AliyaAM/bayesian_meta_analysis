@@ -241,7 +241,7 @@ Compare_distributions_plot = ggplot(d, aes(x = logOddsRatio,
   theme(plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
         panel.grid.major = element_line(colour = "grey", size = 0.2),
         panel.grid.minor = element_line(colour = "grey", size = 0.1))+
-  theme(text = element_text(size = 25))   
+  theme(text = element_text(size = 10))   
 
 
 print(Compare_distributions_plot)
