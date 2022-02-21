@@ -267,11 +267,6 @@ BayesUpdateStepByStep = function(x, Construct) {
 
 
   
-  write.table(data, file = '/Users/aliya/my_docs/proj//bayesian_meta_analysis/data_qual_quant_with_hyperprior_test.csv', append = FALSE, quote = TRUE, sep = ", ",
-              eol = "\r", na = "NA", dec = ".", row.names = FALSE,
-              col.names = TRUE, qmethod = c("escape", "double"),
-              fileEncoding = "" )
-  
   
   return(params = (data.frame(Construct = Construct, 
                               data)))
