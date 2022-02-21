@@ -470,10 +470,6 @@ d <- data.frame(
         Symptoms_distress_density_by_Construct$posterior),
   height = height)
 
-plot5 = ggplot(d, aes(x, y, height = height, group = y)) + 
-  geom_ridgeline(fill = "lightblue")
-
-print(plot5)
 
 #plot4 = ggplot(density_ALL_Construct_quant_only, aes(x = Theta, y = construct, height=posterior, group = construct)) +
 #  geom_density_ridges(stat = "identity", scale = 10) +
