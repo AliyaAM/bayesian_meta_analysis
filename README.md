@@ -6,6 +6,10 @@ This repository contains the analysis for the study: "Informing behaviour change
 ## Instalation and usage 
 Click the button "open in CoLab" and run every cell in the notebook. 
 
+If accessed from Colab, then the analysis can be run in any internet browser without needing to download R files. Once every cell in Colab is run in order then the analysis output will be visible in the browser. Follow the link to Colabatory notebook above and execute every cell in the notebook in order. 
+
+
+
 
 
 
