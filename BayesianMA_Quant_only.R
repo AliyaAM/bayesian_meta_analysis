@@ -478,8 +478,9 @@ d <- data.frame(
 
 #plotting likelihood (quantitative evidence only)
 Plot_Likelihood = ggplot(density_ALL_Construct_quant_only, aes(x = logOddsRatio, y = Construct, height=Likelihood, group = Construct)) +
-  geom_density_ridges(stat = "identity", scale = 3) +  geom_density_ridges(stat = "identity", scale = 1) +
-  xlim(-2,3) +
+  geom_density_ridges(stat = "identity", scale = 3) +  geom_density_ridges(stat = "identity", scale = 3) +
+  scale_x_continuous(name = "log OR", breaks = c(-2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2, 2.5, 2), limits = c(-2, 3)) +
+  
   scale_y_discrete(labels=c("Age" =  "Age",
                             "Comorbidity" =  "Comorbidity",
                             "SocialSupport"=  "Social Support",
@@ -514,9 +515,9 @@ Plot_Likelihood = ggplot(density_ALL_Construct_quant_only, aes(x = logOddsRatio,
   
   
   theme(plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
-        panel.grid.major = element_line(colour = "grey", size = 0.2),
-        panel.grid.minor = element_line(colour = "grey", size = 0.1))+
-  theme(text = element_text(size = 25))   
+        panel.grid.major = element_line(colour = "grey", size = 0.2)) +
+        #panel.grid.minor = element_line(colour = "grey", size = 0.1)) +
+  theme(text = element_text(size = 10))   
 
 ggsave(file = paste(OUTPUT_ROOT, "/Plot_Likelihood.pdf",  sep=""),Plot_Likelihood, width=4, height=3, units="in", scale=3)
 
@@ -524,10 +525,15 @@ print(Plot_Likelihood)
 #plotting the posterior resulted from updating prior with likelihood 
 Plot_posterior_Quant = ggplot(density_ALL_Construct_quant_only, aes(x = logOddsRatio, y = Construct, height=posterior_Quant, group = Construct)) +
   geom_density_ridges(stat = "identity", scale = 1) +
-  xlim(-6,6) +
+  
+  scale_x_continuous(name = "log OR", breaks = c(-2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2, 2.5, 2), limits = c(-2, 3)) +
+
   theme(plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
         panel.grid.major = element_line(colour = "grey", size = 0.2),
-        panel.grid.minor = element_line(colour = "grey", size = 0.1))+
-  theme(text = element_text(size = 25))   
+        panel.grid.minor = element_line(colour = "grey", size = 0.1)) +
+  
+  theme(text = element_text(size = 8))   
 
+ print(Plot_posterior_Quant)
+ 
 ggsave(file = paste(OUTPUT_ROOT, "/Plot_posterior_Quant.pdf",  sep=""),Plot_posterior_Quant, width=4, height=3, units="in", scale=3)

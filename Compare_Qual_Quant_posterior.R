@@ -216,6 +216,9 @@ Compare_distributions_plot = ggplot(d, aes(x = logOddsRatio,
                                           color = distribution,
                                           fill = distribution)) +
   
+  scale_x_continuous(name = "log OR", breaks = c(-2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2, 2.5, 2), limits = c(-2, 3)) +
+
+  
   geom_density_ridges(stat = "identity",
                       scale = 3) +
   
@@ -224,7 +227,7 @@ Compare_distributions_plot = ggplot(d, aes(x = logOddsRatio,
   scale_fill_manual(values = c("#FC8D62" , "#E78AC3" ,"#66C2A5"))+
   scale_color_manual(values = c("#FC8D62" , "#E78AC3" ,"#66C2A5"))+
   
-  xlim(-3,3) +
+  #xlim(-3,3) +
   
   scale_y_discrete(labels=c("Age" =  "Age",
                             "Comorbidity" =  "Comorbidity",
@@ -237,11 +240,20 @@ Compare_distributions_plot = ggplot(d, aes(x = logOddsRatio,
                             "LVEF"="LVEF",
                             "SelfEfficacy"="Self-efficacy"))   + 
   
-  
-  theme(plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
+  theme(legend.position = c("top"),
+        legend.justification = c("right", "top"),
+        legend.box.just = "right",
+        legend.margin = margin(1, 1, 1, 1), 
+       
+         legend.text = element_text(size = 8), 
+        legend.title = element_text(face = "bold", size = 8), 
+        
+        plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
         panel.grid.major = element_line(colour = "grey", size = 0.2),
         panel.grid.minor = element_line(colour = "grey", size = 0.1))+
   theme(text = element_text(size = 10))   
+  
+ 
 
 
 print(Compare_distributions_plot)
