@@ -3,9 +3,6 @@ library(dplyr)
 library(RColorBrewer)
 
 
-density_ALL_Construct
-head(density_ALL_Construct)
-
 
 All_constructs_prior = select(density_ALL_Construct, logOddsRatio, Construct, Prior_qual_density) 
 

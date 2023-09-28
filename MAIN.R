@@ -9,20 +9,22 @@ library(reshape2)
 library(tibble)
 library(compute.es)
 library(metafor)
-library(bayesplot)
 library(ggplot2)
 library(ggridges)
-library(rstan) 
 library(coda)
 library(bayestestR)
 library(HDInterval)
 library(assertthat)
 library(RColorBrewer)
 
+directory = "/Users/aliya/my_docs/proj/"
+
 ## Set the root directory to look for source code.
-SOURCE_ROOT = "//Users/aliyaamirova/proj/bayesian_meta_analysis/"
+SOURCE_ROOT = "/Users/aliya/my_docs/proj/bayesian_meta_analysis/"
 ## Set the root location on the user's local machine to save output files.
-OUTPUT_ROOT = "/Users/aliyaamirova/proj/bayesian_meta_analysis/"
+OUTPUT_ROOT = "/Users/aliya/my_docs/proj/bayesian_meta_analysis/"
+
+
 
 
 x = read.csv(paste(SOURCE_ROOT, "input.csv", sep="")) #to perform the analysis we require this data for all indexed functions which were indexed by the name of the included constructs (eg., self-efficacy, social support). This is done so the analysis is parsled out for each construct separately. 
